@@ -1,0 +1,147 @@
+Build: 1.15.1-30.0.20 - Wed Jan 01 16:41:59 GMT 2020
+	David Quintana:
+		Allow model jsons to override the material library used by OBJ models.
+		Fix model loader test mod resources.
+		Update licenses.
+
+=========
+Build: 1.15.1-30.0.19 - Mon Dec 30 21:14:20 GMT 2019
+	tterrag:
+		Apply baked-in lightmap data to rendering
+		
+		- Fix ForgeHooksClient.fillNormal injecting data to lightmap
+		- Fix OBJModel not filling lightmap data
+		- Fix NewModelLoaderTest blockitem not linking with block
+
+=========
+Build: 1.15.1-30.0.18 - Sun Dec 29 16:16:44 GMT 2019
+	David Quintana:
+		Fix LightUtil.unpack to set the 4th component to 1 when expanding an xyz position into a 4-component vector.
+		Add TRSRTransformer test mod.
+		Fix signature of the bindTileEntityRenderer method, to account for covariance.
+
+=========
+Build: 1.15.1-30.0.17 - Sun Dec 29 01:16:20 GMT 2019
+	David Quintana:
+		More model/rendering fixes:
+		- Breaking change: Change ClientRegistry.bindTileEntityRenderer to a factory, so mods don't have to manually specify the dispatcher.
+		- Breaking change: Delete obsolete SimpleModelState (the class was duplicated by mistake, see SimpleModelTransform) and ICustomModelState (part of the old loader API).
+		- Breaking change: Rename getTextureDependencies to getTextures, for consistency.
+		- Reinstate the getRenderLayer method, fixed appropriately to return the new RenderType value.
+		- Fix OBJ loader applying the model transform in the wrong reference frame.
+		- Fix vanilla bug in TransformationMatrix#func_227986_a_
+		- Fix QuadTransformer logic.
+		- Added new method to IModelConfiguration to retrieve the owner IUnbakedModel, needed in order to construct ItemOverrideLists when baking custom models.
+		- Reintroduce multi-layer model through the new model loader system.
+
+=========
+Build: 1.15.1-30.0.16 - Tue Dec 24 12:16:17 GMT 2019
+	David Quintana:
+		New batch of Model/rendering fixes:
+		- PerspectiveMapWrapper did not pass IModelData through to the wrapped model.
+		- CompositeModel did not store the returned textures from getTextureDependencies.
+		- VertexFormat used COLOR instead of UV to detect UV presence.
+		- QuadTransformer would crash due to index out of bounds.
+		- Small cleanup of TransformationHelper
+
+=========
+Build: 1.15.1-30.0.15 - Fri Dec 20 17:15:21 GMT 2019
+	David Quintana:
+		Fix obj models having all faces in the same mesh, breaking material assignments and visibility in the process.
+		Reintroduce lost patch from the model loader, which would cause the custom values to be missing from generated models.
+
+=========
+Build: 1.15.1-30.0.14 - Fri Dec 20 04:14:34 GMT 2019
+	tterrag:
+		Fix diffuse lighting being baked into models, fixes dark items
+
+=========
+Build: 1.15.1-30.0.13 - Fri Dec 20 03:50:53 GMT 2019
+	David Quintana:
+		Fix item quads not using the existing vertex color when applying tint colors.
+
+=========
+Build: 1.15.1-30.0.12 - Fri Dec 20 01:44:40 GMT 2019
+	David Quintana:
+		Fix bucket model. Some mask textures were not added to the repository, and the bucket override generation was broken.
+		Fix OBJ loading crash due to a float value being parsed as int.
+		Fixes 6377
+
+=========
+Build: 1.15.1-30.0.11 - Thu Dec 19 05:56:10 GMT 2019
+	bl4ckscor33:
+		Fix game crashing when modded entities are present (#6364)
+
+=========
+Build: 1.15.1-30.0.10 - Thu Dec 19 05:02:29 GMT 2019
+	ichttt:
+		Fix warning screen about missing minecraft registry entries (#6363)
+
+	richard:
+		Fix capabilities becoming inaccessible on returning from end (#6368)
+
+=========
+Build: 1.15.1-30.0.8 - Thu Dec 19 04:39:52 GMT 2019
+	ichttt:
+		Some code cleanup for 1.15 (#6362)
+
+=========
+Build: 1.15.1-30.0.7 - Wed Dec 18 02:11:01 GMT 2019
+	tterrag:
+		Fix MainMenuScreen patch
+
+	tterrag:
+		Mod list GUI detail pass
+		
+		- Make padding consistent on all elements
+		- Properly horizontally center the "Search" text
+		- Update and resize forge/mcp logos
+		- Enable linear filtering on logo rendering by default
+		  - Can be disabled with the "logoBlur" mods.toml property
+
+=========
+Build: 1.15.1-30.0.5 - Wed Dec 18 01:03:20 GMT 2019
+	ichttt:
+		Fix mod list screen (#6367)
+
+=========
+Build: 1.15.1-30.0.4 - Tue Dec 17 23:47:00 GMT 2019
+	David Quintana:
+		Fix items in ground being too small, we were applying perspectives twice.
+		Restore forge patch and fix a tiny mistake in it.
+
+	tobias.hotz:
+		Fix keybinds not loading/saving correctly
+
+=========
+Build: 1.15.1-30.0.2 - Tue Dec 17 22:38:00 GMT 2019
+	tterrag:
+		Remove uvlock hook, fixes broken stair/fence/etc models
+
+	tterrag:
+		Update fallback spec version
+
+=========
+Build: 1.15.1-30.0.0 - Tue Dec 17 19:42:28 GMT 2019
+	tterrag:
+		Update to 1.15.1
+
+=========
+Build: 1.15-29.0.4 - Tue Dec 17 18:15:10 GMT 2019
+	David Quintana:
+		Finish converting the code from javax.vecmath to the vanilla vector classes. Forge is now vecmath-free!
+
+=========
+Build: 1.15-29.0.3 - Tue Dec 17 09:50:53 GMT 2019
+	tterrag:
+		Remove deprecations
+
+=========
+Build: 1.15-29.0.2 - Tue Dec 17 04:47:01 GMT 2019
+	tterrag:
+		Fix incorrect item lighting
+
+=========
+Build: 1.15-29.0.1 - Tue Dec 17 04:22:29 GMT 2019
+	tterrag:
+		Revert fluid change to use Material, fixes server crash
