@@ -25,9 +25,9 @@ public class StructureTutorialMain
 {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
-    
     //mod ID to reference to from anywhere in mod
 	public static final String MODID = "structure_tutorial";
+	
 
     public StructureTutorialMain() 
     {
