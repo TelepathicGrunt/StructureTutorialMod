@@ -33,6 +33,15 @@ public class StructureTutorialMain
     {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        
+        //Notice how we aren't using any proxies. If you find another tutorial that uses proxies
+        //or askes you to use them, ignore that. Proxies are nearly entirely useless and only end up
+        //making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent, 
+        //FMLClientSetupEvent, and FMLDedicatedServerSetupEvent. 
+        //
+        //But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server 
+        //side depends on specific cases. For example, purely graphical stuff will be under client 
+        //setup because servers won't have any graphics stuff.
     }
     
 

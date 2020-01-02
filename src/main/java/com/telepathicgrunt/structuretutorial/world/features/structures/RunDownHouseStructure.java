@@ -92,6 +92,22 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 		return 123456789;
 	}
 
+	
+   /*
+    * Visit the vanilla FortressStructure for how they spawn specific enemies in their structure over time.
+	*
+	*It requires the getSpawnList method to be defined in the structure class and the chunk generator's
+	*getPossibleCreatures method needs to have a check for the structure. 
+	*
+	*Thus, it is easier to do this with your own chunkgenerator in your own dimension
+	*instead of trying to make this work in vanilla's chunkgenerator.
+	*/
+//	public List<Biome.SpawnListEntry> getSpawnList() {
+		//Won't work right now as vanilla's chunkgenerator has no check for this structure in getPossibleCreatures.
+//		return NETHER_FORTRESS_ENEMIES; 
+//	}
+
+	
 	/*
 	 * This is where all the checks will be done to determine if the structure can spawn here.
 	 * 
@@ -156,7 +172,6 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 			RunDownHousePieces.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
 			
 			//Sets the bounds of the structure. 
-			//Nether Fortresses uses their bounds to keep spawning Wither Skeletons in the fortress.
 			this.recalculateStructureSize();
 			
 			//I use to debug and quickly find out if the structure is spawning or not and where it is.
