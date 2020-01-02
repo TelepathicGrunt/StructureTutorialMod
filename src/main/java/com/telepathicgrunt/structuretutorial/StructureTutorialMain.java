@@ -55,8 +55,8 @@ public class StructureTutorialMain
 			//
 			//In vanilla, all biomes has all structures added by .addFeature but the biomes that
 			//can actually spawn the structure will have it added with .func_226711_a_ as well.
-			biome.func_226711_a_(Feature.STRONGHOLD.func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG));
-			biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, Feature.STRONGHOLD.func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG))); 
+			biome.func_226711_a_(FeatureInit.RUN_DOWN_HOUSE.func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG));
+			biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, FeatureInit.RUN_DOWN_HOUSE.func_225566_b_(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG))); 
         }
 		
 	}

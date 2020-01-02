@@ -3,6 +3,8 @@ package com.telepathicgrunt.structuretutorial.world.features.structures;
 import java.util.Random;
 import java.util.function.Function;
 
+import org.apache.logging.log4j.Level;
+
 import com.mojang.datafixers.Dynamic;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 
@@ -167,7 +169,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 			this.recalculateStructureSize();
 			
 			//I use to debug and quickly find out if the structure is spawning or not and where it is.
-			//StructureTutorialMain.LOGGER.log(Level.DEBUG, "Rundown House at "+(blockpos.getX() + xOffset)+" "+blockpos.getY()+" "+(blockpos.getZ() + zOffset));
+			StructureTutorialMain.LOGGER.log(Level.DEBUG, "Rundown House at "+(blockpos.getX())+" "+blockpos.getY()+" "+(blockpos.getZ()));
 		}
 
 	}
