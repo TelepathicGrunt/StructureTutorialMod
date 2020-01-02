@@ -54,8 +54,8 @@ public class RunDownHousePieces
 	private static final ResourceLocation LEFT_SIDE = new ResourceLocation(StructureTutorialMain.MODID + ":run_down_house_left_side");
 	private static final ResourceLocation RIGHT_SIDE = new ResourceLocation(StructureTutorialMain.MODID + ":run_down_house_right_side");
 	private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(
-																	LEFT_SIDE, new BlockPos(0, 0, 0),
-																	RIGHT_SIDE, new BlockPos(0, 0, 0)
+																	LEFT_SIDE, new BlockPos(0, 1, 0),
+																	RIGHT_SIDE, new BlockPos(0, 1, 0)
 																  );
 	
 	/*
@@ -67,13 +67,19 @@ public class RunDownHousePieces
 		int z = pos.getZ();
 
 		//This is how we factor in rotation for multi-piece structures. 
-		//Might need some trial and error to get right.
+		//
+		//I would recommend using the OFFSET map above to have each piece at correct height relative of each other 
+		//and keep the x and Z equal to 0. And then in rotations, have the centermost piece have a rotation 
+		//of 0, 0, 0 and then have all other pieces' rotation be based off of the bottommost left corner of 
+		//that piece (the corner that is smallest in x and z). 
+		//
+		//lots of trial and error may be needed to get this right for your structure.
 		BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
 		BlockPos blockpos = rotationOffSet.add(x, pos.getY(), z);
 		pieceList.add(new RunDownHousePieces.Piece(templateManager, LEFT_SIDE, blockpos, rotation));
 		
 
-		rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
+		rotationOffSet = new BlockPos(-10, 0, 0).rotate(rotation);
 		blockpos = rotationOffSet.add(x, pos.getY(), z);
 		pieceList.add(new RunDownHousePieces.Piece(templateManager, RIGHT_SIDE, blockpos, rotation));
 	}
