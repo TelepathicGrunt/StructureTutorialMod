@@ -13,7 +13,6 @@ import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeManager;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -59,16 +58,8 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	}
 
 	/*
-	 * Seems to be unused but cannot be removed.
-	 * Keep this as is.
-	 */
-	protected boolean isEnabledIn(IWorld worldIn) 
-	{
-		return worldIn.getWorldInfo().isMapFeaturesEnabled();
-	}
-
-	/*
-	 * Structure name. What the player will see when doing /Locate command.
+	 * Structure name. 
+	 * Make sure this matches what the resourcelocation of your structure will be.
 	 */
 	public String getStructureName() 
 	{

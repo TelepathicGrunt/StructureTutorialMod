@@ -28,8 +28,11 @@ public class FeatureInit
 	{
 		IForgeRegistry<Feature<?>> registry = event.getRegistry();
 		
-		//Registers the structure itself and sets what its namespace is. In this case,
-		//the structure will get the resourcelocation of structure_tutorial:run_down_house .
+		//Registers the structure itself and sets what its path is. In this case,
+		//the structure will have the resourcelocation of structure_tutorial:run_down_house .
+		//
+		//Also, the path string you give will be what the user will see when they do the
+		//locate command.
 		RUN_DOWN_HOUSE = (Structure<NoFeatureConfig>) registerStructure(registry, RUN_DOWN_HOUSE, "run_down_house");
 		RDHP = register(RunDownHousePieces.Piece::new, "RDHP");
 	}
@@ -53,10 +56,6 @@ public class FeatureInit
      */
 	private static Structure<?> registerStructure(IForgeRegistry<Feature<?>> registry, Structure<?> structure, String name) 
 	{
-    	if(registry == null)
-            throw new NullPointerException("Feature Registry not set (Structure)");
-
-
     	structure.setRegistryName(StructureTutorialMain.MODID, name);
         registry.register(structure);
 

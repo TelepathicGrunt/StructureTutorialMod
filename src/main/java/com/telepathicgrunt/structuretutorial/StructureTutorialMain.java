@@ -38,7 +38,7 @@ public class StructureTutorialMain
 
     /*
      * This is where you do all the manipulation and startup things you need to do for your mod.
-     * What is actually done here will be different for each mod depending on what they are doing.
+     * What is actually done here will be different for every mod depending on what the mod is doing.
      * 
      * Here, we will use this to add our structure to all biomes.
      */
@@ -51,7 +51,7 @@ public class StructureTutorialMain
 		for (Biome biome: ForgeRegistries.BIOMES) 
 		{
 			//this is .addStructure (name is not mapped yet). 
-			//All structures needs to be added by .addStructure AND .addFeature.
+			//All structures needs to be added by .func_225566_b_ AND .addFeature.
 			//
 			//In vanilla, all biomes has all structures added by .addFeature but the biomes that
 			//can actually spawn the structure will have it added with .func_226711_a_ as well.
@@ -67,7 +67,7 @@ public class StructureTutorialMain
 	
 	/*
 	 * You will use this to register anything for your mod. The most common things
-	 * you will register are blocks, items, biomes, entities, and dimensions.
+	 * you will register are blocks, items, biomes, entities, features, and dimensions.
 	 */
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents 
@@ -79,8 +79,8 @@ public class StructureTutorialMain
 		@SubscribeEvent
 		public static void onRegisterFeatures(final RegistryEvent.Register<Feature<?>> event) 
 		{
-			//registers the feature part of structures.
-			//If you don't do this, you'll crash. fun times right? lol
+			//registers the structures/features.
+			//If you don't do this, you'll crash.
 			FeatureInit.registerFeatures(event);
 			
 			
