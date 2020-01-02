@@ -19,7 +19,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 modId="structure_tutorial" #mandatory
 
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${file.jarVersion}" #mandatory
+version="${version}" #mandatory
 
  # A display name for the mod
 displayName="Structure Tutorial Mod" #mandatory
