@@ -24,26 +24,13 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Structure Tutorial Mod" #mandatory
 
-# A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
-
-# A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://example.com/" #optional
-
-# A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+# A text field displayed in the mod UI
+credits="" #optional
 
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
-
-# A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="TelepathicGrunt" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This is a long form description of the mod. You can write whatever you want here
-
-Have some lorem ipsum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sagittis luctus odio eu tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque volutpat ligula eget lacus auctor sagittis. In hac habitasse platea dictumst. Nunc gravida elit vitae sem vehicula efficitur. Donec mattis ipsum et arcu lobortis, eleifend sagittis sem rutrum. Cras pharetra quam eget posuere fermentum. Sed id tincidunt justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+A short mod example on how to register structures and generate them in any biome using structure nbt files.
 '''
