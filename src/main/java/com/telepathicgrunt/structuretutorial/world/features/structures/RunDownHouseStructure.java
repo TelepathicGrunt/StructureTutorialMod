@@ -94,20 +94,23 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	{
 		return 123456789;
 	}
+	
 
 	/*
-	 * Visit the vanilla FortressStructure for how they spawn specific enemies in their structure over time.
+	 * Visit the vanilla FortressStructure and NetherChunkGenerator's getPossibleCreatures method for how 
+	 * they spawn specific enemies in their structure over time.
 	 *
-	 * It requires the getSpawnList method to be defined in the structure class and the chunk generator's
-	 * getPossibleCreatures method needs to have a check for the structure.
+	 * It requires the getSpawnList method to be defined in the structure class returning a List<Biome.SpawnListEntry> (the mob)
+	 * and the chunk generator class's getPossibleCreatures method needs to be overridden to have a check for the structure.
 	 *
 	 * Thus, it is easier to do this with your own chunkgenerator in your own dimension instead of trying to make this work
-	 * in vanilla's chunkgenerator.
+	 * in vanilla's chunkgenerator as you would have to find a way to replace that method in vanilla.
 	 */
-	//	public List<Biome.SpawnListEntry> getSpawnList() {
-	//Won't work right now as vanilla's chunkgenerator has no check for this structure in getPossibleCreatures.
-	//		return NETHER_FORTRESS_ENEMIES; 
-	//	}
+//		public List<Biome.SpawnListEntry> getSpawnList() 
+//		{
+//			// Won't work right now as vanilla's OverworldChunkGenerator class has no check for this structure in getPossibleCreatures method.
+//			return NETHER_FORTRESS_ENEMIES;  // A list of SpawnListEntries that holds all the mobs this structure can spawn.
+//		}
 
 
 	/*
