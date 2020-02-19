@@ -19,13 +19,12 @@ public class FeatureInit
 {
 	//Static instance of our structure so we can reference it and add it to biomes easily.
 	public static Structure<NoFeatureConfig> RUN_DOWN_HOUSE = new RunDownHouseStructure(NoFeatureConfig::deserialize);
-	public static IStructurePieceType RDHP;
+	public static IStructurePieceType RDHP = RunDownHousePieces.Piece::new;
 
 
 	/*
 	 * Registers the features and structures. Normal Features will be registered here too.
 	 */
-	@SuppressWarnings("unchecked")
 	public static void registerFeatures(Register<Feature<?>> event)
 	{
 		IForgeRegistry<Feature<?>> registry = event.getRegistry();
@@ -35,8 +34,8 @@ public class FeatureInit
 		//
 		//Also, the path string you give will be what the user will see when they do the
 		//locate command.
-		RUN_DOWN_HOUSE = (Structure<NoFeatureConfig>) StructureTutorialMain.register(registry, RUN_DOWN_HOUSE, "run_down_house");
-		RDHP = register(RunDownHousePieces.Piece::new, "RDHP");
+		StructureTutorialMain.register(registry, RUN_DOWN_HOUSE, "run_down_house");
+		register(RDHP, "RDHP");
 	}
 
 
