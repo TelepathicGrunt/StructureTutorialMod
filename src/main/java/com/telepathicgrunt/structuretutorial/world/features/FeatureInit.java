@@ -42,8 +42,8 @@ public class FeatureInit
 	/*
 	 * Registers the structures pieces themselves. If you don't do this part, Forge will complain to you in the Console.
 	 */
-	static IStructurePieceType register(IStructurePieceType p_214750_0_, String key)
+	static IStructurePieceType register(IStructurePieceType structurePiece, String key)
 	{
-		return Registry.register(Registry.STRUCTURE_PIECE, key.toLowerCase(Locale.ROOT), p_214750_0_);
+		return Registry.register(Registry.STRUCTURE_PIECE, key.toLowerCase(Locale.ROOT), structurePiece);
 	}
 }
