@@ -36,6 +36,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * 
 	 * This is using vanilla's default algorithm to determine chunks that this structure can spawn in.
 	 */
+	@Override
 	protected ChunkPos getStartPositionForPosition(ChunkGenerator<?> chunkGenerator, Random random, int x, int z, int spacingOffsetsX, int spacingOffsetsZ)
 	{
 		//this means Run Down Houses cannot be closer than 7 chunks or more than 12 chunks
@@ -62,6 +63,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	/*
 	 * Structure name. Make sure this matches what the resourcelocation of your structure will be.
 	 */
+	@Override
 	public String getStructureName()
 	{
 		return StructureTutorialMain.MODID + ":run_down_house";
@@ -71,6 +73,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	/*
 	 * This seems to be unused but cannot be removed. Just return 0 is all you need to do.
 	 */
+	@Override
 	public int getSize()
 	{
 		return 0;
@@ -80,6 +83,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	/*
 	 * This is how the worldgen code will start the generation of our structure when it passes the checks.
 	 */
+	@Override
 	public Structure.IStartFactory getStartFactory()
 	{
 		return RunDownHouseStructure.Start::new;
@@ -126,6 +130,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village. (Bedrock
 	 * Edition seems to not have the same check)
 	 */
+	@Override
 	public boolean func_225558_a_(BiomeManager p_225558_1_, ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ, Biome biome)
 	{
 		ChunkPos chunkpos = this.getStartPositionForPosition(chunkGen, rand, chunkPosX, chunkPosZ, 0, 0);
@@ -154,6 +159,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 		}
 
 
+		@Override
 		public void init(ChunkGenerator<?> generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn)
 		{
 			//Check out vanilla's WoodlandMansionStructure for how they offset the x and z
