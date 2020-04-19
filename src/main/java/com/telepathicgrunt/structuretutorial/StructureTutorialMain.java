@@ -62,12 +62,15 @@ public class StructureTutorialMain
 		//You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id, 
 		//and if you use the BiomeDictionary, you can even check if the biome has certain tags like swamp or snowy.
 		for (Biome biome : ForgeRegistries.BIOMES)
-		{
-			//this is .addStructure (name is not mapped yet). 
-			//All structures needs to be added by .func_225566_b_ AND .addFeature.
+		{ 
+			// All structures needs to be added by .addStructure AND .addFeature in order to spawn.
 			//
-			//In vanilla, all biomes has all structures added by .addFeature but the biomes that
-			//can actually spawn the structure will have it added with .func_226711_a_ as well.
+			// .addStructure tells Minecraft that this biome can start the generation of the structure.
+			// .addFeature tells Minecraft that the pieces of the structure can be made in this biome.
+			//
+			// Thus it is best practice to do .addFeature for all biomes and do .addStructure as well for
+			// the biome you want the structure to spawn in. That way, the structure will only spawn in the
+			// biomes you want but will not get cut off when generating if part of it goes into a non-valid biome.
 			biome.addStructure(FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
 			biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG)
 					.withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
