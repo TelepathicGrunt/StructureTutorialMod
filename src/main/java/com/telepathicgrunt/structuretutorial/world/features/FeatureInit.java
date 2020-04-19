@@ -29,11 +29,12 @@ public class FeatureInit
 	{
 		IForgeRegistry<Feature<?>> registry = event.getRegistry();
 
-		//Registers the structure itself and sets what its path is. In this case,
-		//the structure will have the resourcelocation of structure_tutorial:run_down_house .
-		//
-		//Also, the path string you give will be what the user will see when they do the
-		//locate command.
+		/* Registers the structure itself and sets what its path is. In this case,
+		 * the structure will have the resourcelocation of structure_tutorial:run_down_house .
+		 * 
+		 * It is always a good idea to register your regular features too so that other mods
+		 * can use them too directly from the Forge Registry. It great for mod compatibility.
+		 */
 		StructureTutorialMain.register(registry, RUN_DOWN_HOUSE, "run_down_house");
 		register(RDHP, "RDHP");
 	}

@@ -61,7 +61,12 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 
 
 	/*
-	 * Structure name. Make sure this matches what the resourcelocation of your structure will be.
+	 * The structure name to show in the /locate command. 
+	 * 
+	 * Make sure this matches what the resourcelocation of your structure will be
+	 * because if you don't add the MODID: part, Minecraft will put minecraft: in front 
+	 * of the name instead and we don't want that. We want our structure to have our
+	 *  mod's ID rather than Minecraft so people don't get confused.
 	 */
 	@Override
 	public String getStructureName()
@@ -91,8 +96,10 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 
 
 	/*
-	 * I believe this is used so that no two structure's spawning will be in perfect sync as long as they have different
-	 * seed modifier.
+	 * This is used so that if two structure's has the same spawn location algorithm, 
+	 * they will not end up in perfect sync as long as they have different seed modifier.
+	 * 
+	 * So make this a big random number that is unique only to this structure.
 	 */
 	protected int getSeedModifier()
 	{
@@ -122,7 +129,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * 
 	 * Notice how the biome is also passed in. While you could do manual checks on the biome to see if you can spawn here,
 	 * that is highly discouraged. Instead, you should do the biome check in the FMLCommonSetupEvent event (setup method in
-	 * StructureTutorialMain) and add your structure to the biome with .addFeature and .func_226711_a_ methods.
+	 * StructureTutorialMain) and add your structure to the biome with .addFeature and .addStructure methods.
 	 * 
 	 * Instead, this method is best used for determining if the chunk position itself is valid, if certain other structures
 	 * are too close or not, or some other restrictive condition.
