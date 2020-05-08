@@ -71,6 +71,12 @@ public class StructureTutorialMain
 			// Thus it is best practice to do .addFeature for all biomes and do .addStructure as well for
 			// the biome you want the structure to spawn in. That way, the structure will only spawn in the
 			// biomes you want but will not get cut off when generating if part of it goes into a non-valid biome.
+		    	//
+		    	//Note: If your mappings are out of data, 
+		    	//	Biome.addStructure will be Biome.func_225566_b_ , 
+		    	//      Feature.withConfiguration will be Feature.func_225566_b_ ,  
+		    	//	ConfiguredFeature.withPlacement will be ConfiguredFeature.func_227228_a_ ,
+		    	//	Placement.configure will be Placement.func_227446_a_
 			biome.addStructure(FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
 			biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG)
 					.withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
