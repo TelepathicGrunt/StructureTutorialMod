@@ -127,11 +127,17 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	/*
 	 * This is where all the checks will be done to determine if the structure can spawn here.
 	 * 
-	 * Notice how the biome is also passed in. While you could do manual checks on the biome to see if you can spawn here,
-	 * that is highly discouraged. Instead, you should do the biome check in the FMLCommonSetupEvent event (setup method in
-	 * StructureTutorialMain) and add your structure to the biome with .addFeature and .addStructure methods.
+	 * Notice how the biome is also passed in. Though, you are not going to do any biome checking here as
+	 * you should've added this structure to the biomes you wanted already with the .addStructure method.
 	 * 
-	 * Instead, this method is best used for determining if the chunk position itself is valid, if certain other structures
+	 * Also, please for the love of god, do not do dimension checking here. If you do and another mod's dimension
+	 * is trying to spawn your structure, the locate command will make minecraft hang forever and break the game.
+	 * 
+	 * If you want to do dimension checking, I would do it in the Init method. It will make the locate command say the
+	 * structure is spawning in the blacklisted dimension but the structure won't actually spawn at all. This is much
+	 * better than making the game become unresponsive completely. 
+	 * 
+	 * Other than that, this method is used for determining if the chunk coordinates are valid, if certain other structures
 	 * are too close or not, or some other restrictive condition.
 	 *
 	 * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village. (Bedrock
