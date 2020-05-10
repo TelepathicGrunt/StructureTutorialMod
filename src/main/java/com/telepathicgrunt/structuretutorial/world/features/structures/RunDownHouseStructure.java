@@ -135,7 +135,8 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * 
 	 * If you want to do dimension checking, I would do it in the Init method. It will make the locate command say the
 	 * structure is spawning in the blacklisted dimension but the structure won't actually spawn at all. This is much
-	 * better than making the game become unresponsive completely. 
+	 * better than making the game become unresponsive completely. You can send a message from the server to the players
+	 * there saying the dimension cannot spawn the structure and to ignore the false positive from the locate command.
 	 * 
 	 * Other than that, this method is used for determining if the chunk coordinates are valid, if certain other structures
 	 * are too close or not, or some other restrictive condition.
