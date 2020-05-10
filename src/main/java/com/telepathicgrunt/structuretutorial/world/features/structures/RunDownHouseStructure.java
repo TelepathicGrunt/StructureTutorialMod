@@ -130,6 +130,13 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * Notice how the biome is also passed in. Though, you are not going to do any biome checking here as
 	 * you should've added this structure to the biomes you wanted already with the .addStructure method.
 	 * 
+	 * Basically, this method is used for determining if the chunk coordinates are valid, if certain other 
+	 * structures are too close or not, or some other restrictive condition.
+	 *
+	 * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village. (Bedrock
+	 * Edition seems to not have the same check)
+	 * 
+	 * 
 	 * Also, please for the love of god, do not do dimension checking here. If you do and another mod's dimension
 	 * is trying to spawn your structure, the locate command will make minecraft hang forever and break the game.
 	 * 
@@ -138,11 +145,6 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * better than making the game become unresponsive completely. You can send a message from the server to the players
 	 * there saying the dimension cannot spawn the structure and to ignore the false positive from the locate command.
 	 * 
-	 * Other than that, this method is used for determining if the chunk coordinates are valid, if certain other structures
-	 * are too close or not, or some other restrictive condition.
-	 *
-	 * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village. (Bedrock
-	 * Edition seems to not have the same check)
 	 */
 	@Override
 	public boolean func_225558_a_(BiomeManager p_225558_1_, ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ, Biome biome)
