@@ -1,10 +1,11 @@
 # Structure Tutorial Mod
  **How to register and generate structures in 1.15 Minecraft using nbt files!**
- [This is using MCP mapping version of: '20200414-1.15.1' but try to use the latest 
-  mappings from http://export.mcpbot.bspk.rs/. Don't download any files but just 
-  get the number like this '20200414-1.15.1' of the latest mapping release.
-  Put that number into your mapping channel in build.gradle and rebuild your project
-  to be able to use the latest mappings.]
+ 
+_[This is using MCP mapping version of: '20200414-1.15.1' but try to use the latest_
+ _mappings from http://export.mcpbot.bspk.rs/. Don't download any files but just_
+ _get the number like this '20200414-1.15.1' of the latest mapping release_
+ _Put that number into your mapping channel in build.gradle and rebuild your project_
+ _to be able to use the latest mappings.]_
  
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 files plus 2 structure nbt files.  
 
