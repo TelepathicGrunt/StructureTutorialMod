@@ -115,7 +115,9 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * and the chunk generator class's getPossibleCreatures method needs to be overridden to have a check for the structure.
 	 *
 	 * Thus, it is easier to do this with your own chunkgenerator in your own dimension instead of trying to make this work
-	 * in vanilla's chunkgenerator as you would have to find a way to replace that method in vanilla.
+	 * in vanilla's chunkgenerator. If you want your mobs to spawn in your structures in vanilla's chunkgenerators, you'll
+	 * have to use the mob spawn event, check if the mob being spawned is gonna be in your structure, and replace the entity
+	 * with the mobs you want spawning in your structure. It's a bit more work but it's the best we can do.
 	 */
 //		public List<Biome.SpawnListEntry> getSpawnList() 
 //		{
@@ -123,6 +125,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 //			return NETHER_FORTRESS_ENEMIES;  // A list of SpawnListEntries that holds all the mobs this structure can spawn.
 //		}
 
+	
 
 	/*
 	 * This is where all the checks will be done to determine if the structure can spawn here.
