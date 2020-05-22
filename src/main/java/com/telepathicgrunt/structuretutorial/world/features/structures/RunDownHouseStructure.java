@@ -148,9 +148,10 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig>
 	 * better than making the game become unresponsive completely. You can send a message from the server to the players
 	 * there saying the dimension cannot spawn the structure and to ignore the false positive from the locate command.
 	 * 
+	 * This may be called func_225558_a_ instead of canBeGenerated on older mappings.
 	 */
 	@Override
-	public boolean func_225558_a_(BiomeManager p_225558_1_, ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ, Biome biome)
+	public boolean canBeGenerated(BiomeManager p_225558_1_, ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ, Biome biome)
 	{
 		ChunkPos chunkpos = this.getStartPositionForPosition(chunkGen, rand, chunkPosX, chunkPosZ, 0, 0);
 

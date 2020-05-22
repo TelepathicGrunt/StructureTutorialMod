@@ -15,9 +15,9 @@ Good luck and I hope this helps!
 
 ------------------
 
-_[This is using MCP mapping version of: '20200414-1.15.1' but try to use the latest_
+_[This is using MCP mapping version of: '20200521-1.15.1' but try to use the latest_
  _mappings from http://export.mcpbot.bspk.rs/. Don't download any files but just_
- _get the number like this '20200414-1.15.1' of the latest mapping release._
+ _get the number like this '20200521-1.15.1' of the latest mapping release._
  _Put that number into your mapping channel in build.gradle and rebuild your project_
  _to be able to use the latest mappings.]_
  
