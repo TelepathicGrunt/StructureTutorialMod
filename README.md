@@ -1,5 +1,5 @@
 # Structure Tutorial Mod
-**How to register and generate structures in 1.16.1 Minecraft using nbt files!**
+**How to register and generate structures in 1.16.1 Minecraft using nbt files! Change the Github branch to see previous MC versions of this tutorial.**
  
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 5 files plus 2 structure nbt files.  
 
