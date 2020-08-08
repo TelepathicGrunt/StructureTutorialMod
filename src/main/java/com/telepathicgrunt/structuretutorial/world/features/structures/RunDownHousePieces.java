@@ -28,14 +28,15 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
  * This class is based off of the IglooPieces class which I am assuming is doing the proper way of generating
  * structures. If you look at SwampHutPiece or DesertPyramidPiece, you'll see they manually hardcoded every block by
  * hand which is tedious and time consuming. It is also difficult to visualize it which is why I highly encourage the
- * use of structure blocks.
+ * use of structure blocks and Jigsaw structures. The way I am showing you right now is Structure Blocks + manual placing.
  * 
- * Also, you might notice that some structures like Pillager Outposts or Woodland Mansions uses a special block called
+ * Also, you might notice that some structures like Pillager Outposts or Villages uses a special block called
  * Jigsaw Block to randomize which structure nbt to use to attach to other parts of the structure and still keep it
- * looking clean. This is somewhat complicated and I haven't looks into this yet. But once you're familiar with modding
- * and is pretty experienced with coding, go try and make a structure using Jigsaw blocks! (Look at
- * PillagerOutpostPieces and how it used JigsawPattern and JigsawManager. Once mastered, you will be able to generate
- * massive structures that are unique every time you find one.
+ * looking clean. Jigsaw structures handles the height placing, rotations, and attaching pieces to each other for you!
+ * Thus, Jigsaw structures are a great alternative (and preferable in my opinion) to this method I am currently showing you.
+ * But once you're familiar with modding and is pretty experienced with coding, go try and make a structure using
+ * Jigsaw blocks! (Look at PillagerOutpostPieces or VillagePieces and how it used JigsawPattern and JigsawManager.
+ *  Once mastered, you will be able to generate massive structures that are unique every time you find one.
  */
 public class RunDownHousePieces {
     /*

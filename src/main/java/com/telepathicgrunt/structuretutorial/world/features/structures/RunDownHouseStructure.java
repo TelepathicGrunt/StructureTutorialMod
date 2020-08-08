@@ -105,7 +105,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
             int z = (chunkZ << 4) + 7;
 
             // Finds the y value of the terrain at location.
-            int surfaceY = generator.func_222531_c(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+            int surfaceY = generator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
             BlockPos blockpos = new BlockPos(x, surfaceY, z);
 
             // Now adds the structure pieces to this.components with all details such as where each part goes

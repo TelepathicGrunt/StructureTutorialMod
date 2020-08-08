@@ -31,14 +31,24 @@ public class StructureTutorialMain {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 
-        // Notice how we aren't using any proxies. If you find another tutorial that uses proxies
-        // or askes you to use them, ignore that. Proxies are nearly entirely useless and only end up
-        // making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent,
-        // FMLClientSetupEvent, and FMLDedicatedServerSetupEvent.
-        //
-        // But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server
-        // side depends on specific cases. For example, purely graphical stuff will be under client
-        // setup because servers won't have any graphics stuff.
+        /*
+         * Notice how we aren't using any proxies. If you find another tutorial that uses proxies
+         * or asks you to use them, ignore that. Proxies are nearly entirely useless and only end up
+         * making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent,
+         * FMLClientSetupEvent, and FMLDedicatedServerSetupEvent.
+         *
+         * But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server
+         * side depends on specific cases. For example, purely graphical stuff will be under client
+         * setup because servers won't have any graphics stuff.
+         */
+
+        /*
+         * Note: There are quite a lot of final or private fields we will need to access.
+         * To get and set values in these fields, we will need to use Access Transformers (AT).
+         * Once you setup your AT file in META-INF, copy the entries from this turtorial's AT into yours
+         * and then refresh gradle (or rebuild project) so that the project will apply the AT entries.
+         * Forge docs on AT's: https://mcforge.readthedocs.io/en/latest/advanced/accesstransformers/
+         */
     }
 
     /*
