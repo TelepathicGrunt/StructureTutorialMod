@@ -8,11 +8,8 @@ import com.telepathicgrunt.structuretutorial.world.features.FeatureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.placement.IPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,100 +19,79 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(StructureTutorialMain.MODID)
-public class StructureTutorialMain
-{
-	// Directly reference a log4j logger.
-	public static final Logger LOGGER = LogManager.getLogger();
-	//mod ID to reference to from anywhere in mod
-	public static final String MODID = "structure_tutorial";
+public class StructureTutorialMain {
+    // Directly reference a log4j logger.
+    public static final Logger LOGGER = LogManager.getLogger();
+    // mod ID to reference to from anywhere in mod
+    public static final String MODID = "structure_tutorial";
 
+    public StructureTutorialMain() {
+        // Register the setup method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 
-	public StructureTutorialMain()
-	{
-		// Register the setup method for modloading
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // Notice how we aren't using any proxies. If you find another tutorial that uses proxies
+        // or askes you to use them, ignore that. Proxies are nearly entirely useless and only end up
+        // making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent,
+        // FMLClientSetupEvent, and FMLDedicatedServerSetupEvent.
+        //
+        // But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server
+        // side depends on specific cases. For example, purely graphical stuff will be under client
+        // setup because servers won't have any graphics stuff.
+    }
 
-		//Notice how we aren't using any proxies. If you find another tutorial that uses proxies
-		//or askes you to use them, ignore that. Proxies are nearly entirely useless and only end up
-		//making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent, 
-		//FMLClientSetupEvent, and FMLDedicatedServerSetupEvent. 
-		//
-		//But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server 
-		//side depends on specific cases. For example, purely graphical stuff will be under client 
-		//setup because servers won't have any graphics stuff.
-	}
+    /*
+     * This is where you do all the manipulation and startup things you need to do for your mod. What is actually done here will be different for every mod
+     * depending on what the mod is doing.
+     * 
+     * Here, we will use this to add our structure to all biomes.
+     */
+    public void setup(final FMLCommonSetupEvent event) {
+        // Add our structure to all biomes including other modded biomes
+        //
+        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id,
+        // and if you use the BiomeDictionary, you can even check if the biome has certain tags like swamp or snowy.
+        for (Biome biome : ForgeRegistries.BIOMES) {
+            // All structures needs to be added to biomes by func_235063_a_ which replaces .addStructure and .addFeature from 1.15.2
+            // The function does not have a mapping at time of writing, but the most likely name for it is .addStructureFeature
+            //
+            // This function determines which biomes your structure will be able to spawn in
 
+            biome.func_235063_a_(FeatureInit.RUN_DOWN_HOUSE.func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG));
+        }
 
-	/*
-	 * This is where you do all the manipulation and startup things you need to do for your mod. What is actually done here
-	 * will be different for every mod depending on what the mod is doing.
-	 * 
-	 * Here, we will use this to add our structure to all biomes.
-	 */
-	public void setup(final FMLCommonSetupEvent event)
-	{
-		//Add our structure to all biomes including other modded biomes
-		//
-		//You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id, 
-		//and if you use the BiomeDictionary, you can even check if the biome has certain tags like swamp or snowy.
-		for (Biome biome : ForgeRegistries.BIOMES)
-		{ 
-			// All structures needs to be added by .addStructure AND .addFeature in order to spawn.
-			//
-			// .addStructure tells Minecraft that this biome can start the generation of the structure.
-			// .addFeature tells Minecraft that the pieces of the structure can be made in this biome.
-			//
-			// Thus it is best practice to do .addFeature for all biomes and do .addStructure as well for
-			// the biome you want the structure to spawn in. That way, the structure will only spawn in the
-			// biomes you want but will not get cut off when generating if part of it goes into a non-valid biome.
-		    	//
-		    	//Note: If your mappings are out of data, 
-		    	//	Biome.addStructure will be Biome.func_225566_b_ , 
-		    	//      Feature.withConfiguration will be Feature.func_225566_b_ ,  
-		    	//	ConfiguredFeature.withPlacement will be ConfiguredFeature.func_227228_a_ ,
-		    	//	Placement.configure will be Placement.func_227446_a_
-			biome.addStructure(FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-			biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, FeatureInit.RUN_DOWN_HOUSE.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG)
-					.withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
-		}
+    }
 
-	}
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class
+    // (this is subscribing to the MOD Event bus for receiving Registry Events)
 
-	// You can use EventBusSubscriber to automatically subscribe events on the contained class 
-	// (this is subscribing to the MOD Event bus for receiving Registry Events)
+    /*
+     * You will use this to register anything for your mod. The most common things you will register are blocks, items, biomes, entities, features, and
+     * dimensions.
+     */
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents {
 
-	/*
-	 * You will use this to register anything for your mod. The most common things you will register are blocks, items,
-	 * biomes, entities, features, and dimensions.
-	 */
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class RegistryEvents
-	{
+        /**
+         * This method will be called by Forge when it is time for the mod to register features.
+         */
+        @SubscribeEvent
+        public static void onRegisterFeatures(final RegistryEvent.Register<Feature<?>> event) {
+            // registers the structures/features.
+            // If you don't do this, you'll crash.
+            FeatureInit.registerFeatures(event);
 
-		/**
-		 * This method will be called by Forge when it is time for the mod to register features.
-		 */
-		@SubscribeEvent
-		public static void onRegisterFeatures(final RegistryEvent.Register<Feature<?>> event)
-		{
-			//registers the structures/features.
-			//If you don't do this, you'll crash.
-			FeatureInit.registerFeatures(event);
+            LOGGER.log(Level.INFO, "features/structures registered.");
+        }
+    }
 
-			LOGGER.log(Level.INFO, "features/structures registered.");
-		}
-	}
-	
-	/*
-	 * Helper method to quickly register features, blocks, items, structures, biomes, anything that can be registered.
-	 */
-	public static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T entry, String registryKey)
-	{
-		entry.setRegistryName(new ResourceLocation(StructureTutorialMain.MODID, registryKey));
-		registry.register(entry);
-		return entry;
-	}
+    /*
+     * Helper method to quickly register features, blocks, items, structures, biomes, anything that can be registered.
+     */
+    public static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T entry, String registryKey) {
+        entry.setRegistryName(new ResourceLocation(StructureTutorialMain.MODID, registryKey));
+        registry.register(entry);
+        return entry;
+    }
 }
