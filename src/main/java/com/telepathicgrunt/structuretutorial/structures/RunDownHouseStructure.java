@@ -1,10 +1,7 @@
-package com.telepathicgrunt.structuretutorial.world.features.structures;
-
-import org.apache.logging.log4j.Level;
+package com.telepathicgrunt.structuretutorial.structures;
 
 import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
-
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -16,6 +13,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import org.apache.logging.log4j.Level;
 
 public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
     public RunDownHouseStructure(Codec<NoFeatureConfig> codec) {

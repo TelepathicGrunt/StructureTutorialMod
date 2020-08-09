@@ -1,16 +1,9 @@
-package com.telepathicgrunt.structuretutorial.world.features;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.util.*;
+package com.telepathicgrunt.structuretutorial;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
-import com.telepathicgrunt.structuretutorial.world.features.structures.RunDownHousePieces;
-import com.telepathicgrunt.structuretutorial.world.features.structures.RunDownHouseStructure;
-
+import com.telepathicgrunt.structuretutorial.structures.RunDownHousePieces;
+import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.DimensionSettings;
@@ -24,16 +17,13 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.event.RegistryEvent.Register;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.config.ConfigTracker;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.Locale;
 
 /*
  *  All methods in the FeatureInit class run during the forge mod event bus's register features event.
  */
-public class FeatureInit {
+public class STFeatures {
     // Static instance of our structure so we can reference it and add it to biomes easily.
     public static Structure<NoFeatureConfig> RUN_DOWN_HOUSE = new RunDownHouseStructure(NoFeatureConfig.field_236558_a_);
     public static IStructurePieceType RDHP = RunDownHousePieces.Piece::new;
@@ -70,7 +60,7 @@ public class FeatureInit {
                 true);
 
 
-        FeatureInit.registerAllPieces();
+        STFeatures.registerAllPieces();
     }
 
     /*

@@ -1,13 +1,8 @@
-package com.telepathicgrunt.structuretutorial.world.features.structures;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+package com.telepathicgrunt.structuretutorial.structures;
 
 import com.google.common.collect.ImmutableMap;
+import com.telepathicgrunt.structuretutorial.STFeatures;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
-import com.telepathicgrunt.structuretutorial.world.features.FeatureInit;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -23,6 +18,10 @@ import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /*
  * This class is based off of the IglooPieces class which I am assuming is doing the proper way of generating
@@ -88,7 +87,7 @@ public class RunDownHousePieces {
         private Rotation rotation;
 
         public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
-            super(FeatureInit.RDHP, 0);
+            super(STFeatures.RDHP, 0);
             this.resourceLocation = resourceLocationIn;
             BlockPos blockpos = RunDownHousePieces.OFFSET.get(resourceLocation);
             this.templatePosition = pos.add(blockpos.getX(), blockpos.getY(), blockpos.getZ());
@@ -97,7 +96,7 @@ public class RunDownHousePieces {
         }
 
         public Piece(TemplateManager templateManagerIn, CompoundNBT tagCompound) {
-            super(FeatureInit.RDHP, tagCompound);
+            super(STFeatures.RDHP, tagCompound);
             this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
             this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
             this.setupPiece(templateManagerIn);

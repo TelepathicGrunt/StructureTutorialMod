@@ -1,11 +1,5 @@
 package com.telepathicgrunt.structuretutorial;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.telepathicgrunt.structuretutorial.world.features.FeatureInit;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
@@ -18,6 +12,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(StructureTutorialMain.MODID)
@@ -68,7 +65,7 @@ public class StructureTutorialMain {
             //
             // This function determines which biomes your structure will be able to spawn in
 
-            biome.func_235063_a_(FeatureInit.RUN_DOWN_HOUSE.func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG));
+            biome.func_235063_a_(STFeatures.RUN_DOWN_HOUSE.func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG));
         }
 
     }
@@ -90,7 +87,7 @@ public class StructureTutorialMain {
         public static void onRegisterFeatures(final RegistryEvent.Register<Feature<?>> event) {
             // registers the structures/features.
             // If you don't do this, you'll crash.
-            FeatureInit.registerFeatures(event);
+            STFeatures.registerFeatures(event);
 
             LOGGER.log(Level.INFO, "features/structures registered.");
         }
