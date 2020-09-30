@@ -21,9 +21,9 @@ Good luck and I hope this helps!
 
 ------------------
 
-_[StructureTutorialMod is using MCP mapping version of: '20200723-1.16.1' but try to_
- _use the latest mappings from http://export.mcpbot.bspk.rs/. Don't download any files_
- _but just get the number like this '20200521-1.15.1' of the latest mapping release._
- _Put that number into your mapping channel in build.gradle and rebuild your project_
- _to be able to use the latest mappings.]_
+_MCPBot is dead. Do not use that to check for updates._
+_if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `_
+_command for the project and it'll remap everything to the cutting-edge mappings!_
+-Otherwise, just use the mapping this mod uses for now:_
+_mappings channel: 'snapshot', version: '20200916-1.16.2'_
  

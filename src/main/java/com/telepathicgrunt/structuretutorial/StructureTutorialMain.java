@@ -1,20 +1,22 @@
 package com.telepathicgrunt.structuretutorial;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(StructureTutorialMain.MODID)
@@ -25,50 +27,8 @@ public class StructureTutorialMain {
     public static final String MODID = "structure_tutorial";
 
     public StructureTutorialMain() {
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-
-        /*
-         * Notice how we aren't using any proxies. If you find another tutorial that uses proxies
-         * or asks you to use them, ignore that. Proxies are nearly entirely useless and only end up
-         * making your code look a bit worse. Instead, do all your setup in the FMLCommonSetupEvent,
-         * FMLClientSetupEvent, and FMLDedicatedServerSetupEvent.
-         *
-         * But mainly FMLCommonSetupEvent will be used as doing stuff strictly client side or server
-         * side depends on specific cases. For example, purely graphical stuff will be under client
-         * setup because servers won't have any graphics stuff.
-         */
-
-        /*
-         * Note: There are quite a lot of final or private fields we will need to access.
-         * To get and set values in these fields, we will need to use Access Transformers (AT).
-         * Once you setup your AT file in META-INF, copy the entries from this turtorial's AT into yours
-         * and then refresh gradle (or rebuild project) so that the project will apply the AT entries.
-         * Forge docs on AT's: https://mcforge.readthedocs.io/en/latest/advanced/accesstransformers/
-         */
     }
 
-    /*
-     * This is where you do all the manipulation and startup things you need to do for your mod. What is actually done here will be different for every mod
-     * depending on what the mod is doing.
-     * 
-     * Here, we will use this to add our structure to all biomes.
-     */
-    public void setup(final FMLCommonSetupEvent event) {
-        // Add our structure to all biomes including other modded biomes
-        //
-        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id,
-        // and if you use the BiomeDictionary, you can even check if the biome has certain tags like swamp or snowy.
-        for (Biome biome : ForgeRegistries.BIOMES) {
-            // All structures needs to be added to biomes by func_235063_a_ which replaces .addStructure and .addFeature from 1.15.2
-            // The function does not have a mapping at time of writing, but the most likely name for it is .addStructureFeature
-            //
-            // This function determines which biomes your structure will be able to spawn in
-
-            biome.func_235063_a_(STFeatures.RUN_DOWN_HOUSE.func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG));
-        }
-
-    }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class
     // (this is subscribing to the MOD Event bus for receiving Registry Events)
@@ -79,18 +39,52 @@ public class StructureTutorialMain {
      */
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
-
         /**
          * This method will be called by Forge when it is time for the mod to register features.
          */
         @SubscribeEvent
-        public static void onRegisterFeatures(final RegistryEvent.Register<Feature<?>> event) {
-            // registers the structures/features.
-            // If you don't do this, you'll crash.
-            STFeatures.registerFeatures(event);
+        public static void onRegisterStructures(final RegistryEvent.Register<Structure<?>> event) {
+            // Registers the structures.
+            // If you don't do this, bad things might happen... very bad things... Spooky...
+            STStructures.registerStructures(event);
+            STConfiguredStructures.registerConfiguredStructures();
 
-            LOGGER.log(Level.INFO, "features/structures registered.");
+            LOGGER.log(Level.INFO, "structures registered.");
         }
+    }
+
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        /*
+         * This is the event you will use to add anything to any biome.
+         * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
+         * adding carvers, spawning new features... etc
+         *
+         * Here, we will use this to add our structure to all biomes.
+         */
+        @SubscribeEvent
+        public static void biomeModification(final BiomeLoadingEvent event) {
+            // Add our structure to all biomes including other modded biomes
+            //
+            // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id
+
+            event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
+        }
+
+        /*
+         * Will go into the world's chunkgenerator and manually add our structure spacing.
+         * If the spacing is not added, the structure doesn't spawn.
+         * Use this for dimension blacklists for your structure!
+         */
+        @SubscribeEvent
+        public static void addDimensionalSpacing(final WorldEvent.Load event) {
+            if(event.getWorld() instanceof ServerWorld){
+                ServerWorld serverWorld = (ServerWorld)event.getWorld();
+                Map<Structure<?>, StructureSeparationSettings> tempMap = serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_();
+                tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
+                serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+            }
+       }
     }
 
     /*

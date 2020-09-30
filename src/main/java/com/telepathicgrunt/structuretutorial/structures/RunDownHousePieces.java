@@ -1,7 +1,7 @@
 package com.telepathicgrunt.structuretutorial.structures;
 
 import com.google.common.collect.ImmutableMap;
-import com.telepathicgrunt.structuretutorial.STFeatures;
+import com.telepathicgrunt.structuretutorial.STStructures;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -87,7 +87,7 @@ public class RunDownHousePieces {
         private Rotation rotation;
 
         public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
-            super(STFeatures.RDHP, 0);
+            super(STStructures.RDHP, 0);
             this.resourceLocation = resourceLocationIn;
             BlockPos blockpos = RunDownHousePieces.OFFSET.get(resourceLocation);
             this.templatePosition = pos.add(blockpos.getX(), blockpos.getY(), blockpos.getZ());
@@ -96,7 +96,7 @@ public class RunDownHousePieces {
         }
 
         public Piece(TemplateManager templateManagerIn, CompoundNBT tagCompound) {
-            super(STFeatures.RDHP, tagCompound);
+            super(STStructures.RDHP, tagCompound);
             this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
             this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
             this.setupPiece(templateManagerIn);
@@ -128,7 +128,7 @@ public class RunDownHousePieces {
          * or what item an Item Frame will have.
          */
         @Override
-        protected void handleDataMarker(String function, BlockPos pos, IWorld worldIn, Random rand, MutableBoundingBox sbb) {
+        protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
             if ("chest".equals(function)) {
                 worldIn.setBlockState(pos, Blocks.CHEST.getDefaultState(), 2);
                 TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -136,7 +136,6 @@ public class RunDownHousePieces {
                 // Just another check to make sure everything is going well before we try to set the chest.
                 if (tileentity instanceof ChestTileEntity) {
                     // ((ChestTileEntity) tileentity).setLootTable(<resource_location_to_loottable>, rand.nextLong());
-
                 }
             }
         }
