@@ -22,8 +22,12 @@ Good luck and I hope this helps!
 ------------------
 
 _MCPBot is dead. Do not use that to check for updates._
+
 _if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `_
+
 _command for the project and it'll remap everything to the cutting-edge mappings!_
--Otherwise, just use the mapping this mod uses for now:_
+
+_Otherwise, just use the mapping this mod uses for now:_
+
 _mappings channel: 'snapshot', version: '20200916-1.16.2'_
  
