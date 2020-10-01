@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -80,7 +81,7 @@ public class StructureTutorialMain {
         public static void addDimensionalSpacing(final WorldEvent.Load event) {
             if(event.getWorld() instanceof ServerWorld){
                 ServerWorld serverWorld = (ServerWorld)event.getWorld();
-                Map<Structure<?>, StructureSeparationSettings> tempMap = serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_();
+                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
                 tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
                 serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
             }
