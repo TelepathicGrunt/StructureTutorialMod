@@ -1,6 +1,7 @@
 package com.telepathicgrunt.structuretutorial;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;

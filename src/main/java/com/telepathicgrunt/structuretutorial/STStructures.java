@@ -46,7 +46,6 @@ public class STStructures {
          */
         registerStructure(
                 RUN_DOWN_HOUSE, /* The instance of the structure */
-                GenerationStage.Decoration.SURFACE_STRUCTURES, /* Generation stage for when to generate. This stage places the structure before plants are placed */
                 new StructureSeparationSettings(10 /* maximum distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts */,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
@@ -63,17 +62,14 @@ public class STStructures {
      */
     public static <F extends Structure<?>> void registerStructure(
             F structure,
-            GenerationStage.Decoration stage,
             StructureSeparationSettings structureSeparationSettings,
             boolean transformSurroundingLand)
     {
         /*
-         * The structure class keeps maps of all the structures and their generation stages.
-         * We need to add our structures into the maps along with the vanilla
+         * We need to add our structures into the map in Structure alongside vanilla
          * structures or else it will cause errors. Called by registerStructure.
          */
         Structure.field_236365_a_.put(structure.getRegistryName().toString().toLowerCase(Locale.ROOT), structure);
-        Structure.field_236385_u_.put(structure, stage);
 
         /*
          * Will add land at the base of the structure like it does for Villages and Outposts.

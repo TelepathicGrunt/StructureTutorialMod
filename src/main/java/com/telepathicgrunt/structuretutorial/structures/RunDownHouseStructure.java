@@ -8,6 +8,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -26,6 +27,17 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
     @Override
     public  IStartFactory<NoFeatureConfig> getStartFactory() {
         return RunDownHouseStructure.Start::new;
+    }
+
+
+    /*
+     * Generation stage for when to generate the structure. there are 10 stages you can pick from!
+     * This surface structure stage places the structure before plants and ores are generated.
+     */
+    @Override
+    public GenerationStage.Decoration func_236396_f_()
+    {
+        return GenerationStage.Decoration.SURFACE_STRUCTURES;
     }
 
     /*
