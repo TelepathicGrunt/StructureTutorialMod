@@ -68,6 +68,9 @@ public class STStructures {
         /*
          * We need to add our structures into the map in Structure alongside vanilla
          * structures or else it will cause errors. Called by registerStructure.
+         *
+         * (If you are using deferred registries, do not put this line inside the deferred method.
+         *  Instead, call it anywhere else before you start the configuredstructure registering)
          */
         Structure.field_236365_a_.put(structure.getRegistryName().toString().toLowerCase(Locale.ROOT), structure);
 
