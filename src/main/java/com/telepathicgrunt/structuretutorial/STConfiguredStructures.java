@@ -21,7 +21,9 @@ public class STConfiguredStructures {
         Registry.register(registry, new ResourceLocation(StructureTutorialMain.MODID, "configured_run_down_house"), CONFIGURED_RUN_DOWN_HOUSE);
 
 
-        // Make it so it can spawn in superflat mode with the customize string thing. (I haven't tried it)
+        // Need to add this to super flat's special list so that suepr flat will not crash.
+        // Note: your structure cannot spawn in superflat without hacks because BiomeModificationEvent
+        // does not fire for superflat's biomes that it makes when you switch to that worldtype.
         FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE, CONFIGURED_RUN_DOWN_HOUSE);
     }
 }
