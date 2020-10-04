@@ -76,7 +76,14 @@ public class StructureTutorialMain {
         /*
          * Will go into the world's chunkgenerator and manually add our structure spacing.
          * If the spacing is not added, the structure doesn't spawn.
-         * Use this for dimension blacklists for your structure!
+         *
+         * Use this for dimension blacklists for your structure.
+         * (Don't forget to attempt to remove your structure too from
+         *  the map if you are blacklisting that dimension! It might have
+         *  your structure in it already.)
+         *
+         * Basically use this to mak absolutely sure the chunkgeneration
+         * can or cannot spawn your structure.
          */
         @SubscribeEvent
         public static void addDimensionalSpacing(final WorldEvent.Load event) {
