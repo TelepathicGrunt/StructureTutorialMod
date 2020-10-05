@@ -39,17 +39,18 @@ import java.util.Random;
  */
 public class RunDownHousePieces {
     /*
-     * Here is a video on how to save a structure with structure blocks. https://www.youtube.com/watch?v=ylGFb4F4xVk&t=1s Once saved, the structure nbt file is
-     * store in that world's save folder within the generated folder inside.
+     * Here is a video on how to save a structure with structure blocks. https://www.youtube.com/watch?v=ylGFb4F4xVk&t=1s
+     * Once saved, the structure nbt file is store in that world's save folder within the generated folder inside.
      * 
-     * Move the nbt file of your structure into asses.mod_id.structures folder under src/main/resources in your mod. Make sure the nbt file name is all
-     * lowercase and uses no spaces.
+     * Move the nbt file of your structure into data.mod_id.structures folder under src/main/resources in your mod.
+     * That's data folder. Not assets. I messed up before and put it in the wrong place lmao. It goes in data folder!
+     * Make sure the nbt file name is all lowercase and uses no spaces. That's the naming convention.
      * 
-     * Here, I have two structure nbt files named run_down_house_left_side.nbt and run_down_house_right_side.nbt and I access them with the following resource
-     * locations below. The MODID and ':' are important too.
+     * Here, I have two structure nbt files named run_down_house_left_side.nbt and run_down_house_right_side.nbt
+     * and I access them with the following resource locations below.
      */
-    private static final ResourceLocation LEFT_SIDE = new ResourceLocation(StructureTutorialMain.MODID + ":run_down_house_left_side");
-    private static final ResourceLocation RIGHT_SIDE = new ResourceLocation(StructureTutorialMain.MODID + ":run_down_house_right_side");
+    private static final ResourceLocation LEFT_SIDE = new ResourceLocation(StructureTutorialMain.MODID, "run_down_house_left_side");
+    private static final ResourceLocation RIGHT_SIDE = new ResourceLocation(StructureTutorialMain.MODID, "run_down_house_right_side");
     private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(LEFT_SIDE, new BlockPos(0, 1, 0), RIGHT_SIDE, new BlockPos(0, 1, 0));
 
     /*
