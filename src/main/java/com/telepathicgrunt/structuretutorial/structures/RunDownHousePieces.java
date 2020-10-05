@@ -78,8 +78,8 @@ public class RunDownHousePieces {
     }
 
     /*
-     * Here's where some voodoo happens. Most of this doesn't need to be touched but you do have to pass in the IStructurePieceType you registered into the
-     * super constructors.
+     * Here's where some voodoo happens. Most of this doesn't need to be touched but you do
+     * have to pass in the IStructurePieceType you registered into the super constructors.
      * 
      * The method you will most likely want to touch is the handleDataMarker method.
      */
@@ -120,13 +120,15 @@ public class RunDownHousePieces {
         }
 
         /*
-         * If you added any data marker structure blocks to your structure, you can access and modify them here. In this case, our structure has a data maker
-         * with the string "chest" put into it. So we check to see if the incoming function is "chest" and if it is, we now have that exact position.
+         * If you added any data marker structure blocks to your structure, you can access and modify them here.
+         * In this case, our structure has a data maker with the string "chest" put into it. So we check to see
+         * if the incoming function is "chest" and if it is, we now have that exact position.
          * 
-         * So what is done here is we replace the structure block with a chest and we can then set the loottable for it.
+         * So what is done here is we replace the structure block with
+         * a chest and we can then set the loottable for it.
          * 
-         * You can set other data markers to do other behaviors such as spawn a random mob in a certain spot, randomize what rare block spawns under the floor,
-         * or what item an Item Frame will have.
+         * You can set other data markers to do other behaviors such as spawn a random mob in a certain spot,
+         * randomize what rare block spawns under the floor, or what item an Item Frame will have.
          */
         @Override
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
@@ -141,5 +143,4 @@ public class RunDownHousePieces {
             }
         }
     }
-
 }
