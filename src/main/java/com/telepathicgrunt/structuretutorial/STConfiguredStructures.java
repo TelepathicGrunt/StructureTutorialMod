@@ -17,7 +17,7 @@ public class STConfiguredStructures {
      * Noticed we are not using a forge registry because there is none for configured structures
      */
     public static void registerConfiguredStructures() {
-        MutableRegistry<StructureFeature<?, ?>> registry = (MutableRegistry<StructureFeature<?, ?>>) WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
+        Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(StructureTutorialMain.MODID, "configured_run_down_house"), CONFIGURED_RUN_DOWN_HOUSE);
 
 
