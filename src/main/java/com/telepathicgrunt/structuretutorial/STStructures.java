@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHousePieces;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -108,14 +109,14 @@ public class STStructures {
      * your mod and don't change it. Called by registerFeatures.
      */
     public static void registerAllPieces() {
-        registerStructurePiece(RDHP, "RDHP");
+        registerStructurePiece(RDHP, new ResourceLocation(StructureTutorialMain.MODID, "rdhp"));
     }
 
     /*
      * Registers the structures pieces themselves. If you don't do this part, Forge will complain to
      * you in the Console. Called by registerPieces.
      */
-    static void registerStructurePiece(IStructurePieceType structurePiece, String key) {
-        Registry.register(Registry.STRUCTURE_PIECE, key.toLowerCase(Locale.ROOT), structurePiece);
+    static void registerStructurePiece(IStructurePieceType structurePiece, ResourceLocation rl) {
+        Registry.register(Registry.STRUCTURE_PIECE, rl, structurePiece);
     }
 }
