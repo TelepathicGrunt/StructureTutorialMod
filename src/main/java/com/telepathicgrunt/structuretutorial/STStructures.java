@@ -73,7 +73,7 @@ public class STStructures {
          * (If you are using deferred registries, do not put this line inside the deferred method.
          *  Instead, call it anywhere else before you start the configuredstructure registering)
          */
-        Structure.field_236365_a_.put(structure.getRegistryName().toString().toLowerCase(Locale.ROOT), structure);
+        Structure.field_236365_a_.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Will add land at the base of the structure like it does for Villages and Outposts.

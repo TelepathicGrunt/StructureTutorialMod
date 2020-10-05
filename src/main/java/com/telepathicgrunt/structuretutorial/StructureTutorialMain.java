@@ -51,7 +51,7 @@ public class StructureTutorialMain {
             STStructures.registerStructures(event);
             STConfiguredStructures.registerConfiguredStructures();
 
-            LOGGER.log(Level.INFO, "structures registered.");
+            //LOGGER.log(Level.INFO, "structures registered.");
         }
     }
 
