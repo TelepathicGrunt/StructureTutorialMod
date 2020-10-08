@@ -1,19 +1,24 @@
 package com.telepathicgrunt.structuretutorial;
 
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,71 +34,89 @@ public class StructureTutorialMain {
     public static final String MODID = "structure_tutorial";
 
     public StructureTutorialMain() {
+        // For registering and other initialization stuff.
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addGenericListener(Structure.class, this::onRegisterStructures);
+
+
+        // For events that happen after initialization. This is probably going to be use a lot.
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
+
+        // The comments for BiomeLoadingEvent and StructureSpawnListGatherEvent says to do HIGH for additions.
+        // Since we are adding a structure and adding spawns, we set the priority to HIGH.
+        forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
+        forgeBus.addListener(EventPriority.HIGH, this::onStructureSpawnListGather);
     }
 
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class
-    // (this is subscribing to the MOD Event bus for receiving Registry Events)
-
-    /*
-     * You will use this to register anything for your mod. The most common things you will register are blocks, items, biomes, entities, features, and
-     * dimensions.
+    /**
+     * This method will be called by Forge when it is time for the mod to register features.
      */
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        /**
-         * This method will be called by Forge when it is time for the mod to register features.
-         */
-        @SubscribeEvent
-        public static void onRegisterStructures(final RegistryEvent.Register<Structure<?>> event) {
-            // Registers the structures.
-            // If you don't do this, bad things might happen... very bad things... Spooky...
-            STStructures.registerStructures(event);
-            STConfiguredStructures.registerConfiguredStructures();
+    public void onRegisterStructures(final RegistryEvent.Register<Structure<?>> event) {
+        // Registers the structures.
+        // If you don't do this, bad things might happen... very bad things... Spooky...
+        STStructures.registerStructures(event);
+        STConfiguredStructures.registerConfiguredStructures();
 
-            //LOGGER.log(Level.INFO, "structures registered.");
-        }
+        //LOGGER.log(Level.INFO, "structures registered.");
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
-        /*
-         * This is the event you will use to add anything to any biome.
-         * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
-         * adding carvers, spawning new features... etc
-         *
-         * Here, we will use this to add our structure to all biomes.
-         */
-        @SubscribeEvent
-        public static void biomeModification(final BiomeLoadingEvent event) {
-            // Add our structure to all biomes including other modded biomes
-            //
-            // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id
+    /**
+     * This is the event you will use to add anything to any biome.
+     * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
+     * adding carvers, spawning new features... etc
+     *
+     * Here, we will use this to add our structure to all biomes.
+     */
+    public void biomeModification(final BiomeLoadingEvent event) {
+        // Add our structure to all biomes including other modded biomes
+        //
+        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id
 
-            event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
+        event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
+    }
+
+    /**
+     * Will go into the world's chunkgenerator and manually add our structure spacing.
+     * If the spacing is not added, the structure doesn't spawn.
+     *
+     * Use this for dimension blacklists for your structure.
+     * (Don't forget to attempt to remove your structure too from
+     *  the map if you are blacklisting that dimension! It might have
+     *  your structure in it already.)
+     *
+     * Basically use this to mak absolutely sure the chunkgeneration
+     * can or cannot spawn your structure.
+     */
+    public void addDimensionalSpacing(final WorldEvent.Load event) {
+        if(event.getWorld() instanceof ServerWorld){
+            ServerWorld serverWorld = (ServerWorld)event.getWorld();
+            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
+            tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
+            serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
+   }
 
-        /*
-         * Will go into the world's chunkgenerator and manually add our structure spacing.
-         * If the spacing is not added, the structure doesn't spawn.
-         *
-         * Use this for dimension blacklists for your structure.
-         * (Don't forget to attempt to remove your structure too from
-         *  the map if you are blacklisting that dimension! It might have
-         *  your structure in it already.)
-         *
-         * Basically use this to mak absolutely sure the chunkgeneration
-         * can or cannot spawn your structure.
-         */
-        @SubscribeEvent
-        public static void addDimensionalSpacing(final WorldEvent.Load event) {
-            if(event.getWorld() instanceof ServerWorld){
-                ServerWorld serverWorld = (ServerWorld)event.getWorld();
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-                tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
-                serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
-            }
-       }
+    /**
+     * || ONLY AVAILABLE IN FORGE 34.1.12+ ||
+     *
+     * This event allows us to add any mob to spawn naturally over time in
+     * specific structures. You check the event to see if the structure passed in
+     * is yours or someone else's structure and then you add your spawns to it.
+     *
+     * You can also get and/or remove spawns from structures too like disabling
+     * Guardians from spawning in Ocean Monuments. (Be sure to set the priority
+     * to NORMAL for removal as per the StructureSpawnListGatherEvent's comments.
+     */
+    private void onStructureSpawnListGather(StructureSpawnListGatherEvent event)
+    {
+        if (event.getStructure() == STStructures.RUN_DOWN_HOUSE)
+        {
+            // Weight is 1000 to overwhelm the other mobs and spawn ours most of the time.
+            event.addEntitySpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ILLUSIONER, 1000, 4, 9));
+            event.addEntitySpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.VINDICATOR, 1000, 4, 9));
+        }
     }
 
     /*

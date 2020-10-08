@@ -6,15 +6,12 @@ import com.telepathicgrunt.structuretutorial.structures.RunDownHousePieces;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.event.RegistryEvent.Register;
-
-import java.util.Locale;
 
 public class STStructures {
     // Static instance of our structure so we can reference it

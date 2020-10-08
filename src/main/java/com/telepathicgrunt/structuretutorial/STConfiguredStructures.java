@@ -1,7 +1,6 @@
 package com.telepathicgrunt.structuretutorial;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.FlatGenerationSettings;
