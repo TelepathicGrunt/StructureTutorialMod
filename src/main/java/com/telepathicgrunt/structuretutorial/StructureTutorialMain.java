@@ -44,9 +44,7 @@ public class StructureTutorialMain {
         forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
 
         // The comments for BiomeLoadingEvent and StructureSpawnListGatherEvent says to do HIGH for additions.
-        // Since we are adding a structure and adding spawns, we set the priority to HIGH.
         forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
-        forgeBus.addListener(EventPriority.HIGH, this::onStructureSpawnListGather);
     }
 
 
@@ -97,27 +95,6 @@ public class StructureTutorialMain {
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
    }
-
-    /**
-     * || ONLY AVAILABLE IN FORGE 34.1.12+ ||
-     *
-     * This event allows us to add any mob to spawn naturally over time in
-     * specific structures. You check the event to see if the structure passed in
-     * is yours or someone else's structure and then you add your spawns to it.
-     *
-     * You can also get and/or remove spawns from structures too like disabling
-     * Guardians from spawning in Ocean Monuments. (Be sure to set the priority
-     * to NORMAL for removal as per the StructureSpawnListGatherEvent's comments.
-     */
-    private void onStructureSpawnListGather(StructureSpawnListGatherEvent event)
-    {
-        if (event.getStructure() == STStructures.RUN_DOWN_HOUSE)
-        {
-            // Weight is 1000 to overwhelm the other mobs and spawn ours most of the time.
-            event.addEntitySpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.ILLUSIONER, 1000, 4, 9));
-            event.addEntitySpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.VINDICATOR, 1000, 4, 9));
-        }
-    }
 
     /*
      * Helper method to quickly register features, blocks, items, structures, biomes, anything that can be registered.
