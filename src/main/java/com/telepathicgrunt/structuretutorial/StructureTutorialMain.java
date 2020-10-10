@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
@@ -91,15 +90,9 @@ public class StructureTutorialMain {
     public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld)event.getWorld();
-
-            // Superflat world is pretty hacky to get working without weird behavior so let's just skip it.
-            // We should focus on getting the structure spawning in all other worlds instead.
-            if(serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator){
-                return;
-            }
-
-            serverWorld.getChunkProvider().getChunkGenerator().func_235957_b_().func_236195_a_()
-                    .put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
+            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
+            tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
+            serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
    }
 
