@@ -22,8 +22,14 @@ public class STConfiguredStructures {
 
         // Need to add this to superflat's special list so that superflat worldtype will not crash
         // when you are entering an existing superflat world. (Even if your structure isn't spawning it in).
+        //
         // Note: your structure cannot spawn in superflat without hacks because BiomeModificationEvent
-        // does not fire for superflat's biomes that it makes when you switch to that worldtype.
+        // does not fire for superflat's biomes that it makes when you switch to that worldtype. Furthermore,
+        // the FlatChunkGenerator does not have your StructureSeparationSettings too. Adding the StructureSeparationSettings
+        // manually will cause the structure to spawn upon reloading a superflat world but it's buggy imo.
+        //
+        // For now, just add this line to stop superflat crashs and then
+        // focus on getting your structure to spawn in non-superflat dimensions.
         FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE, CONFIGURED_RUN_DOWN_HOUSE);
     }
 }
