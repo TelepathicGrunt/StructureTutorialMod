@@ -19,17 +19,18 @@ public class STConfiguredStructures {
         Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(StructureTutorialMain.MODID, "configured_run_down_house"), CONFIGURED_RUN_DOWN_HOUSE);
 
+        // Ok so, this part may be hard to grasp but basically, just add your structure to this to
+        // prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
+        // FlatGenerationSettings.STRUCTURES in it and you don't add your structure to it, the game
+        // could crash later when you attempt to add the StructureSeparationSettings to the dimension.
 
-        // Need to add this to superflat's special list so that superflat worldtype will not crash
-        // when you are entering an existing superflat world. (Even if your structure isn't spawning it in).
+        // (It would also crash with superflat worldtype if you omit the below line
+        //  and attempt to add the structure's StructureSeparationSettings to the world)
         //
-        // Note: your structure cannot spawn in superflat without hacks because BiomeModificationEvent
-        // does not fire for superflat's biomes that it makes when you switch to that worldtype. Furthermore,
-        // the FlatChunkGenerator does not have your StructureSeparationSettings too. Adding the StructureSeparationSettings
-        // manually will cause the structure to spawn upon reloading a superflat world but it's buggy imo.
-        //
-        // For now, just add this line to stop superflat crashs and then
-        // focus on getting your structure to spawn in non-superflat dimensions.
+        // Note: If you want your structure to spawn in superflat, remove the FlatChunkGenerator check
+        // in StructureTutorialMain.addDimensionalSpacing and then create a superflat world, exit it,
+        // and re-enter it and your structures will be spawning. I could not figure out why it needs
+        // the restart but honestly, superflat is really buggy and shouldn't be you main focus in my opinion.
         FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE, CONFIGURED_RUN_DOWN_HOUSE);
     }
 }
