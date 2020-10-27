@@ -4,22 +4,24 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
+import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
@@ -82,7 +84,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
     }
 
 
-    /**
+    /*
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.
      * 
@@ -121,27 +123,49 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
         }
 
         @Override
-        public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
-            // Check out vanilla's WoodlandMansionStructure for how they offset the x and z
-            // so that they get the y value of the land at the mansion's entrance, no matter
-            // which direction the mansion is rotated.
-            //
-            // However, for most purposes, getting the y value of land with the default x and z is good enough.
-            Rotation rotation = Rotation.values()[this.rand.nextInt(Rotation.values().length)];
+        public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
 
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
+            BlockPos blockpos = new BlockPos(x, 0, z);
 
-            // Finds the y value of the terrain at location.
-            int surfaceY = generator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
-            BlockPos blockpos = new BlockPos(x, surfaceY, z);
+            // All a structure has to do is call this method to turn it into a jigsaw based structure!
+            JigsawManager.func_242837_a(
+                    dynamicRegistryManager,
+                    new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
+                            // The path to the starting Template Pool JSON file to read.
+                            .getOrDefault(new ResourceLocation(StructureTutorialMain.MODID, "run_down_house/start_pool")),
 
-            // Now adds the structure pieces to this.components with all details such as where each part goes
-            // so that the structure can be added to the world by worldgen.
-            RunDownHousePieces.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
+                            // How many pieces outward from center can a recursive jigsaw structure spawn.
+                            // Our structure is only 1 block out and isn't recursive so any value of 1 or more doesn't change anything.
+                            // However, I recommend you keep this a high value so people can use datapacks to add additional pieces to your structure easily.
+                            50),
+                    AbstractVillagePiece::new,
+                    chunkGenerator,
+                    templateManagerIn,
+                    blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
+                    this.components, // The list that will be populated with the jigsaw pieces after this method.
+                    this.rand,
+                    true, // Allow intersecting jigsaw pieces. If false, villages cannot generate houses. I recommend to keep this to true.
+                    true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's y value instead
 
-            // Sets the bounds of the structure.
+
+            // Right here, you can do interesting stuff with the pieces in this.components such as offset the
+            // center piece by 50 blocks up for no reason, remove repeats of a piece or add a new piece so
+            // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
+            // holds just the piece's size and positions. Blocks will be placed later in JigsawManager.
+            //
+            // In this case, we offset the pieces up 1 so that the doorstep is not lower than the original
+            // terrain and then we extend the bounding box down by 1 to force down the land by 1 block that the
+            // Structure.field_236384_t_ field will place at bottom of the house. By lifting the house up by 1 and
+            // lowering the bounding box, the land at bottom of house will now stay in place instead of also being
+            // raise by 1 block because the land is based on the bounding box itself.
+            this.components.forEach(piece -> piece.offset(0, 1, 0));
+            this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);
+
+
+            // Sets the bounds of the structure once you are finished.
             this.recalculateStructureSize();
 
             // I use to debug and quickly find out if the structure is spawning or not and where it is.

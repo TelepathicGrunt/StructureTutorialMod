@@ -1,10 +1,6 @@
 package com.telepathicgrunt.structuretutorial;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -13,14 +9,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,10 +30,10 @@ public class StructureTutorialMain {
     public static final String MODID = "structure_tutorial";
 
     public StructureTutorialMain() {
-        // For registering and other initialization stuff.
+        // For registration and init stuff.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addGenericListener(Structure.class, this::onRegisterStructures);
-
+        STStructures.DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
+        modEventBus.addListener(this::setup);
 
         // For events that happen after initialization. This is probably going to be use a lot.
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
@@ -49,18 +43,23 @@ public class StructureTutorialMain {
         forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
     }
 
-
     /**
-     * This method will be called by Forge when it is time for the mod to register features.
+     * Here, setupStructures will be ran after registration of all structures are finished.
+     * This is important to be done here so that the Deferred Registry has already ran and
+     * registered/created our structure for us.
+     *
+     * Once after that structure instance is made, we then can now do the rest of the setup
+     * that requires a structure instance such as setting the structure spacing, creating the
+     * configured structure instance, and more.
      */
-    public void onRegisterStructures(final RegistryEvent.Register<Structure<?>> event) {
-        // Registers the structures.
-        // If you don't do this, bad things might happen... very bad things... Spooky...
-        STStructures.registerStructures(event);
-        STConfiguredStructures.registerConfiguredStructures();
-
-        //LOGGER.log(Level.INFO, "structures registered.");
+    public void setup(final FMLCommonSetupEvent event)
+    {
+        event.enqueueWork(() -> {
+            STStructures.setupStructures();
+            STConfiguredStructures.registerConfiguredStructures();
+        });
     }
+
 
     /**
      * This is the event you will use to add anything to any biome.
@@ -70,10 +69,8 @@ public class StructureTutorialMain {
      * Here, we will use this to add our structure to all biomes.
      */
     public void biomeModification(final BiomeLoadingEvent event) {
-        // Add our structure to all biomes including other modded biomes
-        //
-        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id
-
+        // Add our structure to all biomes including other modded biomes.
+        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id.
         event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
     }
 
@@ -102,17 +99,8 @@ public class StructureTutorialMain {
             }
 
             Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-            tempMap.put(STStructures.RUN_DOWN_HOUSE, DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE));
+            tempMap.put(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
    }
-
-    /*
-     * Helper method to quickly register features, blocks, items, structures, biomes, anything that can be registered.
-     */
-    public static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T entry, String registryKey) {
-        entry.setRegistryName(new ResourceLocation(StructureTutorialMain.MODID, registryKey));
-        registry.register(entry);
-        return entry;
-    }
 }

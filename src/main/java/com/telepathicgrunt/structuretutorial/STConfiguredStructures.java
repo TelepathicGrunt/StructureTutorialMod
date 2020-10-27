@@ -8,12 +8,17 @@ import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 public class STConfiguredStructures {
-    // Static instance of our structure so we can reference it and add it to biomes easily.
-    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG);
+    /**
+     * Static instance of our structure so we can reference it and add it to biomes easily.
+     */
+    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get().func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG);
 
-    /*
+    /**
      * Registers the configured structure which is what gets added to the biomes.
-     * Noticed we are not using a forge registry because there is none for configured structures
+     * Noticed we are not using a forge registry because there is none for configured structures.
+     *
+     * We can register configured structures at any time before a world is clicked on and made.
+     * But the best time to register configured features by code is honestly to do it in FMLCommonSetupEvent.
      */
     public static void registerConfiguredStructures() {
         Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
@@ -30,7 +35,7 @@ public class STConfiguredStructures {
         // Note: If you want your structure to spawn in superflat, remove the FlatChunkGenerator check
         // in StructureTutorialMain.addDimensionalSpacing and then create a superflat world, exit it,
         // and re-enter it and your structures will be spawning. I could not figure out why it needs
-        // the restart but honestly, superflat is really buggy and shouldn't be you main focus in my opinion.
-        FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE, CONFIGURED_RUN_DOWN_HOUSE);
+        // the restart but honestly, superflat is really buggy and shouldn't be your main focus in my opinion.
+        FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE.get(), CONFIGURED_RUN_DOWN_HOUSE);
     }
 }

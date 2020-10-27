@@ -1,0 +1,35 @@
+{
+    "_comment0": "More info on template pools can be found here: https://minecraft.gamepedia.com/Custom_world_generation#JSON_format_8",
+
+    "_comment1": "This is the name of the template pool itself. I tend to just put the file path and file name here with modid.",
+  "name": "repurposed_structures:run_down_house/start_pool",
+
+    "_comment2": "The template pool to refer to if the entries in 'elements' fails to generate.",
+  "fallback": "minecraft:empty",
+
+  "_comment3": "Here you can list as many nbt files or configured features to spawn.",
+  "_comment4": "Do note that configured features needs a special element entry stuff.",
+  "elements": [
+    {
+
+        "_comment5": "How likely out of all the element for this one to be chosen.",
+      "weight": 1,
+      "element": {
+
+          "_comment6": "The resourcelocation of the nbt file itself of the structure piece. ",
+          "_comment7": "The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house.",
+        "location": "structure_tutorial:run_down_house_left_side",
+
+          "_comment8": "Processor JSON files can be used to randomize or replace blocks dynamically. Here, we don't do any of that.",
+        "processors": "minecraft:empty",
+
+          "_comment9": "If set to 'terrain_matching', the house would be deformed to fit the change in land.",
+          "_comment10": "That's best for roads so lets stay 'rigid' for now.",
+        "projection": "rigid",
+
+          "_comment11": "The kind of element we are spawning. This one is most likely what you want.",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -2,63 +2,74 @@ package com.telepathicgrunt.structuretutorial;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.telepathicgrunt.structuretutorial.structures.RunDownHousePieces;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.function.Supplier;
 
 public class STStructures {
-    // Static instance of our structure so we can reference it
-    // and use it to make configured structures in STConfiguredStructures
-    public static Structure<NoFeatureConfig> RUN_DOWN_HOUSE = new RunDownHouseStructure(NoFeatureConfig.field_236558_a_);
-    public static IStructurePieceType RDHP = RunDownHousePieces.Piece::new;
 
-    /*
+    /**
+     * We are using the Deferred Registry system to register our structure as this is the preferred way on Forge.
+     * This will handle registering the base structure for us at the correct time so we don't have to handle it ourselves.
+     *
+     * HOWEVER, do note that Deferred Registries only work for anything that is a Forge Registry. This means that
+     * configured structures and configured features need to be registered directly to WorldGenRegistries as there
+     * is no Deferred Registry system for them.
+     */
+    public static final DeferredRegister<Structure<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, StructureTutorialMain.MODID);
+
+    /**
      * Registers the structure itself and sets what its path is. In this case, the
      * structure will have the resourcelocation of structure_tutorial:run_down_house.
-     * 
-     * This is also where the rarity of your structure is set. See the
-     * comments in below in new StructureSeparationSettings for details.
      *
-     * It is always a good idea to register your Structures so that other mods can
-     * use them too directly from the Forge Registry. It great for mod compatibility.
+     * It is always a good idea to register your Structures so that other mods and datapacks can
+     * use them too directly from the registries. It great for mod/datapacks compatibility.
+     *
+     * IMPORTANT: Once you have set the name for your structure below and distributed your mod,
+     * it should NEVER be changed or else it can cause worlds to become corrupted if they generated
+     * any chunks with your mod with the old structure name. See MC-194811 in Mojang's bug tracker for details.
+     *
+     * Forge has an issue report here: https://github.com/MinecraftForge/MinecraftForge/issues/7363
+     * Keep watch on that to know when it is safe to remove or change structure's registry names
      */
-    public static void registerStructures(Register<Structure<?>> event) {
+    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = setupStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.field_236558_a_)));
 
-        // Registers the structure (our helper method attaches the modid to the front of the Structure's ResourceLocation)
-        StructureTutorialMain.register(event.getRegistry(), RUN_DOWN_HOUSE, "run_down_house");
+    /**
+     * Helper method for registering all structures
+     */
+    private static <T extends Structure<?>> RegistryObject<T> setupStructure(String name, Supplier<T> structure) {
+        return DEFERRED_REGISTRY_STRUCTURE.register(name, structure);
+    }
 
-        /*
-         * IMPORTANT: Once you have set the name for your structure below and distributed your mod,
-         * it should NEVER be changed or else it can cause worlds to become corrupted if they generated
-         * any chunks with your mod with the old structure name. See MC-194811 in Mojang's bug tracker for details.
-         *
-         * Forge has an issue report here: https://github.com/MinecraftForge/MinecraftForge/issues/7363
-         * Keep watch on that to know when it is safe to remove or change structure's registry names
-         */
-        registerStructure(
-                RUN_DOWN_HOUSE, /* The instance of the structure */
+    /**
+     * This is where we set the rarity of your structures and determine if land conforms to it.
+     * See the comments in below for more details.
+     */
+    public static void setupStructures() {
+        setupStructure(
+                RUN_DOWN_HOUSE.get(), /* The instance of the structure */
                 new StructureSeparationSettings(10 /* maximum distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts */,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 true);
 
-
-        STStructures.registerAllPieces();
+        // Add more structures here and so on
     }
 
-    /*
+    /**
      * Adds the provided structure to the registry, and adds the separation settings.
      * The rarity of the structure is determined based on the values passed into
      * this method in the structureSeparationSettings argument. Called by registerFeatures.
      */
-    public static <F extends Structure<?>> void registerStructure(
+    public static <F extends Structure<?>> void setupStructure(
             F structure,
             StructureSeparationSettings structureSeparationSettings,
             boolean transformSurroundingLand)
@@ -67,14 +78,14 @@ public class STStructures {
          * We need to add our structures into the map in Structure alongside vanilla
          * structures or else it will cause errors. Called by registerStructure.
          *
-         * (If you are using deferred registries, do not put this line inside the deferred method.
-         *  Instead, call it anywhere else before you start the configuredstructure registering)
+         * If the registration is setup properly for the structure,
+         * getRegistryName() should never return null.
          */
         Structure.field_236365_a_.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Will add land at the base of the structure like it does for Villages and Outposts.
-         * Doesn't work well on structure that have pieces stacked vertically.
+         * Doesn't work well on structure that have pieces stacked vertically or change in heights.
          */
         if(transformSurroundingLand){
             Structure.field_236384_t_ =
@@ -97,23 +108,5 @@ public class STStructures {
                         .putAll(DimensionStructuresSettings.field_236191_b_)
                         .put(structure, structureSeparationSettings)
                         .build();
-    }
-
-    /*
-     * If you have multiple structures it is helpful to break out the registering of the pieces.
-     * If you change the name you register the pieces with and load a world from before the name
-     * was changed it will spam errors to the console, so pick a name you like before distributing
-     * your mod and don't change it. Called by registerFeatures.
-     */
-    public static void registerAllPieces() {
-        registerStructurePiece(RDHP, new ResourceLocation(StructureTutorialMain.MODID, "rdhp"));
-    }
-
-    /*
-     * Registers the structures pieces themselves. If you don't do this part, Forge will complain to
-     * you in the Console. Called by registerPieces.
-     */
-    static void registerStructurePiece(IStructurePieceType structurePiece, ResourceLocation rl) {
-        Registry.register(Registry.STRUCTURE_PIECE, rl, structurePiece);
     }
 }

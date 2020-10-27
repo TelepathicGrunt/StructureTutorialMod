@@ -1,0 +1,15 @@
+{
+  "name": "repurposed_structures:run_down_house/side_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "structure_tutorial:run_down_house_right_side",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
