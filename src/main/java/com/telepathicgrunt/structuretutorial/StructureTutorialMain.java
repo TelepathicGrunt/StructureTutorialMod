@@ -21,12 +21,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(StructureTutorialMain.MODID)
 public class StructureTutorialMain {
-    // Directly reference a log4j logger.
+
     public static final Logger LOGGER = LogManager.getLogger();
-    // mod ID to reference to from anywhere in mod
     public static final String MODID = "structure_tutorial";
 
     public StructureTutorialMain() {

@@ -88,9 +88,9 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.
      * 
-     * Notice how the biome is also passed in. Though, you are not going to do any biome
-     * checking here as you should've added this structure to the biomes you
-     * wanted already with the biome load event.
+     * Notice how the biome is also passed in. Though, you are not going to
+     * do any biome checking here as you should've added this structure to
+     * the biomes you wanted already with the biome load event.
      * 
      * Basically, this method is used for determining if the land is at a suitable height,
      * if certain other structures are too close or not, or some other restrictive condition.
@@ -103,7 +103,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
      * another mod's dimension is trying to spawn your structure, the locate
      * command will make minecraft hang forever and break the game.
      *
-     * Instead, use the WorldEvent.Load event in StructureTutorialMain class.
+     * Instead, use the addDimensionalSpacing method in StructureTutorialMain class.
      * If you check for the dimension there and do not add your structure's
      * spacing into the chunk generator, the structure will not spawn in that dimension!
      */

@@ -28,7 +28,7 @@ public class STConfiguredStructures {
         // prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
         // FlatGenerationSettings.STRUCTURES in it and you don't add your structure to it, the game
         // could crash later when you attempt to add the StructureSeparationSettings to the dimension.
-
+        //
         // (It would also crash with superflat worldtype if you omit the below line
         //  and attempt to add the structure's StructureSeparationSettings to the world)
         //
