@@ -1,72 +1,51 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
+plugins {
+	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'maven-publish'
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = "${mod_version}"
-group = 'com.telepathicgrunt.structuretutorial' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'structure_tutorial'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
-minecraft {
-    // MCPBot is dead. Do not use that to check for updates.
-    // if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `
-    // command for the project and it'll remap everything to the cutting-edge mappings!
-    mappings channel: 'snapshot', version: "${mapping}"
-    
-    // Structures in 1.16.1 require you to place them in some vanilla maps which are private variables
-    // The access transformer allows us to make them public so we can place our structures in them
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    
-    
-    runs {
-        client {
-            workingDirectory project.file('run')
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            mods { examplemod { source sourceSets.main } }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            mods { examplemod {  source sourceSets.main } }
-        }
-    }
+repositories {
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "io.github.prospector:modmenu:${project.mod_menu_version}"
 }
 
-// Example for how to get properties into the manifest for reading by the runtime..
+processResources {
+	inputs.property "version", project.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include "fabric.mod.json"
+		expand "version": project.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = "sources"
+	from sourceSets.main.allSource
+}
+
 jar {
-    manifest {
-        attributes([
-            "Specification-Title": "structure_tutorial",
-            "Specification-Vendor": "telepathicgrunt",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"telepathicgrunt",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	from "LICENSE"
 }
 
 
@@ -74,23 +53,6 @@ jar {
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 processResources {
-    // Will allow gradle.properties version fill inside mods.toml file
-    // This will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
-
-    // Replace stuff in mods.toml, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // Replace version
-        expand 'version':project.version
-    }
-
-    // Copy everything else except the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-
 
     // Will minify the json files of your mod when you build the jar.
     // Helps reduce files size!
