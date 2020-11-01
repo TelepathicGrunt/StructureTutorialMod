@@ -1,42 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "repurposed_structures",
+  "id": "structure_tutorial",
   "version": "${version}",
 
-  "name": "Repurposed Structures",
-  "description": "Adds more variations of vanilla structures and features!",
+  "name": "Structure Tutorial Mod",
+  "description": "A working example on how to make structures in Minecraft!",
   "authors": [
     "TelepathicGrunt"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/repurposed-structures-fabric",
-    "issues": "https://github.com/TelepathicGrunt/RepurposedStructures-Fabric/issues"
+    "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.16.3-Fabric-Jigsaw"
   },
 
-  "license": "GNU General Public License v3.0",
-  "icon": "assets/repurposed_structures/RepurposedStructuresLogo.png",
+  "license": "MIT License",
+  "icon": "",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.telepathicgrunt.repurposedstructures.RepurposedStructures"
-    ],
-    "modmenu": [
-      "com.telepathicgrunt.repurposedstructures.configs.ModMenuConfig"
+      "com.telepathicgrunt.structure_tutorial.StructureTutorialMain"
     ]
   },
   "mixins": [
-    "repurposed_structures.mixins.json"
+    "structure_tutorial.mixins.json"
   ],
-
-  "accessWidener" : "repurposed_structures.accesswidener",
-
   "depends": {
-    "fabricloader": ">=0.7.4",
-    "minecraft": "1.16.x",
-    "fabric": ">=0.19.0"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "fabricloader": ">=0.10.6",
+    "minecraft": ">=1.16.2",
+    "fabric": ">=0.25.0"
   }
 }

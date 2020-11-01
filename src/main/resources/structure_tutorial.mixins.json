@@ -4,6 +4,8 @@
   "package": "com.telepathicgrunt.structure_tutorial.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "NoiseChunkGeneratorMixin",
+    "StructuresConfigAccessor"
   ],
   "client": [
   ],
