@@ -44,8 +44,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
      * This surface structure stage places the structure before plants and ores are generated.
      */
     @Override
-    public GenerationStage.Decoration func_236396_f_()
-    {
+    public GenerationStage.Decoration getDecorationStage() {
         return GenerationStage.Decoration.SURFACE_STRUCTURES;
     }
 

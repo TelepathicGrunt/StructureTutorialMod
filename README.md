@@ -1,7 +1,7 @@
 # Structure Tutorial Mod (Forge)
 **How to register and generate jigsaw structures in 1.16.3 Minecraft Forge using nbt files!**
 
-**Change the Github branch to see previous MC versions of this tutorial.**
+**Change the Github branch to see other versions of this tutorial including for Fabric!**
  
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 java files, 2 JSON files, and 2 structure nbt files.  
 
@@ -22,11 +22,11 @@ Good luck and I hope this helps!
 
 _MCPBot is dead. Do not use that to check for updates._
 
-_if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `_
+_if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20201028-1.16.3'" updateMappings `_
 
 _command for the project and it'll remap everything to the cutting-edge mappings!_
 
 _Otherwise, just use the mapping this mod uses for now:_
 
-_mappings channel: 'snapshot', version: '20200916-1.16.2'_
+_mappings channel: 'snapshot', version: '20201028-1.16.3''_
  

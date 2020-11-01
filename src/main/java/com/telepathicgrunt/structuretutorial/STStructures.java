@@ -81,7 +81,7 @@ public class STStructures {
          * If the registration is setup properly for the structure,
          * getRegistryName() should never return null.
          */
-        Structure.field_236365_a_.put(structure.getRegistryName().toString(), structure);
+        Structure.NAME_STRUCTURE_BIMAP.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Will add land at the base of the structure like it does for Villages and Outposts.

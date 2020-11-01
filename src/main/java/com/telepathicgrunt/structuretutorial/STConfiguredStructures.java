@@ -11,7 +11,7 @@ public class STConfiguredStructures {
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get().func_236391_a_(IFeatureConfig.NO_FEATURE_CONFIG);
+    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.
