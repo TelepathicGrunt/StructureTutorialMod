@@ -25,7 +25,7 @@ minecraft {
     // command for the project and it'll remap everything to the cutting-edge mappings!
     mappings channel: 'snapshot', version: "${mapping}"
     
-    // Structures in 1.16.1 require you to place them in some vanilla maps which are private variables
+    // Structures in 1.16.3+ require you to place them in some vanilla maps which are private variables
     // The access transformer allows us to make them public so we can place our structures in them
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -92,8 +92,9 @@ processResources {
     }
 
 
-    // Will minify the json files of your mod when you build the jar.
-    // Helps reduce files size!
+    // Will minify the JSON files of your mod when you build the jar.
+    // Helps reduce files size! Minify means it will strip whitespace
+    // and turn the JSON files into 1 liners.
     doLast {
         def jsonMinifyStart = System.currentTimeMillis()
         def jsonMinified = 0

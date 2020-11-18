@@ -81,7 +81,7 @@ public class StructureTutorialMain {
      *  the map if you are blacklisting that dimension! It might have
      *  your structure in it already.)
      *
-     * Basically use this to mak absolutely sure the chunkgeneration
+     * Basically use this to make absolutely sure the chunkgenerator
      * can or cannot spawn your structure.
      */
     public void addDimensionalSpacing(final WorldEvent.Load event) {
