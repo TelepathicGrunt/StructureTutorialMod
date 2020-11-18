@@ -54,8 +54,9 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 processResources {
 
-    // Will minify the json files of your mod when you build the jar.
-    // Helps reduce files size!
+	// Will minify the JSON files of your mod when you build the jar.
+	// Helps reduce files size! Minify means it will strip whitespace
+	// and turn the JSON files into 1 liners.
     doLast {
         def jsonMinifyStart = System.currentTimeMillis()
         def jsonMinified = 0
