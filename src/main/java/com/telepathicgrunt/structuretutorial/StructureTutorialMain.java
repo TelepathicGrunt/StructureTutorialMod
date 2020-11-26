@@ -68,7 +68,12 @@ public class StructureTutorialMain {
      */
     public void biomeModification(final BiomeLoadingEvent event) {
         // Add our structure to all biomes including other modded biomes.
-        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id.
+        // You can skip or add only to certain biomes based on stuff like biome category,
+        // temperature, scale, precipitation, mod id, etc. All kinds of options!
+        //
+        // You can even use the BiomeDictionary as well! To use BiomeDictionary, do
+        // RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
+        // registrykey. Then that can be fed into the dictionary to get the biome's types.
         event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
     }
 
