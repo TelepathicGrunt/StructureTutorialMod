@@ -16,18 +16,20 @@
       "weight": 1,
       "element": {
 
-          "_comment6": "The Identifier of the nbt file itself of the structure piece. ",
-          "_comment7": "The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house.",
+          "_comment6": "The Identifier of the nbt file itself of the structure piece.",
+          "_comment7": "Note, this will automatically check into the 'structures' folder for the nbt file.",
+          "_comment8": "The final path would look like 'resources/data/structure_tutorial/structures/run_down_house_left_side.nbt'",
+          "_comment9": "The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house.",
         "location": "structure_tutorial:run_down_house_left_side",
 
-          "_comment8": "Processor JSON files can be used to randomize or replace blocks dynamically. Here, we don't do any of that.",
+          "_comment10": "Processor JSON files can be used to randomize or replace blocks dynamically. Here, we don't do any of that.",
         "processors": "minecraft:empty",
 
-          "_comment9": "If set to 'terrain_matching', the house would be deformed to fit the change in land.",
-          "_comment10": "That's best for roads so lets stay 'rigid' for now.",
+          "_comment11": "If set to 'terrain_matching', the house would be deformed to fit the change in land.",
+          "_comment12": "That's best for roads so lets stay 'rigid' for now.",
         "projection": "rigid",
 
-          "_comment11": "The kind of element we are spawning. This one is most likely what you want.",
+          "_comment13": "The kind of element we are spawning. This one is most likely what you want.",
         "element_type": "minecraft:single_pool_element"
       }
     }
