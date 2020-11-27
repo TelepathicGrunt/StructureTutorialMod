@@ -156,16 +156,23 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                     true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's y value instead
 
 
+            // **THE FOLLOWING TWO LINES ARE OPTIONAL**
+            //
             // Right here, you can do interesting stuff with the pieces in this.components such as offset the
             // center piece by 50 blocks up for no reason, remove repeats of a piece or add a new piece so
             // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
             // holds just the piece's size and positions. Blocks will be placed later in JigsawManager.
             //
-            // In this case, we offset the pieces up 1 so that the doorstep is not lower than the original
-            // terrain and then we extend the bounding box down by 1 to force down the land by 1 block that the
-            // Structure.field_236384_t_ field will place at bottom of the house. By lifting the house up by 1 and
-            // lowering the bounding box, the land at bottom of house will now stay in place instead of also being
-            // raise by 1 block because the land is based on the bounding box itself.
+            // In this case, we do `piece.offset` to raise pieces up by 1 block so that the house is not right on
+            // the surface of water or sunken into land a bit.
+            //
+            // Then we extend the bounding box down by 1 by doing `piece.getBoundingBox().minY` which will cause the
+            // land formed around the structure to be lowered and not cover the doorstep. You can raise the bounding
+            // box to force the structure to be buried as well. This bounding box stuff with land is only for structures
+            // that you added to Structure.field_236384_t_ field handles adding land around the base of structures.
+            //
+            // By lifting the house up by 1 and lowering the bounding box, the land at bottom of house will now be
+            // flush with the surrounding terrain without blocking off the doorstep.
             this.components.forEach(piece -> piece.offset(0, 1, 0));
             this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);
 
