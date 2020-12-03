@@ -45,7 +45,14 @@ public class STStructures {
                    Getting structures to spawn in Superflat is a bit buggy right now so don't focus too much on this. */
                 .superflatFeature(RUN_DOWN_HOUSE.configure(FeatureConfig.DEFAULT))
 
-                /* Whether surrounding land will be modified automatically to conform to the bottom of the structure */
+                /*
+                 * Whether surrounding land will be modified automatically to conform to the bottom of the structure.
+                 * Basically, it adds land at the base of the structure like it does for Villages and Outposts.
+                 * Doesn't work well on structure that have pieces stacked vertically or change in heights.
+                 *
+                 * Note: The air space this method will create will be filled with water if the structure is below sealevel.
+                 * This means this is best for structure above sealevel so keep that in mind.
+                 */
                 .adjustsSurface()
 
                 /* Finally! Now we register our structure and everything above will take effect. */
