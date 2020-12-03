@@ -30,6 +30,9 @@
         "projection": "rigid",
 
           "_comment13": "The kind of element we are spawning. This one is most likely what you want.",
+          "_comment14": "There's 'minecraft:legacy_single_pool_element' but that swaps the behavior of",
+          "_comment15": "Air and Structure Void in your piece as well as change the attachment mechanism.",
+          "_comment16": "It's only for old Vanilla Jigsaw Structures so don't use it. Stick with non-legacy.",
         "element_type": "minecraft:single_pool_element"
       }
     }

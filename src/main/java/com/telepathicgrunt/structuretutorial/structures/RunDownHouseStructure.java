@@ -127,6 +127,13 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
+
+            /*
+             * We pass this into func_242837_a to tell it where to generate the structure.
+             * If func_242837_a's last parameter is true, blockpos's Y value is ignored and the
+             * structure will spawn at terrain height instead. Set that parameter to false to
+             * force the structure to spawn at blockpos's Y value instead. You got options here!
+             */
             BlockPos blockpos = new BlockPos(x, 0, z);
 
             // All a structure has to do is call this method to turn it into a jigsaw based structure!
@@ -153,7 +160,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                     this.components, // The list that will be populated with the jigsaw pieces after this method.
                     this.rand,
                     true, // Allow intersecting jigsaw pieces. If false, villages cannot generate houses. I recommend to keep this to true.
-                    true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's y value instead
+                    true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's Y value instead
 
 
             // **THE FOLLOWING TWO LINES ARE OPTIONAL**
@@ -181,7 +188,11 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
             this.recalculateStructureSize();
 
             // I use to debug and quickly find out if the structure is spawning or not and where it is.
-            StructureTutorialMain.LOGGER.log(Level.DEBUG, "Rundown House at " + (blockpos.getX()) + " " + blockpos.getY() + " " + (blockpos.getZ()));
+            // This is returning the coordinates of the center starting piece.
+            StructureTutorialMain.LOGGER.log(Level.DEBUG, "Rundown House at " +
+                            this.components.get(0).getBoundingBox().minX + " " +
+                            this.components.get(0).getBoundingBox().minY + " " +
+                            this.components.get(0).getBoundingBox().minZ);
         }
 
     }

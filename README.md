@@ -16,6 +16,8 @@ Now you're ready to begin adding the structure to your mod! Take a look at Struc
 
 When making your own mod, make sure to include the accesstransformer file and to include it in your build.gradle. If your IDE still say that the methods listed in the access transformer are private and shows an error, then you may need to refresh gradle and generate the runs again so the accesstransformers takes effect.
 
+Also, if you get stuck on the template_pool json, here's a datapack of the entire vanilla worldgen. Including vanilla's template_pools. Use this if you want to see how vanilla setup their pools! https://github.com/TelepathicGrunt/StructureTutorialMod/releases/tag/0.0.0
+
 Good luck and I hope this helps!
 
 ------------------
