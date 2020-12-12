@@ -20,3 +20,4 @@ Also, if you get stuck on the template_pool json, here's a datapack of the entir
 
 Good luck and I hope this helps!
  
+You can contact me through issue reports here or on discord. My Discord is TelepathicGrunt#7397
