@@ -7,6 +7,7 @@
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. If you want your jigsaw structure to have more than 1 piece, you will need to setup and save Jigsaw blocks with your structure to nbt (Here's two videos about structures!): 
 >https://www.youtube.com/watch?v=ylGFb4F4xVk&t=1s 
+
 >https://www.youtube.com/watch?v=5a4DAkWW3JQ&feature=youtu.be
 
 Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Then make a JSON file and put it in data/mod_id/worldgen/template_pool folder. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
