@@ -53,7 +53,7 @@ public class STStructures {
      * See the comments in below for more details.
      */
     public static void setupStructures() {
-        registerStructure(
+        setupMapSpacingAndLand(
                 RUN_DOWN_HOUSE.get(), /* The instance of the structure */
                 new StructureSeparationSettings(10 /* maximum distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts */,
@@ -68,7 +68,7 @@ public class STStructures {
      * The rarity of the structure is determined based on the values passed into
      * this method in the structureSeparationSettings argument. Called by registerFeatures.
      */
-    public static <F extends Structure<?>> void registerStructure(
+    public static <F extends Structure<?>> void setupMapSpacingAndLand(
             F structure,
             StructureSeparationSettings structureSeparationSettings,
             boolean transformSurroundingLand)
