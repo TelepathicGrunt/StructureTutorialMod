@@ -5,8 +5,11 @@
  
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 java files, 2 JSON files, and 2 structure nbt files.  
 
-If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. If you want your jigsaw structure to have more than 1 piece, you will need to setup and save Jigsaw blocks with your structure to nbt (You'll have to find another video tutorial for jigsaw structures than the one below. Let me know if you find a great Jigsaw Block tutorial!): 
->https://www.youtube.com/watch?v=ylGFb4F4xVk&t=1s 
+If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. If you want your jigsaw structure to have more than 1 piece, you will need to setup and save Jigsaw blocks with your structure to nbt (Here's two videos about structures! The first one is very long but extremely detailed.): 
+>https://www.youtube.com/watch?v=5a4DAkWW3JQ
+
+>https://www.youtube.com/watch?v=ylGFb4F4xVk  
+
 
 Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Then make a JSON file and put it in data/mod_id/worldgen/template_pool folder. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
 >![Image of the folder layout for Structure Tutorial Mod which shows the structure nbt files are inside data.structure_tutorial.structures which is inside src/main/resources](https://i.imgur.com/Q4FLSOT.png)
@@ -19,6 +22,8 @@ When making your own mod, make sure to include the accesstransformer file and to
 Also, if you get stuck on the template_pool json, here's a datapack of the entire vanilla worldgen. Including vanilla's template_pools. Use this if you want to see how vanilla setup their pools! https://github.com/TelepathicGrunt/StructureTutorialMod/releases/tag/0.0.0
 
 Good luck and I hope this helps!
+
+You can contact me through issue reports here or on discord. My Discord is TelepathicGrunt#7397
 
 ------------------
 
