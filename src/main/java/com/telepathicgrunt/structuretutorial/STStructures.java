@@ -7,7 +7,6 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -40,12 +39,12 @@ public class STStructures {
      * Forge has an issue report here: https://github.com/MinecraftForge/MinecraftForge/issues/7363
      * Keep watch on that to know when it is safe to remove or change structure's registry names
      */
-    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = setupStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.field_236558_a_)));
+    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = registerStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.field_236558_a_)));
 
     /**
      * Helper method for registering all structures
      */
-    private static <T extends Structure<?>> RegistryObject<T> setupStructure(String name, Supplier<T> structure) {
+    private static <T extends Structure<?>> RegistryObject<T> registerStructure(String name, Supplier<T> structure) {
         return DEFERRED_REGISTRY_STRUCTURE.register(name, structure);
     }
 
@@ -54,7 +53,7 @@ public class STStructures {
      * See the comments in below for more details.
      */
     public static void setupStructures() {
-        setupStructure(
+        registerStructure(
                 RUN_DOWN_HOUSE.get(), /* The instance of the structure */
                 new StructureSeparationSettings(10 /* maximum distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts */,
@@ -69,7 +68,7 @@ public class STStructures {
      * The rarity of the structure is determined based on the values passed into
      * this method in the structureSeparationSettings argument. Called by registerFeatures.
      */
-    public static <F extends Structure<?>> void setupStructure(
+    public static <F extends Structure<?>> void registerStructure(
             F structure,
             StructureSeparationSettings structureSeparationSettings,
             boolean transformSurroundingLand)
