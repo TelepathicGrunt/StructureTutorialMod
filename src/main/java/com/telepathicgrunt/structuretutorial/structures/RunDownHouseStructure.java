@@ -150,10 +150,10 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                             .getOrDefault(new ResourceLocation(StructureTutorialMain.MODID, "run_down_house/start_pool")),
 
                             // How many pieces outward from center can a recursive jigsaw structure spawn.
-                            // Our structure is only 1 block out and isn't recursive so any value of 1 or more doesn't change anything.
-                            // However, I recommend you keep this a high value so people can use datapacks to add additional pieces to your structure easily.
+                            // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
+                            // However, I recommend you keep this a decent value like 10 so people can use datapacks to add additional pieces to your structure easily.
                             // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
-                            20),
+                            10),
                     AbstractVillagePiece::new,
                     chunkGenerator,
                     templateManagerIn,
