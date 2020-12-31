@@ -160,7 +160,8 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                     blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
                     this.components, // The list that will be populated with the jigsaw pieces after this method.
                     this.rand,
-                    true, // Allow intersecting jigsaw pieces. If false, villages cannot generate houses. I recommend to keep this to true.
+                    false, // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
+                                      // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
                     true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's Y value instead
 
 
