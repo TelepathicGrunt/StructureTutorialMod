@@ -3,6 +3,8 @@
 
 **Change the Github branch to see previous MC versions of this tutorial.**
  
+ ## NOTE: Jigsaw structures can spawn a single piece structure without any Jigsaw Blocks. I recommend using the Jigsaw branch on this github tutorial instead of non-Jigsaws.
+ 
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 5 files plus 2 structure nbt files.  
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks: 
