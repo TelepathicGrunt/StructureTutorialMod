@@ -141,7 +141,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
              * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
              * Best way to do that is to use getColumnSample to grab a column of blocks at the structure's x/z position.
              * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-             * Make sure to set the final boolean in StructurePoolBasedGenerator.method_30419 to false so
+             * Make sure to set the final boolean in JigsawManager.func_242837_a to false so
              * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
              */
             //IBlockReader blockReader = chunkGenerator.func_230348_a_(blockpos.getX(), blockpos.getZ());
