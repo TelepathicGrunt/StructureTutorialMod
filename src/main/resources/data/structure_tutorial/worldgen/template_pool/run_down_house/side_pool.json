@@ -19,6 +19,18 @@
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }
+    },
+    {
+      "_comment7": "A second entry here means the starting piece's Jigsaw Block has a 50% chance of spawning",
+      "_comment8": "this golden right side piece instead of the regular right side. Think of it like a lottery.",
+
+      "weight": 1,
+      "element": {
+        "location": "structure_tutorial:run_down_house_right_side_golden",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
     }
   ]
 }
