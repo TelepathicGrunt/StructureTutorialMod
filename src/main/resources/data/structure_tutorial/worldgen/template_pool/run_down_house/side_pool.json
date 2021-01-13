@@ -7,14 +7,26 @@
     {
       "weight": 1,
       "element": {
-          "_comment1": "This side piece will only spawn if that side piece is entirely outside or inside the calling piece's bounding box",
-          "_comment2": "Intersecting pieces is not allowed in Jigsaw structures so plan accordingly!",
-          "_comment3": "To spawn a piece entirely outside a calling piece, make sure the Jigsaw block of the calling",
-          "_comment4": "piece is facing outward on the edge of its bounding box. To spawn a piece entirely contained",
-          "_comment5": "inside a calling piece, have the jigsaw block face inward and that there is enough space in",
-          "_comment6": "the calling piece's boundaries to spawn a smaller inner piece.",
+        "_comment1": "This side piece will only spawn if that side piece is entirely outside or inside the calling piece's bounding box",
+        "_comment2": "Intersecting pieces is not allowed in Jigsaw structures so plan accordingly!",
+        "_comment3": "To spawn a piece entirely outside a calling piece, make sure the Jigsaw block of the calling",
+        "_comment4": "piece is facing outward on the edge of its bounding box. To spawn a piece entirely contained",
+        "_comment5": "inside a calling piece, have the jigsaw block face inward and that there is enough space in",
+        "_comment6": "the calling piece's boundaries to spawn a smaller inner piece.",
 
         "location": "structure_tutorial:run_down_house_right_side",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "_comment7": "A second entry here means the starting piece's Jigsaw Block has a 50% chance of spawning",
+      "_comment8": "this golden right side piece instead of the regular right side. Think of it like a lottery.",
+
+      "weight": 1,
+      "element": {
+        "location": "structure_tutorial:run_down_house_right_side_golden",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

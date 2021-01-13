@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -136,6 +137,15 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
              */
             BlockPos blockpos = new BlockPos(x, 0, z);
 
+            /*
+             * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
+             * Best way to do that is to use getColumnSample to grab a column of blocks at the structure's x/z position.
+             * Then loop through it and look for land with air above it and set blockpos's Y value to it.
+             * Make sure to set the final boolean in StructurePoolBasedGenerator.method_30419 to false so
+             * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
+             */
+            //IBlockReader blockReader = chunkGenerator.func_230348_a_(blockpos.getX(), blockpos.getZ());
+
             // All a structure has to do is call this method to turn it into a jigsaw based structure!
             JigsawManager.func_242837_a(
                     dynamicRegistryManager,
@@ -161,8 +171,9 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                     this.components, // The list that will be populated with the jigsaw pieces after this method.
                     this.rand,
                     false, // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
-                                      // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
-                    true); // Place at heightmap (top land). Set this to false for structure to be place at blockpos's Y value instead
+                        // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
+                    true);  // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
+                         // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
 
 
             // **THE FOLLOWING TWO LINES ARE OPTIONAL**
