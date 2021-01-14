@@ -64,6 +64,11 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
      *       use the StructureSpawnListGatherEvent to add water_creatures, water_ambient,
      *       ambient, or misc mobs. Use that event to add/remove mobs from structures
      *       that are not your own.
+     *
+     * NOTE 2: getSpawnList and getCreatureSpawnList is the vanilla methods that Forge does
+     *         not hook up. Do not use those methods or else the mobs won't spawn. You would
+     *         have to manually implement spawning for them. Stick with Forge's Default form
+     *         as it is easier to use that.
      */
     private static final List<MobSpawnInfo.Spawners> STRUCTURE_MONSTERS = ImmutableList.of(
             new MobSpawnInfo.Spawners(EntityType.ILLUSIONER, 100, 4, 9),
