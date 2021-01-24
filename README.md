@@ -1,5 +1,5 @@
 # Structure Tutorial Mod (Forge)
-**How to register and generate jigsaw structures in 1.16.3 Minecraft Forge using nbt files!**
+**How to register and generate jigsaw structures in 1.16.3+ Minecraft Forge using nbt files!**
 
 **Change the Github branch to see other versions of this tutorial including for Fabric!**
  
