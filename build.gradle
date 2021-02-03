@@ -14,7 +14,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = "${mod_version}"
-group = 'com.telepathicgrunt.structuretutorial' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'com.telepathicgrunt.structuretutorial' // https://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'structure_tutorial'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
