@@ -15,7 +15,7 @@ Once saved, the structure nbt file is stored in that world's save folder within 
 >![Image of the folder layout for Structure Tutorial Mod which shows the structure nbt files are inside data.structure_tutorial.structures which is inside src/main/resources](https://i.imgur.com/Q4FLSOT.png)
 
 
-Now you're ready to begin adding the structure to your mod! Take a look at StructureTutorialMain, start reading the comments, and follow the methods/classes. Don't just copy the code quickly or else you will get confuse. Take your time and try to understand how it all works before attempting to register and generate your structure in your own mod.
+Now you're ready to begin adding the structure to your mod! Take a look at StructureTutorialMain, start reading the comments, and follow the methods/classes. Don't just copy the code quickly or else you will get confuse. Take your time and try to understand how it all works before attempting to register and generate your structure in your own mod. (Also, check out the house structure itself in the world! There's some info on signs in the structure itself about nbt files)
 
 When making your own mod, make sure to include the accesstransformer file and to include it in your build.gradle. If your IDE still say that the methods listed in the access transformer are private and shows an error, then you may need to refresh gradle and generate the runs again so the accesstransformers takes effect.
 

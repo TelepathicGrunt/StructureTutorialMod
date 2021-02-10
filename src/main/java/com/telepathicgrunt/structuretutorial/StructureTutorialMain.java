@@ -1,6 +1,12 @@
 package com.telepathicgrunt.structuretutorial;
 
+import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -12,11 +18,13 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +62,22 @@ public class StructureTutorialMain {
         event.enqueueWork(() -> {
             STStructures.setupStructures();
             STConfiguredStructures.registerConfiguredStructures();
+
+            // There are very few mods that relies on seeing your structure in the noise settings registry before the world is made.
+            // This is best done here in FMLCommonSetupEvent after you created your configuredstructures.
+            WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
+                Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
+
+                // Pre-caution in case a mod makes the structure map immutable like datapacks do.
+                if(structureMap instanceof ImmutableMap){
+                    Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+                    tempMap.put(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
+                    settings.getValue().getStructures().field_236193_d_ = tempMap;
+                }
+                else{
+                    structureMap.put(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
+                }
+            });
         });
     }
 
@@ -88,9 +112,23 @@ public class StructureTutorialMain {
      * Basically use this to make absolutely sure the chunkgenerator
      * can or cannot spawn your structure.
      */
+    private static Method GETCODEC_METHOD;
     public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld)event.getWorld();
+
+            // Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
+            // They will handle your structure spacing for your if you add to WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent.
+            // This here is done with reflection as this tutorial is not about setting up and using Mixins.
+            // If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
+            try {
+                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "getCodec");
+                ResourceLocation cgRL = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkProvider().generator));
+                if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+            }
+            catch(Exception e){
+                StructureTutorialMain.LOGGER.error("Was unable to check if " + serverWorld.getDimensionKey().getLocation() + " is using Terraforged's ChunkGenerator.");
+            }
 
             // Prevent spawning our structure in Vanilla's superflat world as
             // people seem to want their superflat worlds free of modded structures.
@@ -100,8 +138,11 @@ public class StructureTutorialMain {
                 return;
             }
 
+
             Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
             // putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
+            // NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
+            //       already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
             tempMap.putIfAbsent(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
