@@ -122,7 +122,7 @@ public class StructureTutorialMain {
             // This here is done with reflection as this tutorial is not about setting up and using Mixins.
             // If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
             try {
-                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "getCodec");
+                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
                 ResourceLocation cgRL = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkProvider().generator));
                 if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
             }
