@@ -5,7 +5,8 @@
  
  This very small Forge mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 java files, 2 JSON files, and 3 structure nbt files.  
 
-If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: https://www.youtube.com/watch?v=umhuRXinD3o
+If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
+>https://www.youtube.com/watch?v=umhuRXinD3o
 
 If you want your jigsaw structure to have more than 1 piece, you will need to setup and save Jigsaw blocks with your structure to nbt. If your structure is only a single piece, then you do not need any Jigsaw Blocks and can just use 1 pool file instead. (Here's two videos about using Jigsaw Blocks in structures! The first one is very long but extremely detailed.): 
 >https://www.youtube.com/watch?v=5a4DAkWW3JQ
