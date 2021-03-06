@@ -65,6 +65,9 @@ public class StructureTutorialMain {
 
             // There are very few mods that relies on seeing your structure in the noise settings registry before the world is made.
             // This is best done here in FMLCommonSetupEvent after you created your configuredstructures.
+            // You may see some mods add their spacings to DimensionSettings.field_242740_q instead of the NOISE_SETTINGS loop below but
+            // that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
+            // So yeah, don't do DimensionSettings.field_242740_q. Use the NOISE_SETTINGS loop below instead.
             WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
                 Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
 
@@ -138,11 +141,11 @@ public class StructureTutorialMain {
                 return;
             }
 
-
-            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
             // putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
+            // Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
             // NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
             //       already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
+            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
             tempMap.putIfAbsent(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }

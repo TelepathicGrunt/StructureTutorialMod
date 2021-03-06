@@ -89,6 +89,8 @@ public class STStructures {
          *
          * Note: The air space this method will create will be filled with water if the structure is below sealevel.
          * This means this is best for structure above sealevel so keep that in mind.
+         *
+         * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
          */
         if(transformSurroundingLand){
             Structure.field_236384_t_ =
@@ -105,6 +107,8 @@ public class STStructures {
          * However, it seems it doesn't always work for code made dimensions as they read from
          * this list beforehand. Use the WorldEvent.Load event in StructureTutorialMain to add
          * the structure spacing from this list into that dimension.
+         *
+         * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
          */
         DimensionStructuresSettings.field_236191_b_ =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
