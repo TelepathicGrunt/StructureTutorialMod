@@ -3,6 +3,7 @@ package com.telepathicgrunt.structuretutorial;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -11,6 +12,8 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class STStructures {
@@ -60,6 +63,7 @@ public class STStructures {
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 true);
 
+
         // Add more structures here and so on
     }
 
@@ -90,7 +94,7 @@ public class STStructures {
          * Note: The air space this method will create will be filled with water if the structure is below sealevel.
          * This means this is best for structure above sealevel so keep that in mind.
          *
-         * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
+         * field_236384_t_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
         if(transformSurroundingLand){
             Structure.field_236384_t_ =
@@ -101,19 +105,49 @@ public class STStructures {
         }
 
         /*
-         * Adds the structure's spacing into several places so that the structure's spacing remains
-         * correct in any dimension or worldtype instead of not spawning.
+         * Adds the structure's spacing into a default structure spacing map that other mods can utilize.
          *
-         * However, it seems it doesn't always work for code made dimensions as they read from
-         * this list beforehand. Use the WorldEvent.Load event in StructureTutorialMain to add
-         * the structure spacing from this list into that dimension.
+         * However, while it does propagate the spacing to some correct dimensions form this map,
+         * it seems it doesn't always work for code made dimensions as they read from this list beforehand.
          *
-         * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
+         * Instead, we will use the WorldEvent.Load event in StructureTutorialMain to add the structure
+         * spacing from this list into that dimension or do dimension blacklisting properly. We also use
+         * our entry in DimensionStructuresSettings.field_236191_b_ in WorldEvent.Load as well.
+         *
+         * field_236191_b_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
         DimensionStructuresSettings.field_236191_b_ =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
                         .putAll(DimensionStructuresSettings.field_236191_b_)
                         .put(structure, structureSeparationSettings)
                         .build();
+
+
+        /*
+         * There are very few mods that relies on seeing your structure in the noise settings registry before the world is made.
+         *
+         * This is best done here in FMLCommonSetupEvent after you created your configuredstructures.
+         * You may see some mods add their spacings to DimensionSettings.field_242740_q instead of the NOISE_SETTINGS loop below but
+         * that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
+         * So yeah, don't do DimensionSettings.field_242740_q. Use the NOISE_SETTINGS loop below instead.
+         */
+        WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
+            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
+
+            /*
+             * Pre-caution in case a mod makes the structure map immutable like datapacks do.
+             * I take no chances myself. You never know what another mods does...
+             *
+             * field_236193_d_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
+             */
+            if(structureMap instanceof ImmutableMap){
+                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+                tempMap.put(structure, structureSeparationSettings);
+                settings.getValue().getStructures().field_236193_d_ = tempMap;
+            }
+            else{
+                structureMap.put(structure, structureSeparationSettings);
+            }
+        });
     }
 }

@@ -62,25 +62,6 @@ public class StructureTutorialMain {
         event.enqueueWork(() -> {
             STStructures.setupStructures();
             STConfiguredStructures.registerConfiguredStructures();
-
-            // There are very few mods that relies on seeing your structure in the noise settings registry before the world is made.
-            // This is best done here in FMLCommonSetupEvent after you created your configuredstructures.
-            // You may see some mods add their spacings to DimensionSettings.field_242740_q instead of the NOISE_SETTINGS loop below but
-            // that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
-            // So yeah, don't do DimensionSettings.field_242740_q. Use the NOISE_SETTINGS loop below instead.
-            WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
-                Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
-
-                // Pre-caution in case a mod makes the structure map immutable like datapacks do.
-                if(structureMap instanceof ImmutableMap){
-                    Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-                    tempMap.put(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
-                    settings.getValue().getStructures().field_236193_d_ = tempMap;
-                }
-                else{
-                    structureMap.put(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
-                }
-            });
         });
     }
 
@@ -93,13 +74,15 @@ public class StructureTutorialMain {
      * Here, we will use this to add our structure to all biomes.
      */
     public void biomeModification(final BiomeLoadingEvent event) {
-        // Add our structure to all biomes including other modded biomes.
-        // You can skip or add only to certain biomes based on stuff like biome category,
-        // temperature, scale, precipitation, mod id, etc. All kinds of options!
-        //
-        // You can even use the BiomeDictionary as well! To use BiomeDictionary, do
-        // RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
-        // registrykey. Then that can be fed into the dictionary to get the biome's types.
+        /*
+         * Add our structure to all biomes including other modded biomes.
+         * You can skip or add only to certain biomes based on stuff like biome category,
+         * temperature, scale, precipitation, mod id, etc. All kinds of options!
+         *
+         * You can even use the BiomeDictionary as well! To use BiomeDictionary, do
+         * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
+         * registrykey. Then that can be fed into the dictionary to get the biome's types.
+         */
         event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
     }
 
@@ -108,22 +91,22 @@ public class StructureTutorialMain {
      * If the spacing is not added, the structure doesn't spawn.
      *
      * Use this for dimension blacklists for your structure.
-     * (Don't forget to attempt to remove your structure too from
-     *  the map if you are blacklisting that dimension! It might have
-     *  your structure in it already.)
+     * (Don't forget to attempt to remove your structure too from the map if you are blacklisting that dimension!)
+     * (It might have your structure in it already.)
      *
-     * Basically use this to make absolutely sure the chunkgenerator
-     * can or cannot spawn your structure.
+     * Basically use this to make absolutely sure the chunkgenerator can or cannot spawn your structure.
      */
     private static Method GETCODEC_METHOD;
     public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerWorld){
             ServerWorld serverWorld = (ServerWorld)event.getWorld();
 
-            // Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
-            // They will handle your structure spacing for your if you add to WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent.
-            // This here is done with reflection as this tutorial is not about setting up and using Mixins.
-            // If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
+            /*
+             * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
+             * They will handle your structure spacing for your if you add to WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent.
+             * This here is done with reflection as this tutorial is not about setting up and using Mixins.
+             * If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
+             */
             try {
                 if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
                 ResourceLocation cgRL = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkProvider().generator));
@@ -133,18 +116,24 @@ public class StructureTutorialMain {
                 StructureTutorialMain.LOGGER.error("Was unable to check if " + serverWorld.getDimensionKey().getLocation() + " is using Terraforged's ChunkGenerator.");
             }
 
-            // Prevent spawning our structure in Vanilla's superflat world as
-            // people seem to want their superflat worlds free of modded structures.
-            // Also that vanilla superflat is really tricky and buggy to work with in my experience.
+            /*
+             * Prevent spawning our structure in Vanilla's superflat world as
+             * people seem to want their superflat worlds free of modded structures.
+             * Also that vanilla superflat is really tricky and buggy to work with in my experience.
+             */
             if(serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator &&
                 serverWorld.getDimensionKey().equals(World.OVERWORLD)){
                 return;
             }
 
-            // putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
-            // Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
-            // NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
-            //       already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
+            /*
+             * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
+             * Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
+             *
+             * NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
+             * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
+             * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
+             */
             Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
             tempMap.putIfAbsent(STStructures.RUN_DOWN_HOUSE.get(), DimensionStructuresSettings.field_236191_b_.get(STStructures.RUN_DOWN_HOUSE.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
