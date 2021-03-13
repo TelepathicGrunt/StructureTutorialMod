@@ -50,6 +50,7 @@ jar {
 
 
 // Bonus stuff!
+import groovy.json.JsonParserType
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 processResources {
@@ -65,7 +66,7 @@ processResources {
             File file = it
             jsonMinified++
             def oldLength = file.length()
-            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+			file.text = JsonOutput.toJson(new JsonSlurper(type: JsonParserType.LAX).parse(file))
             jsonBytesSaved += oldLength - file.length()
         }
         println('Minified ' + jsonMinified + ' json files. Saved ' + jsonBytesSaved + ' bytes. Took ' + (System.currentTimeMillis() - jsonMinifyStart) + 'ms.')
