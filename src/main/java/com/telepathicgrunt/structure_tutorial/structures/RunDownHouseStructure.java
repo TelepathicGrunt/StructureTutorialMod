@@ -76,7 +76,11 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
     /*
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.
-     * 
+     *
+     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
+     * shouldStartAt to return true only if certain chunk coordinates are passed in
+     * which allows you to spawn structures only at certain coordinates in the world.
+     *
      * Notice how the biome is also passed in. Though, you are not going to do any biome
      * checking here as you should've added this structure to the biomes you
      * wanted already with the biome load event.

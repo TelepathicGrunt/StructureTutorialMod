@@ -37,7 +37,7 @@ public class STStructures {
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
 
                 .defaultConfig(new StructureConfig(
-                        10, /* maximum distance apart in chunks between spawn attempts */
+                        10, /* average distance apart in chunks between spawn attempts */
                         5, /* minimum distance apart in chunks between spawn attempts */
                         399117345 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */))
 
