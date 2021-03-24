@@ -5,21 +5,22 @@ import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
+import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import org.apache.logging.log4j.Level;
 
 import java.util.List;
@@ -91,7 +92,11 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
     /*
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.
-     * 
+     *
+     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
+     * func_230363_a_ to return true only if certain chunk coordinates are passed in
+     * which allows you to spawn structures only at certain coordinates in the world.
+     *
      * Notice how the biome is also passed in. Though, you are not going to
      * do any biome checking here as you should've added this structure to
      * the biomes you wanted already with the biome load event.
@@ -116,7 +121,6 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
 //        int landHeight = chunkGenerator.getNoiseHeight(chunkX << 4, chunkZ << 4, Heightmap.Type.WORLD_SURFACE_WG);
 //        return landHeight > 100;
 //    }
-
 
     /**
      * Handles calling up the structure's pieces class and height that structure will spawn at.
