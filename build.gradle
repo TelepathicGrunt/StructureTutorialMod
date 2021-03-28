@@ -23,7 +23,7 @@ minecraft {
     // MCPBot is dead. Do not use that to check for updates.
     // if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `
     // command for the project and it'll remap everything to the cutting-edge mappings!
-    mappings channel: 'snapshot', version: "${mapping}"
+    mappings channel: "official", version: "${mc_version}"
     
     // Structures in 1.16.3+ require you to place them in some vanilla maps which are private variables
     // The access transformer allows us to make them public so we can place our structures in them

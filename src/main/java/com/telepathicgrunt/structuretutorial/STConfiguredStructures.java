@@ -11,7 +11,7 @@ public class STConfiguredStructures {
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
+    public static StructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get().configured(IFeatureConfig.NONE);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.
@@ -26,7 +26,7 @@ public class STConfiguredStructures {
 
         /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
         * prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
-        * FlatGenerationSettings.STRUCTURES in it and you don't add your structure to it, the game
+        * FlatGenerationSettings.STRUCTURE_FEATURES in it and you don't add your structure to it, the game
         * could crash later when you attempt to add the StructureSeparationSettings to the dimension.
         *
         * (It would also crash with superflat worldtype if you omit the below line
@@ -39,6 +39,6 @@ public class STConfiguredStructures {
         *
         * Requires AccessTransformer ( see resources/META-INF/accesstransformer.cfg )
         */
-        FlatGenerationSettings.STRUCTURES.put(STStructures.RUN_DOWN_HOUSE.get(), CONFIGURED_RUN_DOWN_HOUSE);
+        FlatGenerationSettings.STRUCTURE_FEATURES.put(STStructures.RUN_DOWN_HOUSE.get(), CONFIGURED_RUN_DOWN_HOUSE);
     }
 }

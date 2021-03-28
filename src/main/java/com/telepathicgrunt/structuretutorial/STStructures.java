@@ -36,13 +36,14 @@ public class STStructures {
      * use them too directly from the registries. It great for mod/datapacks compatibility.
      *
      * IMPORTANT: Once you have set the name for your structure below and distributed your mod,
-     * it should NEVER be changed or else it can cause worlds to become corrupted if they generated
-     * any chunks with your mod with the old structure name. See MC-194811 in Mojang's bug tracker for details.
+     *   changing the structure's registry name or removing the structure may cause log spam.
+     *   This log spam won't break your worlds as forge already fixed the Mojang bug of removed structures wrecking worlds.
+     *   https://github.com/MinecraftForge/MinecraftForge/commit/56e538e8a9f1b8e6ff847b9d2385484c48849b8d
      *
-     * Forge has an issue report here: https://github.com/MinecraftForge/MinecraftForge/issues/7363
-     * Keep watch on that to know when it is safe to remove or change structure's registry names
+     *   However, users might not know that and think you are to blame for issues that doesn't exist.
+     *   So it is best to keep your structure names the same as long as you can instead of changing them frequently.
      */
-    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = registerStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.field_236558_a_)));
+    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = registerStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.CODEC)));
 
     /**
      * Helper method for registering all structures
@@ -70,7 +71,8 @@ public class STStructures {
     /**
      * Adds the provided structure to the registry, and adds the separation settings.
      * The rarity of the structure is determined based on the values passed into
-     * this method in the structureSeparationSettings argument. Called by registerFeatures.
+     * this method in the structureSeparationSettings argument.
+     * This method is called by setupStructures above.
      */
     public static <F extends Structure<?>> void setupMapSpacingAndLand(
             F structure,
@@ -78,13 +80,13 @@ public class STStructures {
             boolean transformSurroundingLand)
     {
         /*
-         * We need to add our structures into the map in Structure alongside vanilla
-         * structures or else it will cause errors. Called by registerStructure.
+         * We need to add our structures into the map in Structure class
+         * alongside vanilla structures or else it will cause errors.
          *
          * If the registration is setup properly for the structure,
          * getRegistryName() should never return null.
          */
-        Structure.NAME_STRUCTURE_BIMAP.put(structure.getRegistryName().toString(), structure);
+        Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Whether surrounding land will be modified automatically to conform to the bottom of the structure.
@@ -94,31 +96,32 @@ public class STStructures {
          * Note: The air space this method will create will be filled with water if the structure is below sealevel.
          * This means this is best for structure above sealevel so keep that in mind.
          *
-         * field_236384_t_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
+         * NOISE_AFFECTING_FEATURES requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
         if(transformSurroundingLand){
-            Structure.field_236384_t_ =
+            Structure.NOISE_AFFECTING_FEATURES =
                     ImmutableList.<Structure<?>>builder()
-                            .addAll(Structure.field_236384_t_)
+                            .addAll(Structure.NOISE_AFFECTING_FEATURES)
                             .add(structure)
                             .build();
         }
 
         /*
-         * Adds the structure's spacing into a default structure spacing map that other mods can utilize.
+         * This is the map that holds the default spacing of all structures.
+         * Always add your structure to here so that other mods can utilize it if needed.
          *
-         * However, while it does propagate the spacing to some correct dimensions form this map,
+         * However, while it does propagate the spacing to some correct dimensions from this map,
          * it seems it doesn't always work for code made dimensions as they read from this list beforehand.
          *
          * Instead, we will use the WorldEvent.Load event in StructureTutorialMain to add the structure
-         * spacing from this list into that dimension or do dimension blacklisting properly. We also use
-         * our entry in DimensionStructuresSettings.field_236191_b_ in WorldEvent.Load as well.
+         * spacing from this list into that dimension or to do dimension blacklisting properly.
+         * We also use our entry in DimensionStructuresSettings.DEFAULTS in WorldEvent.Load as well.
          *
-         * field_236191_b_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
+         * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
-        DimensionStructuresSettings.field_236191_b_ =
+        DimensionStructuresSettings.DEFAULTS =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-                        .putAll(DimensionStructuresSettings.field_236191_b_)
+                        .putAll(DimensionStructuresSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
 
@@ -126,24 +129,23 @@ public class STStructures {
         /*
          * There are very few mods that relies on seeing your structure in the noise settings registry before the world is made.
          *
-         * This is best done here in FMLCommonSetupEvent after you created your configuredstructures.
-         * You may see some mods add their spacings to DimensionSettings.field_242740_q instead of the NOISE_SETTINGS loop below but
+         * You may see some mods add their spacings to DimensionSettings.BUILTIN_OVERWORLD instead of the NOISE_GENERATOR_SETTINGS loop below but
          * that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
-         * So yeah, don't do DimensionSettings.field_242740_q. Use the NOISE_SETTINGS loop below instead.
+         * So yeah, don't do DimensionSettings.BUILTIN_OVERWORLD. Use the NOISE_GENERATOR_SETTINGS loop below instead if you must.
          */
-        WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
-            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
+        WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings().structureConfig();
 
             /*
              * Pre-caution in case a mod makes the structure map immutable like datapacks do.
              * I take no chances myself. You never know what another mods does...
              *
-             * field_236193_d_ requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
+             * structureConfig requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
              */
             if(structureMap instanceof ImmutableMap){
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
-                settings.getValue().getStructures().field_236193_d_ = tempMap;
+                settings.getValue().structureSettings().structureConfig = tempMap;
             }
             else{
                 structureMap.put(structure, structureSeparationSettings);
