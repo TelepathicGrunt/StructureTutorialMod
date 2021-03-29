@@ -23,6 +23,7 @@ public class StructureTutorialMain implements ModInitializer {
     public static final String MODID = "structure_tutorial";
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onInitialize() {
 
         /*
