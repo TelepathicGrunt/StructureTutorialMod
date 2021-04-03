@@ -43,14 +43,7 @@ public class STStructures {
      *   However, users might not know that and think you are to blame for issues that doesn't exist.
      *   So it is best to keep your structure names the same as long as you can instead of changing them frequently.
      */
-    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = registerStructure("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.CODEC)));
-
-    /**
-     * Helper method for registering all structures
-     */
-    private static <T extends Structure<?>> RegistryObject<T> registerStructure(String name, Supplier<T> structure) {
-        return DEFERRED_REGISTRY_STRUCTURE.register(name, structure);
-    }
+    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = DEFERRED_REGISTRY_STRUCTURE.register("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.CODEC)));
 
     /**
      * This is where we set the rarity of your structures and determine if land conforms to it.
