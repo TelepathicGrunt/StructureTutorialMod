@@ -2,38 +2,38 @@
     // More info on template pools can be found here: https://minecraft.gamepedia.com/Custom_world_generation#JSON_format_8
     // Yes, worldgen json files can have comments. Minecraft does "lenient" parsing of these json files.
 
-    // This is the name of the template pool itself. I tend to just put the file path and file name here with modid."
+    // This is the name of the template pool itself. I tend to just put the file path and file name here with modid.
   "name": "repurposed_structures:run_down_house/start_pool",
 
-    // The template pool to refer to if the entries in 'elements' fails to generate."
+    // The template pool to refer to if the entries in 'elements' fails to generate.
   "fallback": "minecraft:empty",
 
-    // Here you can list as many nbt files or configured features to spawn."
-    // Do note that configured features needs a special element entry stuff."
+    // Here you can list as many nbt files or configured features to spawn.
+    // Do note that configured features needs a special element entry stuff.
   "elements": [
     {
 
-        // How likely out of all the element for this one to be chosen."
+        // How likely out of all the element for this one to be chosen.
       "weight": 1,
       "element": {
 
-          // The Identifier of the nbt file itself of the structure piece."
-          // Note, this will automatically check into the 'structures' folder for the nbt file."
-          // The final path would look like 'resources/data/structure_tutorial/structures/run_down_house_left_side.nbt'"
-          // The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house."
+          // The Identifier of the nbt file itself of the structure piece.
+          // Note, this will automatically check into the 'structures' folder for the nbt file.
+          // The final path would look like 'resources/data/structure_tutorial/structures/run_down_house_left_side.nbt'
+          // The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house.
         "location": "structure_tutorial:run_down_house_left_side",
 
-          // Processor JSON files can be used to randomize or replace blocks dynamically. Here, we don't do any of that."
+          // Processor JSON files can be used to randomize or replace blocks dynamically. Here, we don't do any of that.
         "processors": "minecraft:empty",
 
-          // If set to 'terrain_matching', the house would be deformed to fit the change in land."
-          // That's best for roads so lets stay 'rigid' for now."
+          // If set to 'terrain_matching', the house would be deformed to fit the change in land.
+          // That's best for roads so lets stay 'rigid' for now.
         "projection": "rigid",
 
-          // The kind of element we are spawning. This one is most likely what you want."
-          // There's 'minecraft:legacy_single_pool_element' but that swaps the behavior of"
-          // Air and Structure Void in your piece as well as change the attachment mechanism."
-          // It's only for old Vanilla Jigsaw Structures so don't use it. Stick with non-legacy."
+          // The kind of element we are spawning. This one is most likely what you want.
+          // There's 'minecraft:legacy_single_pool_element' but that swaps the behavior of
+          // Air and Structure Void in your piece as well as change the attachment mechanism.
+          // It's only for old Vanilla Jigsaw Structures so don't use it. Stick with non-legacy.
         "element_type": "minecraft:single_pool_element"
       }
     }

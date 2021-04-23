@@ -20,7 +20,6 @@ build
 # other
 eclipse
 run
-.gitattributes
 
 # Files from Forge MDK
 forge*changelog.txt
