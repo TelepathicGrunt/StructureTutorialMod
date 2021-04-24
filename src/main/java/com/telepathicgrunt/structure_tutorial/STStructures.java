@@ -38,7 +38,7 @@ public class STStructures {
 
                 .defaultConfig(new StructureConfig(
                         10, /* average distance apart in chunks between spawn attempts */
-                        5, /* minimum distance apart in chunks between spawn attempts */
+                        5, /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE */
                         399117345 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */))
 
                 /* Always set this or else re-entering SuperFlat worldtype will crash.
