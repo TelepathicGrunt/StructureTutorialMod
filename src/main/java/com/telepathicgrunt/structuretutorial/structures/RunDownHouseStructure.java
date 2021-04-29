@@ -52,6 +52,9 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
 
 
     /**
+     *        : WARNING!!! DO NOT FORGET THIS METHOD!!!! :
+     * If you do not override step method, your structure WILL crash the biome as it is being parsed!
+     *
      * Generation stage for when to generate the structure. there are 10 stages you can pick from!
      * This surface structure stage places the structure before plants and ores are generated.
      */
