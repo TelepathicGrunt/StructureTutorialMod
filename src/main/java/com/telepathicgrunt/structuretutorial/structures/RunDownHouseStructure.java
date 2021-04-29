@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -11,7 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.Biome;
@@ -28,6 +32,7 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import org.apache.logging.log4j.Level;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.world.gen.feature.structure.Structure.IStartFactory;
 
