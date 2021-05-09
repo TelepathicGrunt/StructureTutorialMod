@@ -35,6 +35,8 @@ minecraft {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods { examplemod { source sourceSets.main } }
         }
 
@@ -42,8 +44,16 @@ minecraft {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods { examplemod {  source sourceSets.main } }
         }
+    }
+}
+
+repositories {
+    maven {
+        url "https://nexus.resourcefulbees.com/repository/telepathicgrunt/"
     }
 }
 
@@ -52,6 +62,10 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    // I recommend having Blame on in your development environment as it can give you more info of what is
+    // broken with your Jigsaw structure. It is super useful!. Just uncomment out this line and refresh gradle.
+    // implementation fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.0.0-forge")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
