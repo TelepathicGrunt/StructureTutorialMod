@@ -11,6 +11,8 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	// Repo for getting Blame from
+	maven {	url "https://nexus.resourcefulbees.com/repository/maven-public/" }
 }
 
 dependencies {
@@ -20,6 +22,10 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "io.github.prospector:modmenu:${project.mod_menu_version}"
+
+	// I recommend having Blame on in your development environment as it can give you more info of what is
+	// broken with your Jigsaw structure. It is super useful!. Just uncomment out this line and refresh gradle.
+	// modImplementation "com.telepathicgrunt:Blame-Fabric:1.16.5-3.0.0-fabric"
 }
 
 processResources {
