@@ -35,8 +35,11 @@ minecraft {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Needed to make other mods with mixins be able to run in you development environment
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods { examplemod { source sourceSets.main } }
         }
 
@@ -44,17 +47,19 @@ minecraft {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Needed to make other mods with mixins be able to run in you development environment
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods { examplemod {  source sourceSets.main } }
         }
     }
 }
 
 repositories {
-    maven {
-        url "https://nexus.resourcefulbees.com/repository/telepathicgrunt/"
-    }
+    // Repo for getting Blame from
+    maven { url "https://nexus.resourcefulbees.com/repository/telepathicgrunt/" }
 }
 
 dependencies {
