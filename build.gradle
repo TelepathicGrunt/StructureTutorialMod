@@ -25,7 +25,7 @@ dependencies {
 
 	// I recommend having Blame on in your development environment as it can give you more info of what is
 	// broken with your Jigsaw structure. It is super useful!. Just uncomment out this line and refresh gradle.
-	// modImplementation "com.telepathicgrunt:Blame-Fabric:1.16.5-3.0.0-fabric"
+	// modImplementation "com.telepathicgrunt:Blame-Fabric:1.16.5-3.0.1-fabric"
 }
 
 processResources {
