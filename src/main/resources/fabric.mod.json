@@ -9,11 +9,11 @@
     "TelepathicGrunt"
   ],
   "contact": {
-    "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.16.3-Fabric-Jigsaw"
+    "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.17.x-Fabric-Jigsaw"
   },
 
   "license": "MIT License",
-  "icon": "",
+  "icon": " ",
 
   "environment": "*",
   "entrypoints": {
@@ -25,8 +25,8 @@
     "structure_tutorial.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.10.6",
-    "minecraft": ">=1.16.2",
-    "fabric": ">=0.25.0"
+    "fabricloader": ">=0.11.3",
+    "minecraft": ">=1.17",
+    "fabric": ">=0.34.9"
   }
 }
