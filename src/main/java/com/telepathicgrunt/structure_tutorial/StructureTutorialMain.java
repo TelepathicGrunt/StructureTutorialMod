@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.chunk.StructureConfig;
+import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,31 +58,29 @@ public class StructureTutorialMain implements ModInitializer {
                         });
 
 
-        // This is optional and can be used for blacklisting the structure from dimensions.
-        // See the comment below for the method and why it is optional.
-        //removeStructureSpawningFromSelectedDimension();
+        // Makes sure all dimensions can spawn our structure if the biome generating has our structure.
+        addStructureSpawningToAllDimensions();
     }
 
 
     /**
-     * || OPTIONAL ||
-     *  This is optional as Fabric API already adds your structure to all dimension.
-     *  But if you want to do dimension based blacklisting, you will need to both
-     *  manually remove your structure from the chunkgenerator's structure spacing map.
+     * This will add our structure's spacing to all dimensions so that even json defined dimensions
+     * with their own json noise setting file can still spawn our structure if we add it to the
+     * dimension's biomes as well.
+     *
+     *  If you want to do dimension based blacklisting, you will need to manually
+     *  remove your structure from the chunkgenerator's structure spacing map.
      * If the spacing or our structure is not added, the structure doesn't spawn in that dimension.
      */
-    public static void removeStructureSpawningFromSelectedDimension() {
+    public static void addStructureSpawningToAllDimensions() {
         // Controls the dimension blacklisting
         ServerWorldEvents.LOAD.register((MinecraftServer minecraftServer, ServerWorld serverWorld)->{
 
             // Need temp map as some mods use custom chunk generators with immutable maps in themselves.
             Map<StructureFeature<?>, StructureConfig> tempMap = new HashMap<>(serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig().getStructures());
 
-            // Make absolutely sure modded dimension cannot spawn our structures.
-            // New dimensions under the minecraft namespace will still get it (datapacks might do this)
-            if(!serverWorld.getRegistryKey().getValue().getNamespace().equals("minecraft")) {
-                tempMap.keySet().remove(STStructures.RUN_DOWN_HOUSE);
-            }
+            // Add out structure so json defined dimensions can spawn it
+            tempMap.put(STStructures.RUN_DOWN_HOUSE, StructuresConfig.DEFAULT_STRUCTURES.get(STStructures.RUN_DOWN_HOUSE));
 
             // Set the new modified map of structure spacing to the dimension's chunkgenerator.
             ((StructuresConfigAccessor)serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig()).setStructures(tempMap);
