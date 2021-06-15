@@ -60,7 +60,7 @@ public class StructureTutorialMain implements ModInitializer {
 
         // This is optional and can be used for blacklisting the structure from dimensions.
         // See the comment below for the method and why it is optional.
-        removeStructureSpawningFromSelectedDimension();
+        // removeStructureSpawningFromSelectedDimension();
     }
 
 
@@ -82,11 +82,6 @@ public class StructureTutorialMain implements ModInitializer {
             // New dimensions under the minecraft namespace will still get it (datapacks might do this)
             if(!serverWorld.getRegistryKey().getValue().getNamespace().equals("minecraft")) {
                 tempMap.keySet().remove(STStructures.RUN_DOWN_HOUSE);
-            }
-            else{
-                // NOTE: This ia temporary solution as v0.35.1+1.17 Fabric API does not add our structure spacing properly to
-                // json defined dimensions that has json defined noise settings files for the chunk generator.
-                tempMap.put(STStructures.RUN_DOWN_HOUSE, StructuresConfig.DEFAULT_STRUCTURES.get(STStructures.RUN_DOWN_HOUSE));
             }
 
             // Set the new modified map of structure spacing to the dimension's chunkgenerator.
