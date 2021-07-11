@@ -1,8 +1,6 @@
 package com.telepathicgrunt.structure_tutorial;
 
 import com.telepathicgrunt.structure_tutorial.mixin.StructuresConfigAccessor;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -12,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.chunk.StructureConfig;
-import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,7 +64,7 @@ public class StructureTutorialMain implements ModInitializer {
     // To activate these methods, make this class implement this:
     //    `implements ModInitializer, DedicatedServerModInitializer, ClientModInitializer {`
     // And then go to fabric.mod.json and add this class to a "client" and "server" entry within "entrypoints" section.
-    
+
 //    @Override
 //    public void onInitializeServer() {
 //        removeStructureSpawningFromSelectedDimension();
