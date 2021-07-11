@@ -1,6 +1,8 @@
 package com.telepathicgrunt.structure_tutorial;
 
 import com.telepathicgrunt.structure_tutorial.mixin.StructuresConfigAccessor;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -56,13 +58,25 @@ public class StructureTutorialMain implements ModInitializer {
                         context -> {
                             context.getGenerationSettings().addBuiltInStructure(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
                         });
-
-
-        // This is optional and can be used for blacklisting the structure from dimensions.
-        // See the comment below for the method and why it is optional.
-        // removeStructureSpawningFromSelectedDimension();
     }
 
+
+    // This is optional and can be used for blacklisting the structure from dimensions.
+    // These two are for making sure our ServerWorldEvents.LOAD event always fires after Fabric API's usage of the same event.
+    // This is done so our changes don't get overwritten by Fabric API adding structure spacings to all dimensions.
+    // To activate these methods, make this class implement this:
+    //    `implements ModInitializer, DedicatedServerModInitializer, ClientModInitializer {`
+    // And then go to fabric.mod.json and add this class to a "client" and "server" entry within "entrypoints" section.
+    
+//    @Override
+//    public void onInitializeServer() {
+//        removeStructureSpawningFromSelectedDimension();
+//    }
+//
+//    @Override
+//    public void onInitializeClient() {
+//        removeStructureSpawningFromSelectedDimension();
+//    }
 
     /**
      * || OPTIONAL ||
