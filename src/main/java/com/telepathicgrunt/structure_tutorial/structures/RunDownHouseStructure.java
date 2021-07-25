@@ -210,7 +210,7 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
 
             // Since by default, the start piece of a structure spawns with it's corner at centerPos
             // and will randomly rotate around that corner, we will center the piece on centerPos instead.
-            // This is so that our structure's start piece is now centered on the water check done in isFeatureChunk.
+            // This is so that our structure's start piece is now centered on the water check done in shouldStartAt.
             // Whatever the offset done to center the start piece, that offset is applied to all other pieces
             // so the structure is shifted properly to the new spot entirely.
             Vec3i structureCenter = this.children.get(0).getBoundingBox().getCenter();
