@@ -7,11 +7,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.structure.MarginedStructureStart;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;
+import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.HeightLimitView;
@@ -103,7 +105,7 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
      */
     @Override
     protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkRandom chunkRandom, ChunkPos chunkPos, Biome biome, ChunkPos chunkPos2, DefaultFeatureConfig featureConfig, HeightLimitView heightLimitView) {
-        BlockPos centerOfChunk = new BlockPos((chunkPos.x << 4) + 7, 0, (chunkPos.z << 4) + 7);
+        BlockPos centerOfChunk = new BlockPos(chunkPos.x * 16, 0, chunkPos.z * 16);
 
         // Grab height of land. Will stop at first non-air block.
         int landHeight = chunkGenerator.getHeightInGround(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Type.WORLD_SURFACE_WG, heightLimitView);
@@ -133,8 +135,8 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
         public void init(DynamicRegistryManager dynamicRegistryManager, ChunkGenerator chunkGenerator, StructureManager structureManager, ChunkPos chunkPos, Biome biome, DefaultFeatureConfig defaultFeatureConfig, HeightLimitView heightLimitView) {
 
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
-            int x = (chunkPos.x << 4) + 7;
-            int z = (chunkPos.z << 4) + 7;
+            int x = chunkPos.x * 16;
+            int z = chunkPos.z * 16;
 
             /*
              * We pass this into method_30419 to tell it where to generate the structure.
@@ -142,7 +144,7 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
              * structure will spawn at terrain height instead. Set that parameter to false to
              * force the structure to spawn at blockpos's Y value instead. You got options here!
              */
-            BlockPos.Mutable blockpos = new BlockPos.Mutable(x, 0, z);
+            BlockPos.Mutable centerPos = new BlockPos.Mutable(x, 0, z);
 
             /*
              * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
@@ -170,13 +172,13 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
                     10);
 
             // All a structure has to do is call this method to turn it into a jigsaw based structure!
-            StructurePoolBasedGenerator.method_30419(
+            StructurePoolBasedGenerator.generate(
                     dynamicRegistryManager,
                     structureSettingsAndStartPool,
                     PoolStructurePiece::new,
                     chunkGenerator,
                     structureManager,
-                    blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
+                    centerPos, // Position of the structure. Y value is ignored if last parameter is set to true.
                     this, // The class instance that holds the list that will be populated with the jigsaw pieces after this method.
                     this.random,
                     false, // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
@@ -205,6 +207,18 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
             // flush with the surrounding terrain without blocking off the doorstep.
             this.children.forEach(piece -> piece.translate(0, 1, 0));
             this.children.forEach(piece -> piece.getBoundingBox().move(0, -1, 0));
+
+            // Since by default, the start piece of a structure spawns with it's corner at centerPos
+            // and will randomly rotate around that corner, we will center the piece on centerPos instead.
+            // This is so that our structure's start piece is now centered on the water check done in isFeatureChunk.
+            // Whatever the offset done to center the start piece, that offset is applied to all other pieces
+            // so the structure is shifted properly to the new spot entirely.
+            Vec3i structureCenter = this.children.get(0).getBoundingBox().getCenter();
+            int xOffset = centerPos.getX() - structureCenter.getX();
+            int zOffset = centerPos.getZ() - structureCenter.getZ();
+            for(StructurePiece structurePiece : this.children){
+                structurePiece.translate(xOffset, 0, zOffset);
+            }
 
             // Sets the bounds of the structure once you are finished.
             this.setBoundingBoxFromChildren();
