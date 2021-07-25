@@ -12,6 +12,7 @@ import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
@@ -132,7 +133,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
      */
     @Override
     protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
-        BlockPos centerOfChunk = new BlockPos((chunkX << 4) + 7, 0, (chunkZ << 4) + 7);
+        BlockPos centerOfChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 
         // Grab height of land. Will stop at first non-air block.
         int landHeight = chunkGenerator.getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Type.WORLD_SURFACE_WG);
@@ -161,9 +162,9 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
         @Override
         public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
 
-            // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
-            int x = (chunkX << 4) + 7;
-            int z = (chunkZ << 4) + 7;
+            // Turns the chunk coordinates into actual coordinates we can use
+            int x = chunkX * 16;
+            int z = chunkZ * 16;
 
             /*
              * We pass this into addPieces to tell it where to generate the structure.
@@ -171,7 +172,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
              * structure will spawn at terrain height instead. Set that parameter to false to
              * force the structure to spawn at blockpos's Y value instead. You got options here!
              */
-            BlockPos blockpos = new BlockPos(x, 0, z);
+            BlockPos centerPos = new BlockPos(x, 0, z);
 
             /*
              * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
@@ -203,7 +204,7 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                     AbstractVillagePiece::new,
                     chunkGenerator,
                     templateManagerIn,
-                    blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
+                    centerPos, // Position of the structure. Y value is ignored if last parameter is set to true.
                     this.pieces, // The list that will be populated with the jigsaw pieces after this method.
                     this.random,
                     false, // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
@@ -232,6 +233,17 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
             this.pieces.forEach(piece -> piece.move(0, 1, 0));
             this.pieces.forEach(piece -> piece.getBoundingBox().y0 -= 1);
 
+            // Since by default, the start piece of a structure spawns with it's corner at centerPos
+            // and will randomly rotate around that corner, we will center the piece on centerPos instead.
+            // This is so that our structure's start piece is now centered on the water check done in isFeatureChunk.
+            // Whatever the offset done to center the start piece, that offset is applied to all other pieces
+            // so the structure is shifted properly to the new spot entirely.
+            Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
+            int xOffset = centerPos.getX() - structureCenter.getX();
+            int zOffset = centerPos.getZ() - structureCenter.getZ();
+            for(StructurePiece structurePiece : this.pieces){
+                structurePiece.move(xOffset, 0, zOffset);
+            }
 
             // Sets the bounds of the structure once you are finished.
             this.calculateBoundingBox();
