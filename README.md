@@ -13,6 +13,7 @@ If your structure is only a **single piece, then you do NOT need any Jigsaw Bloc
 
 >https://www.youtube.com/watch?v=ylGFb4F4xVk  
 
+Handy image for a shorthand way of how Jigsaw Blocks and Pools work together: https://media.discordapp.net/attachments/686973568872873996/782006962979602432/jigsaws.png?width=1025&height=586
 
 Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Then make a JSON file and put it in data/mod_id/worldgen/template_pool folder. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
 >![Image of the folder layout for Structure Tutorial Mod which shows the structure nbt files are inside data.structure_tutorial.structures which is inside src/main/resources](https://i.imgur.com/Q4FLSOT.png)
