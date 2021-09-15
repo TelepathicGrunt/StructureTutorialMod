@@ -1,10 +1,10 @@
 modLoader="javafml" #mandatory
-loaderVersion="[32,)" #mandatory (32 is current forge version)
+loaderVersion="[37,)" #mandatory (37 is current forge version)
 license="MIT License"
 
 [[mods]] #mandatory
 modId="structure_tutorial" #mandatory
-version="${version}" #mandatory
+version="${file.jarVersion}" #mandatory
 displayName="Structure Tutorial Mod" #mandatory
 credits="Special thanks to nhwhite3118 for helping out!"
 authors="TelepathicGrunt" #optional
@@ -16,4 +16,4 @@ A short mod example on how to register structures and generate them in any biome
 [[dependencies.structure_tutorial]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3, 1.17.0)"
+    versionRange="[1.17.0, 1.18.0)"

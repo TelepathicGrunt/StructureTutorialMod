@@ -1,5 +1,5 @@
 # Structure Tutorial Mod (Forge)
-**How to register and generate jigsaw structures in 1.16.3+ Minecraft Forge using nbt files!**
+**How to register and generate jigsaw structures in 1.17.1+ Minecraft Forge using nbt files!**
 
 **Change the Github branch to see other versions of this tutorial including for Fabric!**
  
@@ -29,14 +29,3 @@ Also, if you get stuck on the template_pool json, here's a datapack of the entir
 Good luck and I hope this helps!
 
 You can contact me through issue reports here or on discord. My Discord is TelepathicGrunt#7397 and my channel is: https://discord.gg/SM7WBT6FGu
-
-------------------
-
-_MCPBot is dead. Do not use that to check for updates._
-
-_if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS=1.16.5 -PUPDATE_MAPPINGS_CHANNEL=official updateMappings `_
-
-_command for the project and it'll remap everything to the cutting-edge mappings! Then change the mappings line in your_
-
-_build.gradle to `mappings channel:"official", version:"1.16.5"`_
- 

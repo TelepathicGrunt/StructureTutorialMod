@@ -3,18 +3,17 @@ package com.telepathicgrunt.structuretutorial;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class STStructures {
 
@@ -23,10 +22,10 @@ public class STStructures {
      * This will handle registering the base structure for us at the correct time so we don't have to handle it ourselves.
      *
      * HOWEVER, do note that Deferred Registries only work for anything that is a Forge Registry. This means that
-     * configured structures and configured features need to be registered directly to WorldGenRegistries as there
+     * configured structures and configured features need to be registered directly to BuiltinRegistries as there
      * is no Deferred Registry system for them.
      */
-    public static final DeferredRegister<Structure<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, StructureTutorialMain.MODID);
+    public static final DeferredRegister<StructureFeature<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, StructureTutorialMain.MODID);
 
     /**
      * Registers the structure itself and sets what its path is. In this case, the
@@ -43,7 +42,7 @@ public class STStructures {
      *   However, users might not know that and think you are to blame for issues that doesn't exist.
      *   So it is best to keep your structure names the same as long as you can instead of changing them frequently.
      */
-    public static final RegistryObject<Structure<NoFeatureConfig>> RUN_DOWN_HOUSE = DEFERRED_REGISTRY_STRUCTURE.register("run_down_house", () -> (new RunDownHouseStructure(NoFeatureConfig.CODEC)));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> RUN_DOWN_HOUSE = DEFERRED_REGISTRY_STRUCTURE.register("run_down_house", () -> (new RunDownHouseStructure(NoneFeatureConfiguration.CODEC)));
 
     /**
      * This is where we set the rarity of your structures and determine if land conforms to it.
@@ -52,7 +51,7 @@ public class STStructures {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 RUN_DOWN_HOUSE.get(), /* The instance of the structure */
-                new StructureSeparationSettings(10 /* average distance apart in chunks between spawn attempts */,
+                new StructureFeatureConfiguration(10 /* average distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 true);
@@ -64,22 +63,22 @@ public class STStructures {
     /**
      * Adds the provided structure to the registry, and adds the separation settings.
      * The rarity of the structure is determined based on the values passed into
-     * this method in the structureSeparationSettings argument.
+     * this method in the StructureFeatureConfiguration argument.
      * This method is called by setupStructures above.
      */
-    public static <F extends Structure<?>> void setupMapSpacingAndLand(
+    public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
             F structure,
-            StructureSeparationSettings structureSeparationSettings,
+            StructureFeatureConfiguration StructureFeatureConfiguration,
             boolean transformSurroundingLand)
     {
         /*
-         * We need to add our structures into the map in Structure class
+         * We need to add our structures into the map in StructureFeature class
          * alongside vanilla structures or else it will cause errors.
          *
          * If the registration is setup properly for the structure,
          * getRegistryName() should never return null.
          */
-        Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
+        StructureFeature.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
 
         /*
          * Whether surrounding land will be modified automatically to conform to the bottom of the structure.
@@ -92,9 +91,9 @@ public class STStructures {
          * NOISE_AFFECTING_FEATURES requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
         if(transformSurroundingLand){
-            Structure.NOISE_AFFECTING_FEATURES =
-                    ImmutableList.<Structure<?>>builder()
-                            .addAll(Structure.NOISE_AFFECTING_FEATURES)
+            StructureFeature.NOISE_AFFECTING_FEATURES =
+                    ImmutableList.<StructureFeature<?>>builder()
+                            .addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
                             .add(structure)
                             .build();
         }
@@ -112,10 +111,10 @@ public class STStructures {
          *
          * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
-        DimensionStructuresSettings.DEFAULTS =
-                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-                        .putAll(DimensionStructuresSettings.DEFAULTS)
-                        .put(structure, structureSeparationSettings)
+        StructureSettings.DEFAULTS =
+                ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
+                        .putAll(StructureSettings.DEFAULTS)
+                        .put(structure, StructureFeatureConfiguration)
                         .build();
 
 
@@ -126,22 +125,22 @@ public class STStructures {
          * that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
          * So yeah, don't do DimensionSettings.BUILTIN_OVERWORLD. Use the NOISE_GENERATOR_SETTINGS loop below instead if you must.
          */
-        WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings().structureConfig();
+        BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+            Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig();
 
             /*
              * Pre-caution in case a mod makes the structure map immutable like datapacks do.
              * I take no chances myself. You never know what another mods does...
              *
-             * structureConfig requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
+             * structureConfig requires AccessTransformer (See resources/META-INF/accesstransformer.cfg)
              */
             if(structureMap instanceof ImmutableMap){
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-                tempMap.put(structure, structureSeparationSettings);
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
+                tempMap.put(structure, StructureFeatureConfiguration);
                 settings.getValue().structureSettings().structureConfig = tempMap;
             }
             else{
-                structureMap.put(structure, structureSeparationSettings);
+                structureMap.put(structure, StructureFeatureConfiguration);
             }
         });
     }

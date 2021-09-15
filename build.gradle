@@ -1,11 +1,11 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -17,7 +17,7 @@ version = "${mod_version}"
 group = 'com.telepathicgrunt.structuretutorial' // https://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'structure_tutorial'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
     // MCPBot is dead. Do not use that to check for updates.
@@ -75,13 +75,17 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    from('/') {
+        include 'LICENSE.txt'
+    }
+
     manifest {
         attributes([
             "Specification-Title": "structure_tutorial",
             "Specification-Vendor": "telepathicgrunt",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
+            "Implementation-Version": project.version,
             "Implementation-Vendor" :"telepathicgrunt",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
@@ -94,24 +98,6 @@ import groovy.json.JsonParserType
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 processResources {
-    // Will allow gradle.properties version fill inside mods.toml file
-    // This will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
-
-    // Replace stuff in mods.toml, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // Replace version
-        expand 'version':project.version
-    }
-
-    // Copy everything else except the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-
-
     // Will minify the JSON files of your mod when you build the jar.
     // Helps reduce files size! Minify means it will strip whitespace
     // and turn the JSON files into 1 liners.
