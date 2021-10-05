@@ -201,6 +201,20 @@ public class RunDownHouseStructure extends StructureFeature<NoneFeatureConfigura
                         // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                     heightLimitView);
 
+
+            // **THE FOLLOWING LINE IS OPTIONAL**
+            //
+            // Right here, you can do interesting stuff with the pieces in this.pieces such as offset the
+            // center piece by 50 blocks up for no reason, remove repeats of a piece or add a new piece so
+            // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
+            // holds just the piece's size and positions. Blocks will be placed much later by the game.
+            //
+            // In this case, we do `piece.offset` to raise pieces up by 1 block so that the house is not right on
+            // the surface of water or sunken into land a bit. NOTE: land added by StructureFeature.NOISE_AFFECTING_FEATURES
+            // will also be moved alongside the piece. If you do not want this land, do not add your structure to the
+            // StructureFeature.NOISE_AFFECTING_FEATURES field and now your pieces can be set on the regular terrain instead.
+            this.pieces.forEach(piece -> piece.move(0, 1, 0));
+
             // Since by default, the start piece of a structure spawns with it's corner at centerPos
             // and will randomly rotate around that corner, we will center the piece on centerPos instead.
             // This is so that our structure's start piece is now centered on the water check done in isFeatureChunk.
@@ -215,22 +229,6 @@ public class RunDownHouseStructure extends StructureFeature<NoneFeatureConfigura
 
             // Sets the bounds of the structure once you are finished.
             this.getBoundingBox();
-
-            // **THE FOLLOWING TWO LINES ARE OPTIONAL**
-            //
-            // Right here, you can do interesting stuff with the pieces in this.pieces such as offset the
-            // center piece by 50 blocks up for no reason, remove repeats of a piece or add a new piece so
-            // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
-            // holds just the piece's size and positions. Blocks will be placed much later by the game.
-            //
-            // In this case, we do `piece.offset` to raise pieces up by 1 block so that the house is not right on
-            // the surface of water or sunken into land a bit. Then we use encapsulate to expand the bounding box down 1
-            // so that land added by StructureFeature.NOISE_AFFECTING_FEATURES will make the land be 1 block lower.
-            // Now the house's front door won't be sunken into land since the land added is lowered down a bit.
-            this.pieces.forEach(piece -> piece.move(0, 1, 0));
-            this.pieces.forEach(piece -> piece.getBoundingBox().encapsulate(
-                    piece.getBoundingBox().moved(0, -1, 0)
-            ));
 
             // I use to debug and quickly find out if the structure is spawning or not and where it is.
             // This is returning the coordinates of the center starting piece.
