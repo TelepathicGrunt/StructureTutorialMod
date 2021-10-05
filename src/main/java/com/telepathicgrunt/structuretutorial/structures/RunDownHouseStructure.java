@@ -211,27 +211,19 @@ public class RunDownHouseStructure extends Structure<NoFeatureConfig> {
                         // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
                     true);  // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
                          // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-
-
-            // **THE FOLLOWING TWO LINES ARE OPTIONAL**
+            
+            // **THE FOLLOWING LINE IS OPTIONAL**
             //
             // Right here, you can do interesting stuff with the pieces in this.pieces such as offset the
             // center piece by 50 blocks up for no reason, remove repeats of a piece or add a new piece so
             // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
-            // holds just the piece's size and positions. Blocks will be placed later in JigsawManager.
+            // holds just the piece's size and positions. Blocks will be placed much later by the game.
             //
             // In this case, we do `piece.offset` to raise pieces up by 1 block so that the house is not right on
-            // the surface of water or sunken into land a bit.
-            //
-            // Then we extend the bounding box down by 1 by doing `piece.getBoundingBox().minY` which will cause the
-            // land formed around the structure to be lowered and not cover the doorstep. You can raise the bounding
-            // box to force the structure to be buried as well. This bounding box stuff with land is only for structures
-            // that you added to Structure.NOISE_AFFECTING_FEATURES field handles adding land around the base of structures.
-            //
-            // By lifting the house up by 1 and lowering the bounding box, the land at bottom of house will now be
-            // flush with the surrounding terrain without blocking off the doorstep.
+            // the surface of water or sunken into land a bit. NOTE: land added by Structure.NOISE_AFFECTING_FEATURES
+            // will also be moved alongside the piece. If you do not want this land, do not add your structure to the
+            // Structure.NOISE_AFFECTING_FEATURES field and now your pieces can be set on the regular terrain instead.
             this.pieces.forEach(piece -> piece.move(0, 1, 0));
-            this.pieces.forEach(piece -> piece.getBoundingBox().y0 -= 1);
 
             // Since by default, the start piece of a structure spawns with it's corner at centerPos
             // and will randomly rotate around that corner, we will center the piece on centerPos instead.
