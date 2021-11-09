@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -23,7 +24,6 @@ public class StructureTutorialMain implements ModInitializer {
     public static final String MODID = "structure_tutorial";
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onInitialize() {
 
         /*
@@ -32,6 +32,7 @@ public class StructureTutorialMain implements ModInitializer {
          */
         STStructures.setupAndRegisterStructureFeatures();
         STConfiguredStructures.registerConfiguredStructures();
+        //removeStructureSpawningFromSelectedDimension();
 
         /*
          * This is the API you will use to add anything to any biome.
@@ -57,24 +58,6 @@ public class StructureTutorialMain implements ModInitializer {
                         });
     }
 
-
-    // This is optional and can be used for blacklisting the structure from dimensions.
-    // These two are for making sure our ServerWorldEvents.LOAD event always fires after Fabric API's usage of the same event.
-    // This is done so our changes don't get overwritten by Fabric API adding structure spacings to all dimensions.
-    // To activate these methods, make this class implement this:
-    //    `implements ModInitializer, DedicatedServerModInitializer, ClientModInitializer {`
-    // And then go to fabric.mod.json and add this class to a "client" and "server" entry within "entrypoints" section.
-
-//    @Override
-//    public void onInitializeServer() {
-//        removeStructureSpawningFromSelectedDimension();
-//    }
-//
-//    @Override
-//    public void onInitializeClient() {
-//        removeStructureSpawningFromSelectedDimension();
-//    }
-
     /**
      * || OPTIONAL ||
      *  This is optional as Fabric API already adds your structure to all dimension.
@@ -83,17 +66,23 @@ public class StructureTutorialMain implements ModInitializer {
      * If the spacing or our structure is not added, the structure doesn't spawn in that dimension.
      */
     public static void removeStructureSpawningFromSelectedDimension() {
+        // This is for making sure our ServerWorldEvents.LOAD event always fires after Fabric API's usage of the same event.
+        // This is done so our changes don't get overwritten by Fabric API adding structure spacings to all dimensions.
+        // Requires Fabric API v0.42.0  or newer.
+        Identifier runAfterFabricAPIPhase = new Identifier(StructureTutorialMain.MODID, "run_after_fabric_api");
+        ServerWorldEvents.LOAD.addPhaseOrdering(Event.DEFAULT_PHASE, runAfterFabricAPIPhase);
+
         // Controls the dimension blacklisting
-        ServerWorldEvents.LOAD.register((MinecraftServer minecraftServer, ServerWorld serverWorld)->{
+        ServerWorldEvents.LOAD.register(runAfterFabricAPIPhase, (MinecraftServer minecraftServer, ServerWorld serverWorld)->{
 
             // Need temp map as some mods use custom chunk generators with immutable maps in themselves.
             Map<StructureFeature<?>, StructureConfig> tempMap = new HashMap<>(serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig().getStructures());
 
             // Make absolutely sure modded dimension cannot spawn our structures.
             // New dimensions under the minecraft namespace will still get it (datapacks might do this)
-            if(!serverWorld.getRegistryKey().getValue().getNamespace().equals("minecraft")) {
+            //if(!serverWorld.getRegistryKey().getValue().getNamespace().equals("minecraft")) {
                 tempMap.keySet().remove(STStructures.RUN_DOWN_HOUSE);
-            }
+            //}
 
             // Set the new modified map of structure spacing to the dimension's chunkgenerator.
             ((StructuresConfigAccessor)serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig()).setStructures(tempMap);
