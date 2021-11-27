@@ -1,9 +1,9 @@
 # Structure Tutorial Mod (Fabric)
-**How to register and generate jigsaw structures in 1.17 Minecraft Fabric using nbt files!**
+**How to register and generate jigsaw structures in 1.18 Minecraft Fabric using nbt files!**
 
 **Change the Github branch to see other versions of this tutorial including Forge.**
  
- This very small Fabric mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 java files, 2 (optional) mixins, 2 json files, and 3 structure nbt files.  
+ This very small Fabric mod is full of comments that will help you understand what a lot of the methods do and what needs to be done to get your structure to generate. In all, this mod is really just 4 java files, 3 mixins, 2 json files, and 3 structure nbt files.  
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
 >https://www.youtube.com/watch?v=umhuRXinD3o

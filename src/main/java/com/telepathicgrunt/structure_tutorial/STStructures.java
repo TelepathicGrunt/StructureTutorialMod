@@ -5,9 +5,8 @@ import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.StructureConfig;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 public class STStructures {
 
@@ -19,7 +18,7 @@ public class STStructures {
      * It is always a good idea to register your Structures so that other mods and datapacks can
      * use them too directly from the registries. It great for mod/datapacks compatibility.
      */
-    public static StructureFeature<DefaultFeatureConfig> RUN_DOWN_HOUSE = new RunDownHouseStructure(DefaultFeatureConfig.CODEC);
+    public static StructureFeature<StructurePoolFeatureConfig> RUN_DOWN_HOUSE = new RunDownHouseStructure(StructurePoolFeatureConfig.CODEC);
 
     /**
      * This is where we use Fabric API's structure API to setup the StructureFeature
@@ -40,10 +39,6 @@ public class STStructures {
                         10, /* average distance apart in chunks between spawn attempts */
                         5, /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE */
                         399117345 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */))
-
-                /* Always set this or else re-entering SuperFlat worldtype will crash.
-                   Getting structures to spawn in Superflat is a bit buggy right now so don't focus too much on this. */
-                .superflatFeature(RUN_DOWN_HOUSE.configure(FeatureConfig.DEFAULT))
 
                 /*
                  * Whether surrounding land will be modified automatically to conform to the bottom of the structure.

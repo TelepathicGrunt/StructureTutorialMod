@@ -1,30 +1,22 @@
 plugins {
-	id 'fabric-loom' version '0.8-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-repositories {
-	// Repo for getting Blame from
-	maven {	url "https://nexus.resourcefulbees.com/repository/maven-public/" }
-}
-
+repositories {}
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// I recommend having Blame on in your development environment as it can give you more info of what is
-	// broken with your Jigsaw structure. It is super useful!. Just uncomment out this line and refresh gradle.
-	// modImplementation "com.telepathicgrunt:Blame-Fabric:1.16.5-3.0.1-fabric"
 }
 
 processResources {
@@ -36,15 +28,8 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-
-	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
 }
 
 java {
@@ -59,7 +44,6 @@ jar {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
 }
-
 
 // Bonus stuff!
 import groovy.json.JsonParserType

@@ -1,6 +1,7 @@
 package com.telepathicgrunt.structure_tutorial.mixin;
 
 import com.telepathicgrunt.structure_tutorial.STStructures;
+import com.telepathicgrunt.structure_tutorial.structures.RunDownHouseStructure;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
@@ -40,13 +41,13 @@ public class NoiseChunkGeneratorMixin {
     private static Pool<SpawnSettings.SpawnEntry> getStructureSpawns(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos){
 
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.getStructureAt(pos, true, STStructures.RUN_DOWN_HOUSE).hasChildren()) {
-                return STStructures.RUN_DOWN_HOUSE.getMonsterSpawns();
+            if (accessor.getStructureAt(pos, STStructures.RUN_DOWN_HOUSE).hasChildren()) {
+                return RunDownHouseStructure.STRUCTURE_MONSTERS;
             }
         }
         else if (group == SpawnGroup.CREATURE) {
-            if (accessor.getStructureAt(pos, true, STStructures.RUN_DOWN_HOUSE).hasChildren()) {
-                return STStructures.RUN_DOWN_HOUSE.getCreatureSpawns();
+            if (accessor.getStructureAt(pos, STStructures.RUN_DOWN_HOUSE).hasChildren()) {
+                return RunDownHouseStructure.STRUCTURE_CREATURES;
             }
         }
 
