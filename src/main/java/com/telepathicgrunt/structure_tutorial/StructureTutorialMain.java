@@ -43,8 +43,9 @@ public class StructureTutorialMain implements ModInitializer {
         addStructureSpawningToDimensionsAndBiomes();
 
         /*
-         * NOTE: BiomeModifications from Fabric API does not work in 1.18 currently.
-         * See addStructureSpawningToDimensionsAndBiomes method for how to spawn in biomes
+         * NOTE: BiomeModifications from Fabric API does not work for Structures in 1.18 currently.
+         * See addStructureSpawningToDimensionsAndBiomes method for how to spawn structures in biomes
+         * The BiomeModifications API still works for Features tho and mobs and other stuff.
          *
          * This is the API you will use to add anything to any biome.
          * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
