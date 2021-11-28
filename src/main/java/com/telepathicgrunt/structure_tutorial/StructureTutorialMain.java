@@ -12,6 +12,7 @@ import net.fabricmc.fabric.impl.structure.FabricStructureImpl;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -96,67 +97,36 @@ public class StructureTutorialMain implements ModInitializer {
             ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
             ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
 
-            // Create a set of registry keys that our structure can spawn in.
-            // To create a custom registry key that points to your own biome, do this:
-            // RegistryKey.of(Registry.BIOME_KEY, new Identifier("modid", "custom_biome"))
-            ImmutableSet<RegistryKey<Biome>> overworldBiomes = ImmutableSet.<RegistryKey<Biome>>builder()
-                    .add(BiomeKeys.BADLANDS)
-                    .add(BiomeKeys.BAMBOO_JUNGLE)
-                    .add(BiomeKeys.BIRCH_FOREST)
-                    .add(BiomeKeys.BEACH)
-                    .add(BiomeKeys.DARK_FOREST)
-                    .add(BiomeKeys.DESERT)
-                    .add(BiomeKeys.ERODED_BADLANDS)
-                    .add(BiomeKeys.FLOWER_FOREST)
-                    .add(BiomeKeys.FOREST)
-                    .add(BiomeKeys.FROZEN_PEAKS)
-                    .add(BiomeKeys.FROZEN_RIVER)
-                    .add(BiomeKeys.GROVE)
-                    .add(BiomeKeys.ICE_SPIKES)
-                    .add(BiomeKeys.JAGGED_PEAKS)
-                    .add(BiomeKeys.JUNGLE)
-                    .add(BiomeKeys.MEADOW)
-                    .add(BiomeKeys.MUSHROOM_FIELDS)
-                    .add(BiomeKeys.OLD_GROWTH_BIRCH_FOREST)
-                    .add(BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA)
-                    .add(BiomeKeys.OLD_GROWTH_PINE_TAIGA)
-                    .add(BiomeKeys.PLAINS)
-                    .add(BiomeKeys.RIVER)
-                    .add(BiomeKeys.SAVANNA)
-                    .add(BiomeKeys.SAVANNA_PLATEAU)
-                    .add(BiomeKeys.SNOWY_BEACH)
-                    .add(BiomeKeys.SNOWY_PLAINS)
-                    .add(BiomeKeys.SNOWY_SLOPES)
-                    .add(BiomeKeys.SNOWY_TAIGA)
-                    .add(BiomeKeys.SPARSE_JUNGLE)
-                    .add(BiomeKeys.STONY_PEAKS)
-                    .add(BiomeKeys.STONY_SHORE)
-                    .add(BiomeKeys.SWAMP)
-                    .add(BiomeKeys.SUNFLOWER_PLAINS)
-                    .add(BiomeKeys.TAIGA)
-                    .add(BiomeKeys.WINDSWEPT_FOREST)
-                    .add(BiomeKeys.WINDSWEPT_GRAVELLY_HILLS)
-                    .add(BiomeKeys.WINDSWEPT_HILLS)
-                    .add(BiomeKeys.WINDSWEPT_SAVANNA)
-                    .add(BiomeKeys.WOODED_BADLANDS)
-                    .add(BiomeKeys.DRIPSTONE_CAVES)
-                    .add(BiomeKeys.LUSH_CAVES)
-                    .add(BiomeKeys.OCEAN)
-                    .add(BiomeKeys.COLD_OCEAN)
-                    .add(BiomeKeys.FROZEN_OCEAN)
-                    .add(BiomeKeys.LUKEWARM_OCEAN)
-                    .add(BiomeKeys.WARM_OCEAN)
-                    .add(BiomeKeys.DEEP_OCEAN)
-                    .add(BiomeKeys.DEEP_COLD_OCEAN)
-                    .add(BiomeKeys.DEEP_FROZEN_OCEAN)
-                    .add(BiomeKeys.DEEP_LUKEWARM_OCEAN)
-                    .build();
 
             // Create the multimap of Configured Structures to biomes we will need.
             ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> tempConfiguredStructureBiomeMultiMap = ImmutableMultimap.builder();
-            // Add all biomekey entries that this Configured Structure can spawn in.
-            overworldBiomes.forEach(biomeKey -> tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
-            // Add the structure to associate with this new multimap of Configured Structures to biomes to spawn in.
+
+            // Add the registrykey of all biomes that this Configured Structure can spawn in.
+            for(Map.Entry<RegistryKey<Biome>, Biome> biomeEntry : minecraftServer.getRegistryManager().getMutable(Registry.BIOME_KEY).getEntries()) {
+                // Skip all ocean, end, nether, and none category biomes.
+                // You can do checks for other traits that the biome has.
+                Biome.Category biomeCategory = biomeEntry.getValue().getCategory();
+                if(biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.THEEND && biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.NONE) {
+                    tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeEntry.getKey());
+                }
+            }
+
+            // Alternative way to add our structures to a fixed set of biomes by creating a set of biome registry keys.
+            // To create a custom registry key that points to your own biome, do this:
+            // RegistryKey.of(Registry.BIOME_KEY, new Identifier("modid", "custom_biome"))
+//            ImmutableSet<RegistryKey<Biome>> overworldBiomes = ImmutableSet.<RegistryKey<Biome>>builder()
+//                    .add(BiomeKeys.FOREST)
+//                    .add(BiomeKeys.MEADOW)
+//                    .add(BiomeKeys.PLAINS)
+//                    .add(BiomeKeys.SAVANNA)
+//                    .add(BiomeKeys.SNOWY_PLAINS)
+//                    .add(BiomeKeys.SWAMP)
+//                    .add(BiomeKeys.SUNFLOWER_PLAINS)
+//                    .add(BiomeKeys.TAIGA)
+//                    .build();
+//            overworldBiomes.forEach(biomeKey -> tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
+
+            // Add the base structure to associate with this new multimap of Configured Structures to biomes to spawn in.
             tempStructureToMultiMap.put(STStructures.RUN_DOWN_HOUSE, tempConfiguredStructureBiomeMultiMap.build());
 
             ((StructuresConfigAccessor) worldStructureConfig).setConfiguredStructures(tempStructureToMultiMap.build());
@@ -165,6 +135,9 @@ public class StructureTutorialMain implements ModInitializer {
             //////////// DIMENSION BASED STRUCTURE SPAWNING (OPTIONAL) ////////////
 //            // Controls the dimension blacklisting and/or whitelisting
 //            // If the spacing or our structure is not added for a dimension, the structure doesn't spawn in that dimension.
+//            // Note: due to a quirk with how Noise Settings are shared between dimensions, you need this mixin to make a
+//            // deep copy of the noise setting per dimension for your dimension whitelisting/blacklisting to work properly:
+//            // https://github.com/TelepathicGrunt/RepurposedStructures-Fabric/blob/1.18/src/main/java/com/telepathicgrunt/repurposedstructures/mixin/world/ChunkGeneratorMixin.java
 //
 //            // Need temp map as some mods use custom chunk generators with immutable maps in themselves.
 //            Map<StructureFeature<?>, StructureConfig> tempMap = new HashMap<>(worldStructureConfig.getStructures());
