@@ -195,18 +195,8 @@ public class RunDownHouseStructure extends StructureFeature<DefaultFeatureConfig
             // only 1 of that piece exists, etc. But you do not have access to the piece's blocks as this list
             // holds just the piece's size and positions. Blocks will be placed later in StructurePoolBasedGenerator.
             //
-            // In this case, we do `piece.translate` to raise pieces up by 1 block so that the house is not right on
-            // the surface of water or sunken into land a bit.
-            //
-            // Then we extend the bounding box down by 1 by doing `piece.getBoundingBox().minY` which will cause the
-            // land formed around the structure to be lowered and not cover the doorstep. You can raise the bounding
-            // box to force the structure to be buried as well. This bounding box stuff with land is only for structures
-            // that you added to Structure.JIGSAW_STRUCTURES field handles adding land around the base of structures.
-            //
-            // By lifting the house up by 1 and lowering the bounding box, the land at bottom of house will now be
-            // flush with the surrounding terrain without blocking off the doorstep.
+            // By lifting the house up by 1, the terraforming land at bottom of house will now be also raised up by 1.
             this.children.forEach(piece -> piece.translate(0, 1, 0));
-            this.children.forEach(piece -> piece.getBoundingBox().minY -= 1);
 
             // Sets the bounds of the structure once you are finished.
             this.setBoundingBoxFromChildren();
