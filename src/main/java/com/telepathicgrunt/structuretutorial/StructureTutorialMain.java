@@ -1,17 +1,22 @@
 package com.telepathicgrunt.structuretutorial;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.mojang.serialization.Codec;
+import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,9 +46,7 @@ public class StructureTutorialMain {
         // For events that happen after initialization. This is probably going to be use a lot.
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
-
-        // The comments for BiomeLoadingEvent and StructureSpawnListGatherEvent says to do HIGH for additions.
-        forgeBus.addListener(EventPriority.HIGH, this::biomeModification);
+        forgeBus.addListener(EventPriority.NORMAL, RunDownHouseStructure::setupStructureSpawns);
     }
 
     /**
@@ -55,8 +58,7 @@ public class StructureTutorialMain {
      * that requires a structure instance such as setting the structure spacing, creating the
      * configured structure instance, and more.
      */
-    public void setup(final FMLCommonSetupEvent event)
-    {
+    public void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             STStructures.setupStructures();
             STConfiguredStructures.registerConfiguredStructures();
@@ -65,26 +67,7 @@ public class StructureTutorialMain {
 
 
     /**
-     * This is the event you will use to add anything to any biome.
-     * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
-     * adding carvers, spawning new features... etc
-     *
-     * Here, we will use this to add our structure to all biomes.
-     */
-    public void biomeModification(final BiomeLoadingEvent event) {
-        /*
-         * Add our structure to all biomes including other modded biomes.
-         * You can skip or add only to certain biomes based on stuff like biome category,
-         * temperature, scale, precipitation, mod id, etc. All kinds of options!
-         *
-         * You can even use the BiomeDictionary as well! To use BiomeDictionary, do
-         * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
-         * registrykey. Then that can be fed into the dictionary to get the biome's types.
-         */
-        event.getGeneration().getStructures().add(() -> STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
-    }
-
-    /**
+     * Tells the chunkgenerator which biomes our structure can spawn in.
      * Will go into the world's chunkgenerator and manually add our structure spacing.
      * If the spacing is not added, the structure doesn't spawn.
      *
@@ -96,9 +79,59 @@ public class StructureTutorialMain {
      */
     private static Method GETCODEC_METHOD;
     public void addDimensionalSpacing(final WorldEvent.Load event) {
-        if(event.getWorld() instanceof ServerLevel){
-            ServerLevel serverWorld = (ServerLevel)event.getWorld();
+        if(event.getWorld() instanceof ServerLevel serverLevel){
+            ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
+            StructureSettings worldStructureConfig = chunkGenerator.getSettings();
 
+            //////////// BIOME BASED STRUCTURE SPAWNING ////////////
+            /*
+             * NOTE: BiomeModifications from Fabric API does not work in 1.18 currently.
+             * Instead, we will use the below to add our structure to overworld biomes.
+             * Remember, this is temporary until Fabric API finds a better solution for adding structures to biomes.
+             */
+
+            // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
+            // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
+            ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
+            worldStructureConfig.configuredStructures.entrySet().forEach(tempStructureToMultiMap::put);
+
+
+            // Create the multimap of Configured Structures to biomes we will need.
+            ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> tempConfiguredStructureBiomeMultiMap = ImmutableMultimap.builder();
+
+            // Add the registrykey of all biomes that this Configured Structure can spawn in.
+            for(Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
+                // Skip all ocean, end, nether, and none category biomes.
+                // You can do checks for other traits that the biome has.
+                Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
+                if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
+                    tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeEntry.getKey());
+                }
+            }
+
+            // Alternative way to add our structures to a fixed set of biomes by creating a set of biome registry keys.
+            // To create a custom registry key that points to your own biome, do this:
+            // ResourceKey.of(Registry.BIOME_REGISTRY, new ResourceLocation("modid", "custom_biome"))
+//            ImmutableSet<ResourceKey<Biome>> overworldBiomes = ImmutableSet.<ResourceKey<Biome>>builder()
+//                    .add(Biomes.FOREST)
+//                    .add(Biomes.MEADOW)
+//                    .add(Biomes.PLAINS)
+//                    .add(Biomes.SAVANNA)
+//                    .add(Biomes.SNOWY_PLAINS)
+//                    .add(Biomes.SWAMP)
+//                    .add(Biomes.SUNFLOWER_PLAINS)
+//                    .add(Biomes.TAIGA)
+//                    .build();
+//            overworldBiomes.forEach(biomeKey -> tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
+
+            // Add the base structure to associate with this new multimap of Configured Structures to biomes to spawn in.
+            tempStructureToMultiMap.put(STStructures.RUN_DOWN_HOUSE.get(), tempConfiguredStructureBiomeMultiMap.build());
+
+            // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
+            worldStructureConfig.configuredStructures = tempStructureToMultiMap.build();
+
+
+            //////////// DIMENSION BASED STRUCTURE SPAWNING (OPTIONAL) ////////////
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
              * They will handle your structure spacing for your if you add to BuiltinRegistries.NOISE_GENERATOR_SETTINGS in your structure's registration.
@@ -107,11 +140,11 @@ public class StructureTutorialMain {
              */
             try {
                 if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
-                ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkSource().generator));
+                ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
                 if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
             }
             catch(Exception e){
-                StructureTutorialMain.LOGGER.error("Was unable to check if " + serverWorld.dimension().location() + " is using Terraforged's ChunkGenerator.");
+                StructureTutorialMain.LOGGER.error("Was unable to check if " + serverLevel.dimension().location() + " is using Terraforged's ChunkGenerator.");
             }
 
             /*
@@ -119,8 +152,8 @@ public class StructureTutorialMain {
              * people seem to want their superflat worlds free of modded structures.
              * Also that vanilla superflat is really tricky and buggy to work with in my experience.
              */
-            if(serverWorld.getChunkSource().getGenerator() instanceof FlatLevelSource &&
-                serverWorld.dimension().equals(Level.OVERWORLD)){
+            if(chunkGenerator instanceof FlatLevelSource &&
+                serverLevel.dimension().equals(Level.OVERWORLD)){
                 return;
             }
 
@@ -132,9 +165,9 @@ public class StructureTutorialMain {
              * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
              * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
              */
-            Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+            Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureConfig.structureConfig());
             tempMap.putIfAbsent(STStructures.RUN_DOWN_HOUSE.get(), StructureSettings.DEFAULTS.get(STStructures.RUN_DOWN_HOUSE.get()));
-            serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+            worldStructureConfig.structureConfig = tempMap;
         }
    }
 }

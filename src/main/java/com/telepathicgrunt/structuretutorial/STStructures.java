@@ -6,11 +6,12 @@ import com.telepathicgrunt.structuretutorial.structures.RunDownHouseStructure;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class STStructures {
      *   However, users might not know that and think you are to blame for issues that doesn't exist.
      *   So it is best to keep your structure names the same as long as you can instead of changing them frequently.
      */
-    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> RUN_DOWN_HOUSE = DEFERRED_REGISTRY_STRUCTURE.register("run_down_house", () -> (new RunDownHouseStructure(NoneFeatureConfiguration.CODEC)));
+    public static final RegistryObject<StructureFeature<JigsawConfiguration>> RUN_DOWN_HOUSE = DEFERRED_REGISTRY_STRUCTURE.register("run_down_house", () -> (new RunDownHouseStructure(JigsawConfiguration.CODEC)));
 
     /**
      * This is where we set the rarity of your structures and determine if land conforms to it.

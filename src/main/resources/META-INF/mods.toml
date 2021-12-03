@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[37,)" #mandatory (37 is current forge version)
+loaderVersion="[38,)" #mandatory
 license="MIT License"
 
 [[mods]] #mandatory
@@ -16,4 +16,4 @@ A short mod example on how to register structures and generate them in any biome
 [[dependencies.structure_tutorial]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.0, 1.18.0)"
+    versionRange="[1.18, 1.19)"

@@ -17,7 +17,7 @@ version = "${mod_version}"
 group = 'com.telepathicgrunt.structuretutorial' // https://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'structure_tutorial'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     // MCPBot is dead. Do not use that to check for updates.
