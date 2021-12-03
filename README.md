@@ -11,8 +11,6 @@ If you don't know how to make a nbt file for structures, it's actually fairly si
 If your structure is only a **single piece, then you do NOT need any Jigsaw Blocks** and can just use 1 pool file. If you want your jigsaw structure to have more than 1 piece, you will need to setup and save Jigsaw blocks into your structure's nbt files. The Jigsaw blocks acts as connectors between the nbt pieces and pool files. (Here's two videos about using Jigsaw Blocks in structures! The first one is very long but extremely detailed.): 
 >https://www.youtube.com/watch?v=5a4DAkWW3JQ
 
->https://www.youtube.com/watch?v=ylGFb4F4xVk  
-
 Handy image for a shorthand way of how Jigsaw Blocks and Pools work together: 
 >![Jigsaw Cheatsheet](https://cdn.discordapp.com/attachments/686973568872873996/782006962979602432/jigsaws.png)
 
