@@ -1,23 +1,19 @@
 package com.telepathicgrunt.structure_tutorial;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 import com.telepathicgrunt.structure_tutorial.mixin.StructuresConfigAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.impl.structure.FabricStructureImpl;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -93,13 +89,8 @@ public class StructureTutorialMain implements ModInitializer {
              * Remember, this is temporary until Fabric API finds a better solution for adding structures to biomes.
              */
 
-            // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
-            ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-            ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
-
-
-            // Create the multimap of Configured Structures to biomes we will need.
-            ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> tempConfiguredStructureBiomeMultiMap = ImmutableMultimap.builder();
+            // Create a mutable map we will use for easier adding to biomes
+            HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> STStructureToMultiMap = new HashMap<>();
 
             // Add the registrykey of all biomes that this Configured Structure can spawn in.
             for(Map.Entry<RegistryKey<Biome>, Biome> biomeEntry : minecraftServer.getRegistryManager().getMutable(Registry.BIOME_KEY).getEntries()) {
@@ -107,7 +98,7 @@ public class StructureTutorialMain implements ModInitializer {
                 // You can do checks for other traits that the biome has.
                 Biome.Category biomeCategory = biomeEntry.getValue().getCategory();
                 if(biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.THEEND && biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.NONE) {
-                    tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeEntry.getKey());
+                    associateBiomeToConfiguredStructure(STStructureToMultiMap, STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeEntry.getKey());
                 }
             }
 
@@ -124,11 +115,14 @@ public class StructureTutorialMain implements ModInitializer {
 //                    .add(BiomeKeys.SUNFLOWER_PLAINS)
 //                    .add(BiomeKeys.TAIGA)
 //                    .build();
-//            overworldBiomes.forEach(biomeKey -> tempConfiguredStructureBiomeMultiMap.put(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
+//            overworldBiomes.forEach(biomeKey -> associateBiomeToConfiguredStructure(STStructureToMultiMap, STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
 
-            // Add the base structure to associate with this new multimap of Configured Structures to biomes to spawn in.
-            tempStructureToMultiMap.put(STStructures.RUN_DOWN_HOUSE, tempConfiguredStructureBiomeMultiMap.build());
-
+            // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
+            // Will include vanilla's and other mod's entries.
+            ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
+            ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
+            // Add our structures to the structure map/multimap and set the world to use this combined map/multimap.
+            STStructureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
             ((StructuresConfigAccessor) worldStructureConfig).setConfiguredStructures(tempStructureToMultiMap.build());
 
 
@@ -155,5 +149,28 @@ public class StructureTutorialMain implements ModInitializer {
 //            ((StructuresConfigAccessor)worldStructureConfig).setStructures(tempMap);
 
         });
+    }
+
+    /**
+     * Helper method that handles setting up the map to multimap relationship to help prevent issues.
+     */
+    private static void associateBiomeToConfiguredStructure(Map<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> STStructureToMultiMap, ConfiguredStructureFeature<?, ?> configuredStructureFeature, RegistryKey<Biome> biomeRegistryKey) {
+        STStructureToMultiMap.putIfAbsent(configuredStructureFeature.feature, HashMultimap.create());
+        HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> configuredStructureToBiomeMultiMap = STStructureToMultiMap.get(configuredStructureFeature.feature);
+        if(configuredStructureToBiomeMultiMap.containsValue(biomeRegistryKey)) {
+            StructureTutorialMain.LOGGER.error("""
+                    Detected 2 ConfiguredStructureFeatures that share the same base StructureFeature trying to be added to same biome. One will be prevented from spawning.
+                    This issue happens with vanilla too and is why a Snowy Village and Plains Village cannot spawn in the same biome because they both use the Village base structure.
+                    The two conflicting ConfiguredStructures are: {}, {}
+                    The biome that is attempting to be shared: {}
+                """,
+                BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(configuredStructureFeature),
+                BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(configuredStructureToBiomeMultiMap.entries().stream().filter(e -> e.getValue() == biomeRegistryKey).findFirst().get().getKey()),
+                biomeRegistryKey
+            );
+        }
+        else{
+            configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
+        }
     }
 }
