@@ -127,7 +127,7 @@ public class StructureTutorialMain implements ModInitializer {
             // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
             // Will include vanilla's and other mod's entries.
             ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-            ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
+            ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().stream().filter(entry -> !STStructureToMultiMap.containsKey(entry.getKey())).forEach(tempStructureToMultiMap::put);
             // Add our structures to the structure map/multimap and set the world to use this combined map/multimap.
             STStructureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
             ((StructuresConfigAccessor) worldStructureConfig).setConfiguredStructures(tempStructureToMultiMap.build());
