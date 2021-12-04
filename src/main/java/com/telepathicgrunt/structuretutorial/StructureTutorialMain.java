@@ -83,6 +83,11 @@ public class StructureTutorialMain {
     public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerLevel serverLevel){
             ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
+            // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
+            if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
+                return;
+            }
+
             StructureSettings worldStructureConfig = chunkGenerator.getSettings();
 
             //////////// BIOME BASED STRUCTURE SPAWNING ////////////
