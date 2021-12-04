@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.telepathicgrunt.structure_tutorial.mixin.StructuresConfigAccessor;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
@@ -70,70 +72,53 @@ public class StructureTutorialMain implements ModInitializer {
     }
 
     /**
-     * The BIOME BASED STRUCTURE section below is needed to spawn structures in biomes in 1.18
-     * until Fabric API updates and adds a new better way.
+     * used for spawning our structures in biomes.
+     * You can move the BiomeModification API anywhere you prefer it to be at.
+     * Just make sure you call BiomeModifications.addStructure at mod init.
      */
     public static void addStructureSpawningToDimensionsAndBiomes() {
-        // This is for making sure our ServerWorldEvents.LOAD event always fires after Fabric API's usage of the same event.
-        // This is done so our changes don't get overwritten by Fabric API adding structure spacings to all dimensions.
-        // Requires Fabric API v0.42.0  or newer.
-        Identifier runAfterFabricAPIPhase = new Identifier(StructureTutorialMain.MODID, "run_after_fabric_api");
-        ServerWorldEvents.LOAD.addPhaseOrdering(Event.DEFAULT_PHASE, runAfterFabricAPIPhase);
 
-        ServerWorldEvents.LOAD.register(runAfterFabricAPIPhase, (MinecraftServer minecraftServer, ServerWorld serverWorld) -> {
-            // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
-            if (serverWorld.getChunkManager().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getRegistryKey().equals(World.OVERWORLD)) {
-                return;
-            }
+        /*
+         * This is the API you will use to add anything to any biome.
+         * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
+         * adding carvers, spawning new features... etc
+         */
+        BiomeModifications.addStructure(
+                // Add our structure to all biomes that have any of these biome categories. This includes modded biomes.
+                // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id, etc.
+                // See BiomeSelectors's methods for more options or write your own by doing `(context) -> context.whatever() == condition`
+                BiomeSelectors.categories(
+                        Biome.Category.DESERT,
+                        Biome.Category.EXTREME_HILLS,
+                        Biome.Category.FOREST,
+                        Biome.Category.ICY,
+                        Biome.Category.JUNGLE,
+                        Biome.Category.PLAINS,
+                        Biome.Category.SAVANNA,
+                        Biome.Category.TAIGA),
+                // The registry key of our ConfiguredStructure so BiomeModification API can grab it
+                // later to tell the game which biomes that your structure can spawn within.
+                RegistryKey.of(
+                        Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
+                        BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE))
+        );
 
-            // We will need this a lot lol
-            StructuresConfig worldStructureConfig = serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig();
-
-            //////////// BIOME BASED STRUCTURE SPAWNING ////////////
-            /*
-             * NOTE: BiomeModifications from Fabric API does not work in 1.18 currently.
-             * Instead, we will use the below to add our structure to overworld biomes.
-             * Remember, this is temporary until Fabric API finds a better solution for adding structures to biomes.
-             */
-
-            // Create a mutable map we will use for easier adding to biomes
-            HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> STStructureToMultiMap = new HashMap<>();
-
-            // Add the registrykey of all biomes that this Configured Structure can spawn in.
-            for(Map.Entry<RegistryKey<Biome>, Biome> biomeEntry : minecraftServer.getRegistryManager().getMutable(Registry.BIOME_KEY).getEntries()) {
-                // Skip all ocean, end, nether, and none category biomes.
-                // You can do checks for other traits that the biome has.
-                Biome.Category biomeCategory = biomeEntry.getValue().getCategory();
-                if(biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.THEEND && biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.NONE) {
-                    associateBiomeToConfiguredStructure(STStructureToMultiMap, STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeEntry.getKey());
-                }
-            }
-
-            // Alternative way to add our structures to a fixed set of biomes by creating a set of biome registry keys.
-            // To create a custom registry key that points to your own biome, do this:
-            // RegistryKey.of(Registry.BIOME_KEY, new Identifier("modid", "custom_biome"))
-//            ImmutableSet<RegistryKey<Biome>> overworldBiomes = ImmutableSet.<RegistryKey<Biome>>builder()
-//                    .add(BiomeKeys.FOREST)
-//                    .add(BiomeKeys.MEADOW)
-//                    .add(BiomeKeys.PLAINS)
-//                    .add(BiomeKeys.SAVANNA)
-//                    .add(BiomeKeys.SNOWY_PLAINS)
-//                    .add(BiomeKeys.SWAMP)
-//                    .add(BiomeKeys.SUNFLOWER_PLAINS)
-//                    .add(BiomeKeys.TAIGA)
-//                    .build();
-//            overworldBiomes.forEach(biomeKey -> associateBiomeToConfiguredStructure(STStructureToMultiMap, STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE, biomeKey));
-
-            // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
-            // Will include vanilla's and other mod's entries.
-            ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-            ((StructuresConfigAccessor) worldStructureConfig).getConfiguredStructures().entrySet().stream().filter(entry -> !STStructureToMultiMap.containsKey(entry.getKey())).forEach(tempStructureToMultiMap::put);
-            // Add our structures to the structure map/multimap and set the world to use this combined map/multimap.
-            STStructureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
-            ((StructuresConfigAccessor) worldStructureConfig).setConfiguredStructures(tempStructureToMultiMap.build());
-
-
-            //////////// DIMENSION BASED STRUCTURE SPAWNING (OPTIONAL) ////////////
+        //////////// DIMENSION BASED STRUCTURE SPAWNING (OPTIONAL) ////////////
+//
+//        // This is for making sure our ServerWorldEvents.LOAD event always fires after Fabric API's usage of the same event.
+//        // This is done so our changes don't get overwritten by Fabric API adding structure spacings to all dimensions.
+//        // Requires Fabric API v0.42.0  or newer.
+//        Identifier runAfterFabricAPIPhase = new Identifier(StructureTutorialMain.MODID, "run_after_fabric_api");
+//        ServerWorldEvents.LOAD.addPhaseOrdering(Event.DEFAULT_PHASE, runAfterFabricAPIPhase);
+//
+//        ServerWorldEvents.LOAD.register(runAfterFabricAPIPhase, (MinecraftServer minecraftServer, ServerWorld serverWorld) -> {
+//            // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
+//            if (serverWorld.getChunkManager().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getRegistryKey().equals(World.OVERWORLD)) {
+//                return;
+//            }
+//
+//            StructuresConfig worldStructureConfig = serverWorld.getChunkManager().getChunkGenerator().getStructuresConfig();
+//
 //            // Controls the dimension blacklisting and/or whitelisting
 //            // If the spacing or our structure is not added for a dimension, the structure doesn't spawn in that dimension.
 //            // Note: due to a quirk with how Noise Settings are shared between dimensions, you need this mixin to make a
@@ -154,8 +139,8 @@ public class StructureTutorialMain implements ModInitializer {
 //
 //            // Set the new modified map of structure spacing to the dimension's chunkgenerator.
 //            ((StructuresConfigAccessor)worldStructureConfig).setStructures(tempMap);
-
-        });
+//
+//        });
     }
 
     /**
