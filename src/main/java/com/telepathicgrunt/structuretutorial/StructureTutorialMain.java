@@ -87,15 +87,15 @@ public class StructureTutorialMain {
 
             //////////// BIOME BASED STRUCTURE SPAWNING ////////////
             /*
-             * NOTE: BiomeModifications from Fabric API does not work in 1.18 currently.
+             * NOTE: BiomeLoadingEvent from Forge API does not work with structures anymore.
              * Instead, we will use the below to add our structure to overworld biomes.
-             * Remember, this is temporary until Fabric API finds a better solution for adding structures to biomes.
+             * Remember, this is temporary until Forge API finds a better solution for adding structures to biomes.
              */
 
             // Create a mutable map we will use for easier adding to biomes
             HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> STStructureToMultiMap = new HashMap<>();
 
-            // Add the registrykey of all biomes that this Configured Structure can spawn in.
+            // Add the resourcekey of all biomes that this Configured Structure can spawn in.
             for(Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
                 // Skip all ocean, end, nether, and none category biomes.
                 // You can do checks for other traits that the biome has.
@@ -105,8 +105,8 @@ public class StructureTutorialMain {
                 }
             }
 
-            // Alternative way to add our structures to a fixed set of biomes by creating a set of biome registry keys.
-            // To create a custom registry key that points to your own biome, do this:
+            // Alternative way to add our structures to a fixed set of biomes by creating a set of biome resource keys.
+            // To create a custom resource key that points to your own biome, do this:
             // ResourceKey.of(Registry.BIOME_REGISTRY, new ResourceLocation("modid", "custom_biome"))
 //            ImmutableSet<ResourceKey<Biome>> overworldBiomes = ImmutableSet.<ResourceKey<Biome>>builder()
 //                    .add(Biomes.FOREST)
