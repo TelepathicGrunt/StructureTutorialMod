@@ -6,6 +6,7 @@ import com.telepathicgrunt.structuretutorial.STStructures;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.PlainVillagePools;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import org.apache.logging.log4j.Level;
 
@@ -60,21 +62,25 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
      * The reason you want to match the classifications is so that your structure's mob
      * will contribute to that classification's cap. Otherwise, it may cause a runaway
      * spawning of the mob that will never stop.
+     *
+     * We use Lazy so that if you classload this class before you register your entities, you will not crash.
+     * Instead, the field and the entities inside will only be referenced when StructureSpawnListGatherEvent
+     * fires much later after entity registration.
      */
-    private static final List<MobSpawnSettings.SpawnerData> STRUCTURE_MONSTERS = ImmutableList.of(
+    private static final Lazy<List<MobSpawnSettings.SpawnerData>> STRUCTURE_MONSTERS = Lazy.of(() -> ImmutableList.of(
             new MobSpawnSettings.SpawnerData(EntityType.ILLUSIONER, 100, 4, 9),
             new MobSpawnSettings.SpawnerData(EntityType.VINDICATOR, 100, 4, 9)
-    );
-    private static final List<MobSpawnSettings.SpawnerData> STRUCTURE_CREATURES = ImmutableList.of(
+    ));
+    private static final Lazy<List<MobSpawnSettings.SpawnerData>> STRUCTURE_CREATURES = Lazy.of(() -> ImmutableList.of(
             new MobSpawnSettings.SpawnerData(EntityType.SHEEP, 30, 10, 15),
             new MobSpawnSettings.SpawnerData(EntityType.RABBIT, 100, 1, 2)
-    );
+    ));
 
     // Hooked up in StructureTutorialMain. You can move this elsewhere or change it up.
     public static void setupStructureSpawns(final StructureSpawnListGatherEvent event) {
         if(event.getStructure() == STStructures.RUN_DOWN_HOUSE.get()) {
-            event.addEntitySpawns(MobCategory.MONSTER, STRUCTURE_MONSTERS);
-            event.addEntitySpawns(MobCategory.CREATURE, STRUCTURE_CREATURES);
+            event.addEntitySpawns(MobCategory.MONSTER, STRUCTURE_MONSTERS.get());
+            event.addEntitySpawns(MobCategory.CREATURE, STRUCTURE_CREATURES.get());
         }
     }
 
@@ -132,10 +138,18 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
          */
         // NoiseColumn blockReader = context.chunkGenerator().getBaseColumn(blockpos.getX(), blockpos.getZ(), context.heightAccessor());
 
-        // We now can access out json template pool so lets set the context to use that json pool.
-        // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
-        context.config().startPool =
-                () -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
+
+        /*
+         * The only reason we are using JigsawConfiguration here is because further down, we are using
+         * JigsawPlacement.addPieces which requires JigsawConfiguration. However, if you create your own
+         * JigsawPlacement.addPieces, you could reduce the amount of workarounds like above that you need
+         * and give yourself more opportunities and control over your structures.
+         *
+         * An example of a custom JigsawPlacement.addPieces in action can be found here:
+         * https://github.com/TelepathicGrunt/RepurposedStructures/blob/1.18/src/main/java/com/telepathicgrunt/repurposedstructures/world/structures/pieces/PieceLimitedJigsawManager.java
+         */
+        JigsawConfiguration newConfig = new JigsawConfiguration(
+                 () -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
                         // The path to the starting Template Pool JSON file to read.
                         //
                         // Note, this is "structure_tutorial:run_down_house/start_pool" which means
@@ -143,18 +157,32 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
                         // "resources/data/structure_tutorial/worldgen/template_pool/run_down_house/start_pool.json"
                         // This is why your pool files must be in "data/<modid>/worldgen/template_pool/<the path to the pool here>"
                         // because the game automatically will check in worldgen/template_pool for the pools.
-                        .get(new ResourceLocation(StructureTutorialMain.MODID, "run_down_house/start_pool"));
+                        .get(new ResourceLocation(StructureTutorialMain.MODID, "run_down_house/start_pool")),
 
-        // How many pieces outward from center can a recursive jigsaw structure spawn.
-        // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
-        // However, I recommend you keep this a decent value like 10 so people can use datapacks to add additional pieces to your structure easily.
-        // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
-        // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
-        context.config().maxDepth = 10;
+                // How many pieces outward from center can a recursive jigsaw structure spawn.
+                // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
+                // However, I recommend you keep this a decent value like 7 so people can use datapacks to add additional pieces to your structure easily.
+                // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
+                // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
+                10
+        );
+
+        // Create a new context with the new config that has our json pool. We will pass this into JigsawPlacement.addPieces
+        PieceGeneratorSupplier.Context<JigsawConfiguration> newContext = new PieceGeneratorSupplier.Context<>(
+                context.chunkGenerator(),
+                context.biomeSource(),
+                context.seed(),
+                context.chunkPos(),
+                newConfig,
+                context.heightAccessor(),
+                context.validBiome(),
+                context.structureManager(),
+                context.registryAccess()
+        );
 
         Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator =
                 JigsawPlacement.addPieces(
-                        context, // Used for JigsawPlacement to get all the proper behaviors done.
+                        newContext, // Used for JigsawPlacement to get all the proper behaviors done.
                         PoolElementStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
                         blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
                         false,  // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
