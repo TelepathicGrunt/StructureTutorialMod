@@ -69,7 +69,7 @@ public class STStructures {
      */
     public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
             F structure,
-            StructureFeatureConfiguration StructureFeatureConfiguration,
+            StructureFeatureConfiguration structureFeatureConfiguration,
             boolean transformSurroundingLand)
     {
         /*
@@ -115,7 +115,7 @@ public class STStructures {
         StructureSettings.DEFAULTS =
                 ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
                         .putAll(StructureSettings.DEFAULTS)
-                        .put(structure, StructureFeatureConfiguration)
+                        .put(structure, structureFeatureConfiguration)
                         .build();
 
 
@@ -137,11 +137,11 @@ public class STStructures {
              */
             if(structureMap instanceof ImmutableMap){
                 Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
-                tempMap.put(structure, StructureFeatureConfiguration);
+                tempMap.put(structure, structureFeatureConfiguration);
                 settings.getValue().structureSettings().structureConfig = tempMap;
             }
             else{
-                structureMap.put(structure, StructureFeatureConfiguration);
+                structureMap.put(structure, structureFeatureConfiguration);
             }
         });
     }
