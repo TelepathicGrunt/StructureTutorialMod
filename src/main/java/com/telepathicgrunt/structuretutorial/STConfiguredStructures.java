@@ -6,7 +6,6 @@ import net.minecraft.data.worldgen.PlainVillagePools;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class STConfiguredStructures {
     /**
