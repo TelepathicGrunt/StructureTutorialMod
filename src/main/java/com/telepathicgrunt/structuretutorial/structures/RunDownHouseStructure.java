@@ -194,11 +194,7 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
         /*
          * Note, you are always free to make your own JigsawPlacement class and implementation of how the structure
          * should generate. It is tricky but extremely powerful if you are doing something that vanilla's jigsaw system cannot do.
-         *
-         * The only reason we are using JigsawConfiguration here is because in RunDownHouseStructure's createPiecesGenerator method,
-         * we are using JigsawPlacement.addPieces which requires StructurePoolFeatureConfig. However, if you create your own
-         * JigsawPlacement.addPieces, you could reduce the amount of workarounds that you need like line 150 and 130 above
-         * and give yourself more opportunities and control over your structures.
+         * Such as for example, forcing 3 pieces to always spawn every time, limiting how often a piece spawns, or remove the intersection limitation of pieces.
          *
          * An example of a custom JigsawPlacement.addPieces in action can be found here (warning, it is using Mojmap mappings):
          * https://github.com/TelepathicGrunt/RepurposedStructures/blob/1.18/src/main/java/com/telepathicgrunt/repurposedstructures/world/structures/pieces/PieceLimitedJigsawManager.java
