@@ -2,7 +2,6 @@ package com.telepathicgrunt.structure_tutorial.structures;
 
 import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structure_tutorial.StructureTutorialMain;
-import com.telepathicgrunt.structure_tutorial.mixin.StructurePoolFeatureConfigAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.structure.PoolStructurePiece;
@@ -111,9 +110,16 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
          */
         //VerticalBlockSample blockView = context.chunkGenerator().getColumnSample(blockpos.getX(), blockpos.getZ(), context.world());
 
-        // We now can access out json template pool so lets set the context to use that json pool.
-        ((StructurePoolFeatureConfigAccessor)context.config()).setStructures(
-            () -> context.registryManager().get(Registry.STRUCTURE_POOL_KEY)
+        /*
+         * The only reason we are using StructurePoolFeatureConfig here is because further down, we are using
+         * StructurePoolBasedGenerator.generate which requires StructurePoolFeatureConfig. However, if you create your own
+         * StructurePoolBasedGenerator.generate, you could reduce the amount of workarounds like above that you need
+         * and give yourself more opportunities and control over your structures.
+         *
+         * An example of a custom StructurePoolBasedGenerator.generate in action can be found here (warning, it is using Mojmap mappings):
+         * https://github.com/TelepathicGrunt/RepurposedStructures-Fabric/blob/1.18/src/main/java/com/telepathicgrunt/repurposedstructures/world/structures/pieces/PieceLimitedJigsawManager.java
+         */
+        StructurePoolFeatureConfig newConfig = new StructurePoolFeatureConfig(
                 // The path to the starting Template Pool JSON file to read.
                 //
                 // Note, this is "structure_tutorial:run_down_house/start_pool" which means
@@ -121,17 +127,32 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
                 // "resources/data/structure_tutorial/worldgen/template_pool/run_down_house/start_pool.json"
                 // This is why your pool files must be in "data/<modid>/worldgen/template_pool/<the path to the pool here>"
                 // because the game automatically will check in worldgen/template_pool for the pools.
-                .get(new Identifier(StructureTutorialMain.MODID, "run_down_house/start_pool")));
+                () -> context.registryManager().get(Registry.STRUCTURE_POOL_KEY)
+                        .get(new Identifier(StructureTutorialMain.MODID, "run_down_house/start_pool")),
 
-        // How many pieces outward from center can a recursive jigsaw structure spawn.
-        // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
-        // However, I recommend you keep this a decent value like 10 so people can use datapacks to add additional pieces to your structure easily.
-        // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
-        ((StructurePoolFeatureConfigAccessor)context.config()).setSize(10);
+                // How many pieces outward from center can a recursive jigsaw structure spawn.
+                // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
+                // However, I recommend you keep this a decent value like 7 so people can use datapacks to add additional pieces to your structure easily.
+                // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
+                10
+        );
+
+        // Create a new context with the new config that has our json pool. We will pass this into JigsawPlacement.addPieces
+        StructureGeneratorFactory.Context<StructurePoolFeatureConfig> newContext = new StructureGeneratorFactory.Context<>(
+                context.chunkGenerator(),
+                context.biomeSource(),
+                context.seed(),
+                context.chunkPos(),
+                newConfig,
+                context.world(),
+                context.validBiome(),
+                context.structureManager(),
+                context.registryManager()
+        );
 
         Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> structurePiecesGenerator =
             StructurePoolBasedGenerator.generate(
-                context, // Used for StructurePoolBasedGenerator to get all the proper behaviors done.
+                newContext, // Used for StructurePoolBasedGenerator to get all the proper behaviors done.
                 PoolStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
                 blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
                 false,  // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
@@ -143,11 +164,7 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
         /*
          * Note, you are always free to make your own StructurePoolBasedGenerator class and implementation of how the structure
          * should generate. It is tricky but extremely powerful if you are doing something that vanilla's jigsaw system cannot do.
-         *
-         * The only reason we are using StructurePoolFeatureConfig here is because in RunDownHouseStructure's createPiecesGenerator method,
-         * we are using StructurePoolBasedGenerator.generate which requires StructurePoolFeatureConfig. However, if you create your own
-         * StructurePoolBasedGenerator.generate, you could reduce the amount of workarounds that you need like line 150 and 130 above
-         * and give yourself more opportunities and control over your structures.
+         * Such as for example, forcing 3 pieces to always spawn every time, limiting how often a piece spawns, or remove the intersection limitation of pieces.
          *
          * An example of a custom StructurePoolBasedGenerator.generate in action can be found here (warning, it is using Mojmap mappings):
          * https://github.com/TelepathicGrunt/RepurposedStructures-Fabric/blob/1.18/src/main/java/com/telepathicgrunt/repurposedstructures/world/structures/pieces/PieceLimitedJigsawManager.java
