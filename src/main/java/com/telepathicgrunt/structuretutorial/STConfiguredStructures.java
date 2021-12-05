@@ -15,7 +15,7 @@ public class STConfiguredStructures {
     public static ConfiguredStructureFeature<?, ?> CONFIGURED_RUN_DOWN_HOUSE = STStructures.RUN_DOWN_HOUSE.get()
             .configured(new JigsawConfiguration(() -> PlainVillagePools.START, 0));
     // Dummy JigsawConfiguration values for now. We will modify the pool at runtime since we cannot get json pool files here at mod init.
-    // You can create and register your pools in code, pass in the code create pool here, and delete line 136 in RunDownHouseStructure.
+    // You can create and register your pools in code, pass in the code create pool here, and delete both newConfig and newContext in RunDownHouseStructure's createPiecesGenerator.
     // Note: JigsawConfiguration only takes 0 - 7 size so that's another reason why we are going to bypass that "codec" by changing size at runtime to get higher sizes.
 
     /**
