@@ -103,27 +103,4 @@ public class StructureTutorialMain implements ModInitializer {
 //
 //        });
     }
-
-    /**
-     * Helper method that handles setting up the map to multimap relationship to help prevent issues.
-     */
-    private static void associateBiomeToConfiguredStructure(Map<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>>> STStructureToMultiMap, ConfiguredStructureFeature<?, ?> configuredStructureFeature, RegistryKey<Biome> biomeRegistryKey) {
-        STStructureToMultiMap.putIfAbsent(configuredStructureFeature.feature, HashMultimap.create());
-        HashMultimap<ConfiguredStructureFeature<?, ?>, RegistryKey<Biome>> configuredStructureToBiomeMultiMap = STStructureToMultiMap.get(configuredStructureFeature.feature);
-        if(configuredStructureToBiomeMultiMap.containsValue(biomeRegistryKey)) {
-            StructureTutorialMain.LOGGER.error("""
-                    Detected 2 ConfiguredStructureFeatures that share the same base StructureFeature trying to be added to same biome. One will be prevented from spawning.
-                    This issue happens with vanilla too and is why a Snowy Village and Plains Village cannot spawn in the same biome because they both use the Village base structure.
-                    The two conflicting ConfiguredStructures are: {}, {}
-                    The biome that is attempting to be shared: {}
-                """,
-                BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(configuredStructureFeature),
-                BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(configuredStructureToBiomeMultiMap.entries().stream().filter(e -> e.getValue() == biomeRegistryKey).findFirst().get().getKey()),
-                biomeRegistryKey
-            );
-        }
-        else{
-            configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
-        }
-    }
 }
