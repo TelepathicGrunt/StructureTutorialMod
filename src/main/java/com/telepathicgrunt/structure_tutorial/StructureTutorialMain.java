@@ -41,7 +41,7 @@ public class StructureTutorialMain implements ModInitializer {
 
         /*
          * This is the API you will use to add anything to any biome.
-         * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
+         * This includes spawns, changing the biome's looks, messing with its temperature,
          * adding carvers, spawning new features... etc
          */
         BiomeModifications.addStructure(
