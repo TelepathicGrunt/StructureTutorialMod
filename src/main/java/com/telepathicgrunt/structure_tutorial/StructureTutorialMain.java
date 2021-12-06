@@ -30,33 +30,6 @@ public class StructureTutorialMain implements ModInitializer {
         STStructures.setupAndRegisterStructureFeatures();
         STConfiguredStructures.registerConfiguredStructures();
         addStructureSpawningToDimensionsAndBiomes();
-
-        /*
-         * NOTE: BiomeModifications from Fabric API does not work for Structures in 1.18 currently.
-         * See addStructureSpawningToDimensionsAndBiomes method for how to spawn structures in biomes
-         * The BiomeModifications API still works for Features tho and mobs and other stuff.
-         *
-         * This is the API you will use to add anything to any biome.
-         * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
-         * adding carvers, spawning new features... etc
-         *
-         * Make sure you give this an identifier to make it clear later what mod did a change and why.
-         * It'll help people look to see if your mod was removing something from biomes.
-         * The biome modifier identifier might also be used by modpacks to disable mod's modifiers too for customization.
-         */
-//        BiomeModifications.create(new Identifier(MODID, "run_down_house_addition"))
-//                .add(   // Describes what we are doing. SInce we are adding a structure, we choose ADDITIONS.
-//                        ModificationPhase.ADDITIONS,
-//
-//                        // Add our structure to all biomes including other modded biomes.
-//                        // You can filter to certain biomes based on stuff like temperature, scale, precipitation, mod id.
-//                        BiomeSelectors.all(),
-//
-//                        // context is basically the biome itself. This is where you do the changes to the biome.
-//                        // Here, we will add our ConfiguredStructureFeature to the biome.
-//                        context -> {
-//                            context.getGenerationSettings().addBuiltInStructure(STConfiguredStructures.CONFIGURED_RUN_DOWN_HOUSE);
-//                        });
     }
 
     /**
