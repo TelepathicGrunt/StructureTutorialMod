@@ -162,7 +162,6 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
                 // Our structure is only 1 piece outward and isn't recursive so any value of 1 or more doesn't change anything.
                 // However, I recommend you keep this a decent value like 7 so people can use datapacks to add additional pieces to your structure easily.
                 // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
-                // Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
                 10
         );
 
