@@ -37,4 +37,9 @@ _if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS=1.16.5
 _command for the project and it'll remap everything to the cutting-edge mappings! Then change the mappings line in your_
 
 _build.gradle to `mappings channel:"official", version:"1.16.5"`_
+
+------------------
+
+My Patreon if you wish to support me! 
+https://www.patreon.com/telepathicgrunt
  
