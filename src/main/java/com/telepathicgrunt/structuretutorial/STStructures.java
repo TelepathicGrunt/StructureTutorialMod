@@ -107,7 +107,6 @@ public class STStructures {
          *
          * Instead, we will use the WorldEvent.Load event in StructureTutorialMain to add the structure
          * spacing from this list into that dimension or to do dimension blacklisting properly.
-         * We also use our entry in DimensionStructuresSettings.DEFAULTS in WorldEvent.Load as well.
          *
          * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
          */
