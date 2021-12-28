@@ -122,10 +122,9 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
     }
 
     public static Optional<PieceGenerator<JigsawConfiguration>> createPiecesGenerator(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
-        // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
-        BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
+        // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
         if (!RunDownHouseStructure.isFeatureChunk(context)) {
             return Optional.empty();
         }
@@ -169,6 +168,9 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
                 context.structureManager(),
                 context.registryAccess()
         );
+
+        // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
+        BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
 
         Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator =
                 JigsawPlacement.addPieces(
