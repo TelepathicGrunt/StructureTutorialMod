@@ -94,10 +94,9 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
     }
 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
-        // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
-        BlockPos blockpos = context.chunkPos().getCenterAtY(0);
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
+        // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
         if (!RunDownHouseStructure.isFeatureChunk(context)) {
             return Optional.empty();
         }
@@ -141,6 +140,9 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
                 context.structureManager(),
                 context.registryManager()
         );
+
+        // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
+        BlockPos blockpos = context.chunkPos().getCenterAtY(0);
 
         Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> structurePiecesGenerator =
             StructurePoolBasedGenerator.generate(
