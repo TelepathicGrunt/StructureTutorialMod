@@ -30,17 +30,8 @@ import java.util.Optional;
 
 public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration> {
     public RunDownHouseStructure(Codec<JigsawConfiguration> codec) {
-        super(codec, (context) -> {
-                // Check if the spot is valid for structure gen. If false, return nothing to signal to the game to skip this spawn attempt.
-                if (!RunDownHouseStructure.isFeatureChunk(context)) {
-                    return Optional.empty();
-                }
-                // Create the pieces layout of the structure and give it to
-                else {
-                    return RunDownHouseStructure.createPiecesGenerator(context);
-                }
-            },
-            PostPlacementProcessor.NONE);
+        // Create the pieces layout of the structure and give it to the game
+        super(codec, RunDownHouseStructure::createPiecesGenerator, PostPlacementProcessor.NONE);
     }
 
     /**
@@ -97,6 +88,12 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
      * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
      * (Bedrock Edition seems to not have the same check)
      *
+     * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
+     * Best way to do that is to use getBaseColumn to grab a column of blocks at the structure's x/z position.
+     * Then loop through it and look for land with air above it and set blockpos's Y value to it.
+     * Make sure to set the final boolean in JigsawPlacement.addPieces to false so
+     * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
+     *
      * Also, please for the love of god, do not do dimension checking here. If you do and
      * another mod's dimension is trying to spawn your structure, the locate
      * command will make minecraft hang forever and break the game.
@@ -128,18 +125,13 @@ public class RunDownHouseStructure extends StructureFeature<JigsawConfiguration>
         // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
         BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
 
-        /*
-         * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
-         * Best way to do that is to use getBaseColumn to grab a column of blocks at the structure's x/z position.
-         * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-         * Make sure to set the final boolean in JigsawPlacement.addPieces to false so
-         * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
-         */
-        // NoiseColumn blockReader = context.chunkGenerator().getBaseColumn(blockpos.getX(), blockpos.getZ(), context.heightAccessor());
-
+        // Check if the spot is valid for our structure. This is just as another method for cleanness.
+        if (!RunDownHouseStructure.isFeatureChunk(context)) {
+            return Optional.empty();
+        }
 
         /*
-         * The only reason we are using JigsawConfiguration here is because further down, we are using
+         * The only reason we are using JigsawConfiguration here is that further down, we are using
          * JigsawPlacement.addPieces which requires JigsawConfiguration. However, if you create your own
          * JigsawPlacement.addPieces, you could reduce the amount of workarounds like above that you need
          * and give yourself more opportunities and control over your structures.
