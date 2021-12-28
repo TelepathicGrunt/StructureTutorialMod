@@ -25,17 +25,8 @@ import java.util.Optional;
 public class RunDownHouseStructure extends StructureFeature<StructurePoolFeatureConfig> {
 
     public RunDownHouseStructure(Codec<StructurePoolFeatureConfig> codec) {
-        super(codec, (context) -> {
-            // Check if the spot is valid for structure gen. If false, return nothing to signal to the game to skip this spawn attempt.
-            if (!RunDownHouseStructure.canGenerate(context)) {
-                return Optional.empty();
-            }
-            // Create the pieces layout of the structure and give it to
-            else {
-                return RunDownHouseStructure.createPiecesGenerator(context);
-            }
-        },
-        PostPlacementProcessor.EMPTY);
+        // Create the pieces layout of the structure and give it to the game
+        super(codec, RunDownHouseStructure::createPiecesGenerator, PostPlacementProcessor.EMPTY);
     }
 
     /**
@@ -68,7 +59,12 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
      *
      * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
      * (Bedrock Edition seems to not have the same check)
-     * 
+     *
+     * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
+     * Best way to do that is to use getColumnSample to grab a column of blocks at the structure's x/z position.
+     * Then loop through it and look for land with air above it and set blockpos's Y value to it.
+     * Make sure to set the final boolean in StructurePoolBasedGenerator.generate to false so
+     * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
      * 
      * Also, please for the love of god, do not do dimension checking here.
      * If you do and another mod's dimension is trying to spawn your structure,
@@ -78,7 +74,7 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
      * StructureTutorialMain class. If you check for the dimension there and do not add your
      * structure's spacing into the chunk generator, the structure will not spawn in that dimension!
      */
-    private static boolean canGenerate(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
+    private static boolean isFeatureChunk(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
         BlockPos spawnXZPosition = context.chunkPos().getCenterAtY(0);
 
         // Grab height of land. Will stop at first non-air block.
@@ -101,17 +97,13 @@ public class RunDownHouseStructure extends StructureFeature<StructurePoolFeature
         // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
         BlockPos blockpos = context.chunkPos().getCenterAtY(0);
 
-        /*
-         * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
-         * Best way to do that is to use getColumnSample to grab a column of blocks at the structure's x/z position.
-         * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-         * Make sure to set the final boolean in StructurePoolBasedGenerator.generate to false so
-         * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
-         */
-        //VerticalBlockSample blockView = context.chunkGenerator().getColumnSample(blockpos.getX(), blockpos.getZ(), context.world());
+        // Check if the spot is valid for our structure. This is just as another method for cleanness.
+        if (!RunDownHouseStructure.isFeatureChunk(context)) {
+            return Optional.empty();
+        }
 
         /*
-         * The only reason we are using StructurePoolFeatureConfig here is because further down, we are using
+         * The only reason we are using StructurePoolFeatureConfig here is that further down, we are using
          * StructurePoolBasedGenerator.generate which requires StructurePoolFeatureConfig. However, if you create your own
          * StructurePoolBasedGenerator.generate, you could reduce the amount of workarounds like above that you need
          * and give yourself more opportunities and control over your structures.
