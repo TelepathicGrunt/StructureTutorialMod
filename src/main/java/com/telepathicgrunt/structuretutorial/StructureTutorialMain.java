@@ -83,7 +83,8 @@ public class StructureTutorialMain {
     public void addDimensionalSpacing(final WorldEvent.Load event) {
         if(event.getWorld() instanceof ServerLevel serverLevel){
             ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
-            // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
+
+            // Skip superflat worlds to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
             if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
                 return;
             }
@@ -151,16 +152,6 @@ public class StructureTutorialMain {
             }
             catch(Exception e){
                 StructureTutorialMain.LOGGER.error("Was unable to check if " + serverLevel.dimension().location() + " is using Terraforged's ChunkGenerator.");
-            }
-
-            /*
-             * Prevent spawning our structure in Vanilla's superflat world as
-             * people seem to want their superflat worlds free of modded structures.
-             * Also that vanilla superflat is really tricky and buggy to work with in my experience.
-             */
-            if(chunkGenerator instanceof FlatLevelSource &&
-                serverLevel.dimension().equals(Level.OVERWORLD)){
-                return;
             }
 
             /*
