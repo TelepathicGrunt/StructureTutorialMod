@@ -68,16 +68,10 @@ public class StructureTutorialMain {
     }
 
 
-    /**
+    /*
      * Tells the chunkgenerator which biomes our structure can spawn in.
      * Will go into the world's chunkgenerator and manually add our structure spacing.
      * If the spacing is not added, the structure doesn't spawn.
-     *
-     * Use this for dimension blacklists for your structure.
-     * (Don't forget to attempt to remove your structure too from the map if you are blacklisting that dimension!)
-     * (It might have your structure in it already.)
-     *
-     * Basically use this to make absolutely sure the chunkgenerator can or cannot spawn your structure.
      */
     private static Method GETCODEC_METHOD;
     public void addDimensionalSpacing(final WorldEvent.Load event) {
@@ -138,10 +132,11 @@ public class StructureTutorialMain {
             worldStructureConfig.configuredStructures = tempStructureToMultiMap.build();
 
 
-            //////////// DIMENSION BASED STRUCTURE SPAWNING (OPTIONAL) ////////////
+            //////////// DIMENSION BASED STRUCTURE SPAWNING ////////////
+
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
-             * They will handle your structure spacing for your if you add to BuiltinRegistries.NOISE_GENERATOR_SETTINGS in your structure's registration.
+             * They will handle your structure spacing for your if you add to Registry.NOISE_GENERATOR_SETTINGS_REGISTRY in your structure's registration.
              * This here is done with reflection as this tutorial is not about setting up and using Mixins.
              * If you are using mixins, you can call the codec method with an invoker mixin instead of using reflection.
              */
@@ -155,16 +150,24 @@ public class StructureTutorialMain {
             }
 
             /*
+             * Makes sure this chunkgenerator and datapack dimensions can spawn our structure.
+             *
              * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
              * Requires AccessTransformer  (see resources/META-INF/accesstransformer.cfg)
-             *
-             * NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as BuiltinRegistries.NOISE_GENERATOR_SETTINGS in FMLCommonSetupEvent
-             * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
-             * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
              */
             Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureConfig.structureConfig());
             tempMap.putIfAbsent(STStructures.RUN_DOWN_HOUSE.get(), StructureSettings.DEFAULTS.get(STStructures.RUN_DOWN_HOUSE.get()));
             worldStructureConfig.structureConfig = tempMap;
+
+            /*
+             * The above three lines can be changed to do dimension blacklists/whitelist for your structure.
+             * (Don't forget to attempt to remove your structure too from the map if you are blacklisting that dimension in case it already has the structure)
+             *
+             * If you do start whitelisting/blacklisting by dimensions instead of the default adding the spacing to all dimensions,
+             * you may want to deep copy the structureConfig field first due to the fact that two dimensions using minecraft:overworld noise setting shares the same instance.
+             * The deep copying would let you only add to one dimension and not the other instead of your changes applying to both dimensions together at same time.
+             * https://github.com/TelepathicGrunt/RepurposedStructures/blob/latest-released/src/main/java/com/telepathicgrunt/repurposedstructures/misc/NoiseSettingsDeepCopier.java
+             */
         }
    }
 
