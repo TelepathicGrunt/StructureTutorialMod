@@ -18,7 +18,7 @@
 
           // Also, heads up, the structure_tutorial:run_down_house_left_side piece has a Jigsaw Block
           // that is targeting this pool directly. Be sure to change that Jigsaw Block's target pool
-          // to make this side pool spawn in your own mod."
+          // to make this side pool spawn in your own mod.
         "location": "structure_tutorial:run_down_house_right_side",
         "processors": "minecraft:empty",
         "projection": "rigid",

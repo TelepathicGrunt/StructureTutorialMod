@@ -1,0 +1,62 @@
+{
+    // Processor lists will run a processor for every block placed by the nbt file.
+    // The resultant block of the processor list is the block that actually gets placed in the world.
+  "processors": [
+      // A single Rule processor for this list.
+    {
+      "processor_type": "minecraft:rule",
+
+      // The rules for this Rule processor to use
+      "rules": [
+        {
+            // The block to look for from the nbt file
+            // This has a 50% chance of allowing the found stone bricks block to be replaced
+          "input_predicate": {
+            "block": "minecraft:stone_bricks",
+            "probability": 0.5,
+            "predicate_type": "minecraft:random_block_match"
+          },
+            // This is always true
+            // Village roads have this part look for water so roads can be replaced with oak planks instead
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+            // The actual block to place if the above conditions return true
+          "output_state": {
+            "Name": "minecraft:infested_stone_bricks"
+          }
+        },
+        {
+          "input_predicate": {
+            "block": "minecraft:stone_bricks",
+            "probability": 0.05,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:emerald_ore"
+          }
+        },
+        {
+          "input_predicate": {
+            "block": "minecraft:cobbled_deepslate",
+            "probability": 0.1,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+            // If an output_state block has properties, you must define ALL properties of the block!
+          "output_state": {
+            "Name": "minecraft:deepslate_redstone_ore",
+            "Properties": {
+              "lit": false
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

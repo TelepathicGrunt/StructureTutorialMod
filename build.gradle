@@ -10,13 +10,20 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-repositories {}
+repositories {
+	maven {	url "https://nexus.resourcefulbees.com/repository/maven-public/" }
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// I recommend having CommandStructures on in your development environment as it gives
+	// commands for making debugging structures easier. It is super useful!
+	modRuntimeOnly "com.telepathicgrunt:CommandStructures-Fabric:2.0.0+1.18.2"
 }
 
 processResources {
@@ -28,7 +35,6 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = 17
 }
 
@@ -43,28 +49,4 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
-}
-
-// Bonus stuff!
-import groovy.json.JsonParserType
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
-processResources {
-
-	// Will minify the JSON files of your mod when you build the jar.
-	// Helps reduce files size! Minify means it will strip whitespace
-	// and turn the JSON files into 1 liners.
-    doLast {
-        def jsonMinifyStart = System.currentTimeMillis()
-        def jsonMinified = 0
-        def jsonBytesSaved = 0
-        fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
-            File file = it
-            jsonMinified++
-            def oldLength = file.length()
-			file.text = JsonOutput.toJson(new JsonSlurper(type: JsonParserType.LAX).parse(file))
-            jsonBytesSaved += oldLength - file.length()
-        }
-        println('Minified ' + jsonMinified + ' json files. Saved ' + jsonBytesSaved + ' bytes. Took ' + (System.currentTimeMillis() - jsonMinifyStart) + 'ms.')
-    }
 }
