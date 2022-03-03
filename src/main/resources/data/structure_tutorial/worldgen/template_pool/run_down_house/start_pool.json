@@ -8,8 +8,8 @@
     // The template pool to refer to if the entries in 'elements' fails to generate.
   "fallback": "minecraft:empty",
 
-    // Here you can list as many nbt files or configured features to spawn.
-    // Do note that configured features needs a special element entry stuff.
+    // Here you can list as many nbt files or placed features to spawn.
+    // Do note that placed features needs a special element entry stuff.
   "elements": [
     {
 

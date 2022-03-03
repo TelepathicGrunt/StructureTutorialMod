@@ -1,0 +1,33 @@
+{
+    // More info on template pools can be found here: https://minecraft.gamepedia.com/Custom_world_generation#JSON_format_8
+
+    // This is the name of the template pool itself. I tend to just put the file path and file name here with modid.
+  "name": "repurposed_structures:run_down_house/side_pool",
+
+    // The template pool to refer to if the entries in 'elements' fails to generate.
+  "fallback": "minecraft:empty",
+
+    // Here you can list as many nbt files or placed features to spawn.
+    // Do note that placed features needs a special element entry stuff.
+  "elements": [
+    {
+        // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+
+          // The Identifier of the nbt file itself of the structure piece.
+          // Note, this will automatically check into the 'structures' folder for the nbt file.
+          // The final path would look like 'resources/data/structure_tutorial/structures/run_down_house_left_side.nbt'
+        "location": "structure_tutorial:sky_fan",
+
+          // Specifies to run this processor list json for the above nbt file when placing it in the world
+          // Processor lists are great for randomizing blocks and making structures appear more natural!
+          // Note, this will automatically check into the 'worldgen/processor_list' folder for the json file.
+          // The final path would look like 'resources/data/structure_tutorial/worldgen/processor_list/randomize_stonebrick.json'
+        "processors": "structure_tutorial:randomize_stonebrick",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -20,16 +20,9 @@ archivesBaseName = 'structure_tutorial'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    // MCPBot is dead. Do not use that to check for updates.
-    // if you want the absolute latest mapping, run ` gradlew -PUPDATE_MAPPINGS="20200916-1.16.2" updateMappings `
-    // command for the project and it'll remap everything to the cutting-edge mappings!
     mappings channel: "official", version: "${mc_version}"
-    
-    // Structures in 1.16.3+ require you to place them in some vanilla maps which are private variables
-    // The access transformer allows us to make them public so we can place our structures in them
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    
-    
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
     runs {
         client {
             workingDirectory project.file('run')
@@ -68,9 +61,9 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    // I recommend having Blame on in your development environment as it can give you more info of what is
-    // broken with your Jigsaw structure. It is super useful!. Just uncomment out this line and refresh gradle.
-    // runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.0.1-forge")
+    // I recommend having CommandStructures on in your development environment as it gives
+    // commands for making debugging structures easier. It is super useful!
+    runtimeOnly fg.deobf("com.telepathicgrunt:CommandStructures:2.0.0+1.18.2")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -89,29 +82,5 @@ jar {
             "Implementation-Vendor" :"telepathicgrunt",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
-    }
-}
-
-
-// Bonus stuff!
-import groovy.json.JsonParserType
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
-processResources {
-    // Will minify the JSON files of your mod when you build the jar.
-    // Helps reduce files size! Minify means it will strip whitespace
-    // and turn the JSON files into 1 liners.
-    doLast {
-        def jsonMinifyStart = System.currentTimeMillis()
-        def jsonMinified = 0
-        def jsonBytesSaved = 0
-        fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
-            File file = it
-            jsonMinified++
-            def oldLength = file.length()
-            file.text = JsonOutput.toJson(new JsonSlurper(type: JsonParserType.LAX).parse(file))
-            jsonBytesSaved += oldLength - file.length()
-        }
-        println('Minified ' + jsonMinified + ' json files. Saved ' + jsonBytesSaved + ' bytes. Took ' + (System.currentTimeMillis() - jsonMinifyStart) + 'ms.')
     }
 }
