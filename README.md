@@ -15,9 +15,11 @@ Handy image for a shorthand way of how Jigsaw Blocks and Pools work together:
 >![Jigsaw Cheatsheet](https://cdn.discordapp.com/attachments/686973568872873996/782006962979602432/jigsaws.png)
 
 This picture shows how structure jigsaw pieces are only valid if the child piece fits entirely within the parent or entirely outside the parent piece. Partial intersections will prevent the piece from spawning.
+
 <img src="https://i.imgur.com/5FGxomT.png" data-canonical-src="https://i.imgur.com/5FGxomT.png" height="300"/>
 
 And here, if a piece fails to spawn, it will go to the fallback pool, pick a new piece from the fallback pool, and try to spawn that piece if there is room for it. Great for closing off the ends of hallways!
+
 <img src="https://cdn.discordapp.com/attachments/754531543309090817/947099941531168798/5201EEE1-1564-439C-A862-41DC6855609D.png" data-canonical-src="https://cdn.discordapp.com/attachments/754531543309090817/947099941531168798/5201EEE1-1564-439C-A862-41DC6855609D.png" height="300"/>
 
 Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Now after you place the nbt file at that spot, we need to make a new JSON file and put it in data/mod_id/worldgen/template_pool folder as now we need to make the pool that will spawn our nbt file. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
