@@ -3,7 +3,7 @@
 
 **Change the Github branch to see other versions of this tutorial including Forge.**
 
- This very small Fabric mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it.
+ This very small Fabric mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://gist.github.com/misode/45559d34627755ecaa52497daea83544
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
 >https://www.youtube.com/watch?v=umhuRXinD3o
