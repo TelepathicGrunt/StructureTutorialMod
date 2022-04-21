@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "com.telepathicgrunt",
+    "id": "structure_tutorial",
+    "version": "${version}",
+    "metadata": {
+      "name": "Structure Tutorial Mod",
+      "description": "A working example on how to make structures in Minecraft!",
+      "contributors": {
+        "Me!": "TelepathicGrunt"
+      },
+      "icon": " ",
+      "license": "MIT",
+      "contact": {
+        "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.18.x-Quilt-Jigsaw"
+      }
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "com.telepathicgrunt.structure_tutorial.StructureTutorialMain"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.16.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=1.0.0-"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.18.2"
+      }
+    ]
+  },
+  "mixin": "structure_tutorial.mixins.json"
+}

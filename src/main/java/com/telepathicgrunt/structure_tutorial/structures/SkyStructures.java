@@ -1,17 +1,17 @@
 package com.telepathicgrunt.structure_tutorial.structures;
 
 import com.telepathicgrunt.structure_tutorial.StructureTutorialMain;
-import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.PostPlacementProcessor;
-import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.structure.StructurePiecesGenerator;
-import net.minecraft.structure.StructureSetKeys;
+import net.minecraft.structure.StructurePiecesGeneratorFactory;
+import net.minecraft.structure.piece.PoolStructurePiece;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
+import net.minecraft.world.gen.structure.BuiltInStructureSets;
 import org.apache.logging.log4j.Level;
 
 import java.util.Optional;
@@ -49,16 +49,16 @@ public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> 
      * Use the biome tags for where to spawn the structure and users can datapack
      * it to spawn in specific biomes that aren't in the dimension they don't like if they wish.
      */
-    private static boolean isFeatureChunk(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
+    private static boolean isFeatureChunk(StructurePiecesGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
         // Grabs the chunk position we are at
         ChunkPos chunkpos = context.chunkPos();
 
         // Checks to make sure our structure does not spawn within 10 chunks of an Ocean Monument
         // to demonstrate how this method is good for checking extra conditions for spawning
-        return !context.chunkGenerator().method_41053(StructureSetKeys.OCEAN_MONUMENTS, context.seed(), chunkpos.x, chunkpos.z, 10);
+        return !context.chunkGenerator().method_41053(BuiltInStructureSets.OCEAN_MONUMENTS, context.seed(), chunkpos.x, chunkpos.z, 10);
     }
 
-    public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
+    public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructurePiecesGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
@@ -71,11 +71,11 @@ public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> 
 
         // Find the top Y value of the land and then offset our structure to 60 blocks above that.
         // WORLD_SURFACE_WG will stop at top water so we don't accidentally put our structure into the ocean if it is a super deep ocean.
-        int topLandY = context.chunkGenerator().getHeightOnGround(blockpos.getX(), blockpos.getZ(), Heightmap.Type.WORLD_SURFACE_WG, context.world());
+        int topLandY = context.chunkGenerator().getHeightOnGround(blockpos.getX(), blockpos.getZ(), Heightmap.Type.WORLD_SURFACE_WG, context.heightLimitView());
         blockpos = blockpos.up(topLandY + 60);
 
         Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> structurePiecesGenerator =
-                StructurePoolBasedGenerator.generate(
+                StructurePoolBasedGenerator.method_30419(
                         context, // Used for JigsawPlacement to get all the proper behaviors done.
                         PoolStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
                         blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.

@@ -1,10 +1,7 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	alias(libs.plugins.quilt.loom)
 	id 'maven-publish'
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -15,38 +12,40 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	minecraft libs.minecraft
+	mappings( loom.layered {
+		addLayer quiltMappings.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:v2")
+		// officialMojangMappings() // MojMap mappings. Uncomment if you want to use this mapping instead.
+	})
+	modImplementation libs.quilt.loader
+	modImplementation libs.quilted.fabric.api
 
 	// I recommend having CommandStructures on in your development environment as it gives
 	// commands for making debugging structures easier. It is super useful!
-	modRuntimeOnly "com.telepathicgrunt:CommandStructures-Fabric:2.0.0+1.18.2"
+	// modRuntimeOnly "com.telepathicgrunt:CommandStructures-Quilt:2.0.0+1.18.2"
 }
 
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("quilt.mod.json") {
 		expand "version": project.version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.encoding = 'UTF-8'
+	it.options.release.set(17)
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 	withSourcesJar()
 }
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${archivesBaseName}"}
 	}
 }
