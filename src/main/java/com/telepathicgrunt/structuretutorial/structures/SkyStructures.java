@@ -1,5 +1,7 @@
 package com.telepathicgrunt.structuretutorial.structures;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.telepathicgrunt.structuretutorial.StructureTutorialMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -13,15 +15,25 @@ import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import org.apache.logging.log4j.Level;
 
 import java.util.Optional;
 
 public class SkyStructures extends StructureFeature<JigsawConfiguration> {
 
+    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
+    // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
+    public static final Codec<JigsawConfiguration> CODEC = RecordCodecBuilder.create((codec) -> {
+        return codec.group(
+                StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(JigsawConfiguration::startPool),
+                Codec.intRange(0, 30).fieldOf("size").forGetter(JigsawConfiguration::maxDepth)
+        ).apply(codec, JigsawConfiguration::new);
+    });
+
     public SkyStructures() {
         // Create the pieces layout of the structure and give it to the game
-        super(JigsawConfiguration.CODEC, SkyStructures::createPiecesGenerator, PostPlacementProcessor.NONE);
+        super(CODEC, SkyStructures::createPiecesGenerator, PostPlacementProcessor.NONE);
     }
 
     /**
