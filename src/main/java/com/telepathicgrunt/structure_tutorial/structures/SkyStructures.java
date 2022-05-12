@@ -1,10 +1,13 @@
 package com.telepathicgrunt.structure_tutorial.structures;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.telepathicgrunt.structure_tutorial.StructureTutorialMain;
 import net.minecraft.structure.PostPlacementProcessor;
 import net.minecraft.structure.StructurePiecesGenerator;
 import net.minecraft.structure.StructurePiecesGeneratorFactory;
 import net.minecraft.structure.piece.PoolStructurePiece;
+import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -18,9 +21,19 @@ import java.util.Optional;
 
 public class SkyStructures extends StructureFeature<StructurePoolFeatureConfig> {
 
+    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
+    // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
+    public static final Codec<StructurePoolFeatureConfig> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(StructurePoolFeatureConfig::getStartPool),
+            Codec.intRange(0, 30).fieldOf("size").forGetter(StructurePoolFeatureConfig::getSize)
+        )
+        .apply(instance, StructurePoolFeatureConfig::new)
+    );
+
     public SkyStructures() {
         // Create the pieces layout of the structure and give it to the game
-        super(StructurePoolFeatureConfig.CODEC, SkyStructures::createPiecesGenerator, PostPlacementProcessor.EMPTY);
+        super(CODEC, SkyStructures::createPiecesGenerator, PostPlacementProcessor.EMPTY);
     }
 
     /*
