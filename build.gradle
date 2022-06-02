@@ -19,10 +19,6 @@ dependencies {
 	})
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
-
-	// I recommend having CommandStructures on in your development environment as it gives
-	// commands for making debugging structures easier. It is super useful!
-	// modRuntimeOnly "com.telepathicgrunt:CommandStructures-Quilt:2.0.0+1.18.2"
 }
 
 processResources {

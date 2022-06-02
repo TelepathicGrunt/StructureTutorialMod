@@ -3,9 +3,7 @@
   "minVersion": "0.8",
   "package": "com.telepathicgrunt.structure_tutorial.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "StructureFeatureAccessor"
-  ],
+  "mixins": [],
   "client": [],
   "injectors": {
     "defaultRequire": 1
