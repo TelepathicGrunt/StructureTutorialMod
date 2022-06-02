@@ -1,5 +1,5 @@
 # Structure Tutorial Mod (Fabric)
-**How to register and generate jigsaw structures in 1.18.2+ Minecraft Fabric using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
+**How to register and generate jigsaw structures in 1.19.0+ Minecraft Fabric using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
 
 **Change the Github branch to see other versions of this tutorial including Forge.**
 
