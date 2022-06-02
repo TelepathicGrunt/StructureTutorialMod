@@ -135,11 +135,6 @@ public class SkyStructures extends Structure {
          * Such as for example, forcing 3 pieces to always spawn every time, limiting how often a piece spawns, or remove the intersection limitation of pieces.
          */
 
-        if(structurePiecesGenerator.isPresent()) {
-            // I use to debug and quickly find out if the structure is spawning or not and where it is.
-            // This is returning the coordinates of the center starting piece.
-            StructureTutorialMain.LOGGER.log(Level.DEBUG, "Sky Structure at {}", blockPos);
-        }
         // Return the pieces generator that is now set up so that the game runs it when it needs to create the layout of structure pieces.
         return structurePiecesGenerator;
     }
