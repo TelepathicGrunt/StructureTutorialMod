@@ -20,7 +20,7 @@ public class STStructures {
      * Registers the base structure itself and sets what its path is. In this case,
      * this base structure will have the resourcelocation of structure_tutorial:sky_structures.
      */
-    public static final RegistryObject<StructureType<?>> SKY_STRUCTURES = DEFERRED_REGISTRY_STRUCTURE.register("sky_structures", typeConvert(SkyStructures.CODEC));
+    public static final RegistryObject<StructureType<?>> SKY_STRUCTURES = DEFERRED_REGISTRY_STRUCTURE.register("sky_structures", () -> typeConvert(SkyStructures.CODEC));
 
     // Helper method to register since compiler will complain about typing if we did () -> SkyStructures.CODEC directly.
     private static <S extends Structure> StructureType<S> typeConvert(Codec<S> codec) {
