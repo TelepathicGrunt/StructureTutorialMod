@@ -18,7 +18,7 @@ dependencies {
 		// officialMojangMappings() // MojMap mappings. Uncomment if you want to use this mapping instead.
 	})
 	modImplementation libs.quilt.loader
-	modImplementation libs.quilted.fabric.api
+	modImplementation libs.qsl
 }
 
 processResources {

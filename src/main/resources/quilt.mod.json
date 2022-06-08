@@ -13,7 +13,7 @@
       "icon": " ",
       "license": "MIT",
       "contact": {
-        "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.18.x-Quilt-Jigsaw"
+        "homepage": "https://github.com/TelepathicGrunt/StructureTutorialMod/tree/1.19.0-Quilt-Jigsaw"
       }
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
@@ -23,15 +23,11 @@
     "depends": [
       {
         "id": "quilt_loader",
-        "versions": ">=0.16.0-"
-      },
-      {
-        "id": "quilted_fabric_api",
-        "versions": ">=1.0.0-"
+        "versions": ">=0.17.0-"
       },
       {
         "id": "minecraft",
-        "versions": ">=1.18.2"
+        "versions": ">=1.19"
       }
     ]
   },
