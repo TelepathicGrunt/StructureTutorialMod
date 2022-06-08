@@ -50,20 +50,11 @@ minecraft {
     }
 }
 
-repositories {
-    // Repo for getting Blame from
-    maven { url "https://nexus.resourcefulbees.com/repository/telepathicgrunt/" }
-}
-
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
-    // I recommend having CommandStructures on in your development environment as it gives
-    // commands for making debugging structures easier. It is super useful!
-    runtimeOnly fg.deobf("com.telepathicgrunt:CommandStructures:2.0.0+1.18.2")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
