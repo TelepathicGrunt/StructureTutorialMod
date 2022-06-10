@@ -1,15 +1,13 @@
 package com.telepathicgrunt.structure_tutorial;
 
-import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structure_tutorial.structures.SkyStructures;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
 public class STStructures {
 
-    public static StructureType<?> SKY_STRUCTURES;
+    public static StructureType<SkyStructures> SKY_STRUCTURES;
 
     /**
      * Registers the structure itself and sets what its path is. In this case, the
@@ -19,11 +17,6 @@ public class STStructures {
      * use them too directly from the registries. It's great for mod/datapacks compatibility.
      */
     public static void registerStructureFeatures() {
-        SKY_STRUCTURES = register(new Identifier(StructureTutorialMain.MODID, "sky_structures"), SkyStructures.CODEC);
-    }
-
-    // Helper method to register since compiler will complain about typing if we did () -> SkyStructures.CODEC directly.
-    private static <S extends Structure> StructureType<S> register(Identifier id, Codec<S> codec) {
-        return Registry.register(Registry.STRUCTURE_TYPE, id, () -> codec);
+        SKY_STRUCTURES = Registry.register(Registry.STRUCTURE_TYPE, new Identifier(StructureTutorialMain.MODID, "sky_structures"), () -> SkyStructures.CODEC);
     }
 }
