@@ -4,7 +4,7 @@ minecraft = "1.19"
 quilt_mappings = "1.19+build.1"
 quilt_loader = "0.17.0-beta.2"
 
-qsl = "2.0.0-beta.1+1.19"
+qsl = "2.0.0-beta.2+1.19"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
