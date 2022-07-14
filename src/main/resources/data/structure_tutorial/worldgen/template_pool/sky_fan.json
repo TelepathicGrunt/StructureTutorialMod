@@ -2,7 +2,7 @@
     // More info on template pools can be found here: https://minecraft.gamepedia.com/Custom_world_generation#JSON_format_8
 
     // This is the name of the template pool itself. I tend to just put the file path and file name here with modid.
-  "name": "repurposed_structures:run_down_house/side_pool",
+  "name": "repurposed_structures:sky_fan",
 
     // The template pool to refer to if the entries in 'elements' fails to generate.
   "fallback": "minecraft:empty",
