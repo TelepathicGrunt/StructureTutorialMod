@@ -3,7 +3,7 @@
     // Yes, worldgen json files can have comments. Minecraft does "lenient" parsing of these json files.
 
     // This is the name of the template pool itself. I tend to just put the file path and file name here with modid.
-  "name": "repurposed_structures:run_down_house/start_pool",
+  "name": "structure_tutorial:run_down_house/start_pool",
 
     // The template pool to refer to if the entries in 'elements' fails to generate.
   "fallback": "minecraft:empty",
