@@ -3,10 +3,10 @@ package com.telepathicgrunt.structure_tutorial.structures;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.telepathicgrunt.structure_tutorial.STStructures;
+import net.minecraft.registry.Holder;
 import net.minecraft.structure.StructureType;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
-import net.minecraft.util.Holder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -114,7 +114,7 @@ public class SkyStructures extends StructureFeature {
         BlockPos blockPos = new BlockPos(chunkPos.getStartX(), startY, chunkPos.getStartZ());
 
         Optional<GenerationStub> structurePiecesGenerator =
-                StructurePoolBasedGenerator.method_30419(
+                StructurePoolBasedGenerator.m_drsiegyr(
                         context, // Used for StructurePoolBasedGenerator to get all the proper behaviors done.
                         this.startPool, // The starting pool to use to create the structure layout from
                         this.startJigsawName, // Can be used to only spawn from one Jigsaw block. But we don't need to worry about this.
