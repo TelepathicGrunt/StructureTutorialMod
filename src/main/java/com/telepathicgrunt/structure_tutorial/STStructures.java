@@ -1,8 +1,9 @@
 package com.telepathicgrunt.structure_tutorial;
 
 import com.telepathicgrunt.structure_tutorial.structures.SkyStructures;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.structure.StructureType;
 
 public class STStructures {
@@ -17,6 +18,6 @@ public class STStructures {
      * use them too directly from the registries. It's great for mod/datapacks compatibility.
      */
     public static void registerStructureFeatures() {
-        SKY_STRUCTURES = Registry.register(Registry.STRUCTURE_TYPE, new Identifier(StructureTutorialMain.MODID, "sky_structures"), () -> SkyStructures.CODEC);
+        SKY_STRUCTURES = Registry.register(Registries.STRUCTURE_TYPE, new Identifier(StructureTutorialMain.MODID, "sky_structures"), () -> SkyStructures.CODEC);
     }
 }
