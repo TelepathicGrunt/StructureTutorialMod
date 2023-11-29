@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[38,)" #mandatory
+loaderVersion="[1,)" #mandatory
 license="MIT License"
 
 [[mods]] #mandatory
