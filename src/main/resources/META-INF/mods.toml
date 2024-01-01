@@ -15,5 +15,5 @@ A short mod example on how to register structures and generate them in any biome
 # makes sure our mod does not be attempted to be ran on older version of Minecraft and explodes
 [[dependencies.structure_tutorial]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="[1.20,)"

@@ -1,7 +1,8 @@
 {
     "pack": {
         "description": "StructureTutorialMod resources",
-        "pack_format": 10,
-        "_comment": "Happy modding!"
+        "pack_format": 26,
+        "_comment": "Happy modding!",
+        "supported_formats": [0, 1000000]
     }
 }
