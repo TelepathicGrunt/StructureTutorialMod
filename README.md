@@ -3,7 +3,7 @@
 
 **Change the Github branch to see other versions of this tutorial including for Fabric!**
  
- This very small Forge mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://misode.github.io/guides/adding-custom-structures/
+ This very small Forge mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://minecraft.wiki/w/Tutorials/Custom_structures
  
 Another guide: https://gist.github.com/GentlemanRevvnar/98a8f191f46d28f63592672022c41497
 
