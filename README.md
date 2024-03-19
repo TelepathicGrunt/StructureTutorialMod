@@ -12,18 +12,19 @@ If your structure is only a **single piece, then you do NOT need any Jigsaw Bloc
 >https://www.youtube.com/watch?v=5a4DAkWW3JQ
 
 Handy image for a shorthand way of how Jigsaw Blocks and Pools work together: 
->![Jigsaw Cheatsheet](https://cdn.discordapp.com/attachments/686973568872873996/782006962979602432/jigsaws.png)
+>![Jigsaw Cheatsheet](https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/dc5eb44d-ddbf-4302-a4c9-e544a53f7981)
+
 
 This picture shows how structure jigsaw pieces are only valid if the child piece fits entirely within the parent or entirely outside the parent piece. Partial intersections will prevent the piece from spawning.
 
-<img src="https://i.imgur.com/5FGxomT.png" data-canonical-src="https://i.imgur.com/5FGxomT.png" height="300"/>
+<img src="https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/a445415a-1d68-4d47-a38c-fe1d1fe675f2" data-canonical-src="https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/a445415a-1d68-4d47-a38c-fe1d1fe675f2" height="300"/>
 
 And here, if a piece fails to spawn, it will go to the fallback pool, pick a new piece from the fallback pool, and try to spawn that piece if there is room for it. Great for closing off the ends of hallways!
 
-<img src="https://cdn.discordapp.com/attachments/754531543309090817/947099941531168798/5201EEE1-1564-439C-A862-41DC6855609D.png" data-canonical-src="https://cdn.discordapp.com/attachments/754531543309090817/947099941531168798/5201EEE1-1564-439C-A862-41DC6855609D.png" height="300"/>
+<img src="https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/fbf2a4d3-d197-4c08-80f1-5027e2a6ed08" data-canonical-src="https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/fbf2a4d3-d197-4c08-80f1-5027e2a6ed08" height="300"/>
 
-Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Now after you place the nbt file at that spot, we need to make a new JSON file and put it in data/mod_id/worldgen/template_pool folder as now we need to make the pool that will spawn our nbt file. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
->![Image of the folder layout for Structure Tutorial Mod which shows the structure nbt files are inside data.structure_tutorial.structures which is inside src/main/resources](https://i.imgur.com/Q4FLSOT.png)
+Once saved, the structure nbt file is stored in that world's save folder within the generated folder inside. Grab those files as you'll need to put it under your mod's resource folder inside data/mod_id/structures. NOTICE: This the data folder and not the asset folder inside resource! Then make a JSON file and put it in data/mod_id/worldgen/template_pool folder. Take a look at this tutorial's start_pool.json file for how to setup the JSON file itself.
+>![Image of the folder layout for Structure Tutorial Mod which shows the structure nbt files are inside data.structure_tutorial.structures which is inside src/main/resources](https://github.com/TelepathicGrunt/StructureTutorialMod/assets/40846040/182e07fb-8d91-4ea2-8152-97c5ad64ff41)
 
 
 Now you're ready to begin adding the structure to your mod! Take a look at StructureTutorialMain, start reading the comments, and follow the json/methods/classes. Don't just copy the code quickly or else you will get confuse. Take your time and try to understand how it all works before attempting to register and generate your structure in your own mod. (Also, check out the house structure itself in the world! There's some info on signs in the structure itself about nbt files)
