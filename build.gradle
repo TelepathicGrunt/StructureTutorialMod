@@ -60,3 +60,10 @@ jar {
 		rename { "${it}_${project.base.archivesName.get()}"}
 	}
 }
+
+idea {
+	module {
+		downloadSources = true
+		downloadJavadoc = true
+	}
+}
