@@ -72,5 +72,8 @@
         }
       ]
     }
-  }
+  },
+
+    // Optional thing that allows swapping a template pool with another per structure json instance. More of an expert niche thing.
+  "pool_aliases": []
 }
