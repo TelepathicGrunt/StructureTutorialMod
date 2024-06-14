@@ -1,7 +1,7 @@
 {
   "replace": false,
 
-    // Minecraft has some configured structure feature tags that can add extra behaviors
+    // Minecraft has some structure tags that can add extra behaviors
     // This one add your structure as a possible locatable structure to Cartographer Villager's Ocean Monument maps
   "values": [
     "structure_tutorial:code_structure_sky_fan"
