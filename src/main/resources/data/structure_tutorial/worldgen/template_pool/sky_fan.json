@@ -14,7 +14,7 @@
 
           // The Identifier of the nbt file itself of the structure piece.
           // Note, this will automatically check into the 'structures' folder for the nbt file.
-          // The final path would look like 'resources/data/structure_tutorial/structures/run_down_house_left_side.nbt'
+          // The final path would look like 'resources/data/structure_tutorial/structure/run_down_house_left_side.nbt'
         "location": "structure_tutorial:sky_fan",
 
           // Specifies to run this processor list json for the above nbt file when placing it in the world

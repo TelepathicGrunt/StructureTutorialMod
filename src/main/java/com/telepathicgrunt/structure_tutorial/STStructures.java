@@ -18,6 +18,6 @@ public class STStructures {
      * use them too directly from the registries. It's great for mod/datapacks compatibility.
      */
     public static void registerStructureFeatures() {
-        SKY_STRUCTURES = Registry.register(Registries.STRUCTURE_TYPE, new Identifier(StructureTutorialMain.MODID, "sky_structures"), () -> SkyStructures.CODEC);
+        SKY_STRUCTURES = Registry.register(Registries.STRUCTURE_TYPE, Identifier.of(StructureTutorialMain.MODID, "sky_structures"), () -> SkyStructures.CODEC);
     }
 }

@@ -41,6 +41,10 @@
     // Keep this false. This is only for vanilla legacy villages to make it spawn properly. We don't need no hacks here!
   "use_expansion_hack": false,
 
+    // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
+    // Set this to "ignore_waterlogging" if you are making underground structures that you do not want to get waterlogged and flooded by aquifiers.
+  "liquid_settings": "apply_waterlogging",
+
     // What mobs can spawn over time in the structure.
     // Make sure you add the mob to the right category (monster, creature, etc)
   "spawn_overrides": {
