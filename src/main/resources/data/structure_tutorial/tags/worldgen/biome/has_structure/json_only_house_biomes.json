@@ -5,7 +5,7 @@
   "_comment2": " An entry can also be expanded to have a 'required' field set to false. This entry will be skipped if the tag or biome doesn't exist. ",
   "_comment3": " This is perfect for supporting modded and datapack biomes! Forge provides `forge` tags that you can use. ",
   "_comment4": " Forge `forge` tags: https://github.com/MinecraftForge/MinecraftForge/tree/1.19.x/src/generated/resources/data/forge/tags/worldgen/biome ",
-  "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/fe8604210aa12cbacf41572f0b5a45004bc08dfb/data/minecraft/worldgen/biome ",
+  "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/5307821fb5271e8ac3ef1ef622ddb3c4d67f5df0/data/minecraft/worldgen/biome ",
   "_comment6": " Please use `forge` and `minecraft` biome tags as much as possible to maximize mod/datapack compatibility. ",
   "values": [
     "#minecraft:is_jungle",
