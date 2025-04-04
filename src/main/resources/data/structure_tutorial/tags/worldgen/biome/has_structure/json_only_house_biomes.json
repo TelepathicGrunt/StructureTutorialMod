@@ -19,31 +19,15 @@
     "minecraft:savanna_plateau",
     "minecraft:windswept_savanna",
     {
-      "id": "#c:is_jungle",
+      "id": "#forge:is_coniferous",
       "required": false
     },
     {
-      "id": "#c:is_forest",
+      "id": "#forge:is_desert",
       "required": false
     },
     {
-      "id": "#c:is_taiga",
-      "required": false
-    },
-    {
-      "id": "#c:is_desert",
-      "required": false
-    },
-    {
-      "id": "#c:is_plains",
-      "required": false
-    },
-    {
-      "id": "#c:is_snowy_plains",
-      "required": false
-    },
-    {
-      "id": "#c:is_savanna",
+      "id": "#forge:is_plains",
       "required": false
     }
   ]
