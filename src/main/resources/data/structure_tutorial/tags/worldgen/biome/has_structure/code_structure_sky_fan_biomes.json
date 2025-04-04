@@ -13,19 +13,11 @@
     "#minecraft:is_deep_ocean",
     "minecraft:swamp",
     {
-      "id": "#c:is_mountain",
+      "id": "#forge:is_mountain",
       "required": false
     },
     {
-      "id": "#c:is_ocean",
-      "required": false
-    },
-    {
-      "id": "#c:is_deep_ocean",
-      "required": false
-    },
-    {
-      "id": "#c:is_swamp",
+      "id": "#forge:is_swamp",
       "required": false
     }
   ]
