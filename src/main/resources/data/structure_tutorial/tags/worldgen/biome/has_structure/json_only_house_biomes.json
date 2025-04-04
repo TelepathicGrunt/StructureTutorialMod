@@ -5,7 +5,7 @@
   "_comment2": " An entry can also be expanded to have a 'required' field set to false. This entry will be skipped if the tag or biome doesn't exist. ",
   "_comment3": " This is perfect for supporting modded and datapack biomes! Fabric provides `c` tags that you can use. ",
   "_comment4": " Fabric `c` tags: https://github.com/FabricMC/fabric/tree/1.20.2/fabric-convention-tags-v1/src/generated/resources/data/c/tags/worldgen/biome ",
-  "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/b7e7f5282f9cc2ca1bd01e9a4911beab4725cb4b/data/minecraft/tags/worldgen/biome ",
+  "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/fe8604210aa12cbacf41572f0b5a45004bc08dfb/data/minecraft/worldgen/biome ",
   "_comment6": " Please use `c` and `minecraft` biome tags as much as possible to maximize mod/datapack compatibility. ",
   "values": [
     "#minecraft:is_jungle",
