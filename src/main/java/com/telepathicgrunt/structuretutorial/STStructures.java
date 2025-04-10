@@ -1,6 +1,7 @@
 package com.telepathicgrunt.structuretutorial;
 
 import com.mojang.serialization.Codec;
+import com.telepathicgrunt.structuretutorial.structures.OceanStructures;
 import com.telepathicgrunt.structuretutorial.structures.SkyStructures;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -21,6 +22,7 @@ public class STStructures {
      * this base structure will have the resourcelocation of structure_tutorial:sky_structures.
      */
     public static final DeferredHolder<StructureType<?>, StructureType<SkyStructures>> SKY_STRUCTURES = DEFERRED_REGISTRY_STRUCTURE.register("sky_structures", () -> explicitStructureTypeTyping(SkyStructures.CODEC));
+    public static final DeferredHolder<StructureType<?>, StructureType<OceanStructures>> OCEAN_STRUCTURES = DEFERRED_REGISTRY_STRUCTURE.register("ocean_structures", () -> explicitStructureTypeTyping(OceanStructures.CODEC));
 
     /**
      * Originally, I had a double lambda ()->()-> for the RegistryObject line above, but it turns out that
