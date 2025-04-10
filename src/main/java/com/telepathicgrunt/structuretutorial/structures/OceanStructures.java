@@ -1,21 +1,16 @@
 package com.telepathicgrunt.structuretutorial.structures;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.telepathicgrunt.structuretutorial.STStructures;
 import com.telepathicgrunt.structuretutorial.utilities.FilterHolderSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
@@ -37,7 +32,6 @@ import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,7 +55,7 @@ public class OceanStructures extends Structure {
                     .apply(codecBuilder, StructureSettings::new)
     );
 
-    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
+    // A custom codec that changes the size limit for our code_structure_sea_boat.json's config to not be capped at 7.
     // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
     public static final MapCodec<OceanStructures> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(CUSTOM_STRUCTURE_SETTINGS_CODEC.forGetter(structureInfo -> structureInfo.modifiableStructureInfo().getOriginalStructureInfo().structureSettings()),
