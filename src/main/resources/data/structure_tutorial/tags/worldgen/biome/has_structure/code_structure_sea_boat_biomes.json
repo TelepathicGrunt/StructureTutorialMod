@@ -1,0 +1,22 @@
+{
+  "replace": false,
+
+  "_comment1": " This biome tag can specify the biome directly. Or specify another biome tag by starting with # ",
+  "_comment2": " An entry can also be expanded to have a 'required' field set to false. This entry will be skipped if the tag or biome doesn't exist. ",
+  "_comment3": " This is perfect for supporting modded and datapack biomes! NeoForge provides `c` tags that you can use. ",
+  "_comment4": " NeoForge `c` tags: https://github.com/neoforged/NeoForge/tree/1.21.1/src/generated/resources/data/c/tags/worldgen/biome ",
+  "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/b7e7f5282f9cc2ca1bd01e9a4911beab4725cb4b/data/minecraft/tags/worldgen/biome ",
+  "_comment6": " Please use `c` and `minecraft` biome tags as much as possible to maximize mod/datapack compatibility. ",
+  "values": [
+    "#minecraft:is_ocean",
+    "#minecraft:is_deep_ocean",
+    {
+      "id": "#c:is_ocean",
+      "required": false
+    },
+    {
+      "id": "#c:is_deep_ocean",
+      "required": false
+    }
+  ]
+}

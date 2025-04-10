@@ -1,0 +1,59 @@
+{
+    // The base structure class to use for the behavior of the structure. (Like extra terrain checks and such)
+    // Since we are using a custom structure class with its own codec, you'll notice there's no use_expansion_hack field
+    // below like the minecraft:jigsaw structure type has. This is because our custom structure's codec does not have
+    // that field because we should not need expansion hacks for our structures. It's only for legacy Minecraft villages.
+  "type": "structure_tutorial:ocean_structures",
+
+    // The path to the template pool json file to use
+  "start_pool": "structure_tutorial:sea_boat",
+
+    // If this field is present, the game will look for a downward facing Jigsaw Block with this Name field in the chosen start piece.
+    // Once found, it will then spawn the start piece so that it's Jigsaw Block is now the true structure center position.
+    // If this field is not present, the start piece will spawn where the structure's true scenter position is the corner of the starting piece.
+  "start_jigsaw_name": "center",
+
+    // This is how many pieces away from the starting piece a piece of the structure can spawn
+    // Think of it like the length of the branch of the structure
+  "size": 1,
+
+    // Maximum distance away from center that pieces can spawn. Cannot be greater than 128
+  "max_distance_from_center": 80,
+
+    // Special custom implementation of the biomes field to allow reading two tags at once to allow excluding biomes by tag too!
+    // See the Codecs in OceanStructures.java for how this field was overridden and changed.
+  "biomes": {
+      // The biome tag to use for what biomes that this structure can spawn in.
+      // Here, this contains all ocean biomes tags so all oceans are included
+    "base": "#structure_tutorial:has_structure/code_structure_sea_boat_biomes",
+      // The biome tag to use for what biomes that this structure should NOT spawn in, even if the biome is in the has_structure entry.
+      // Here we exclude Frozen Ocean and Deep Frozen Ocean because of icebergs. Not good for our ship.
+    "filter": "#structure_tutorial:exclude_structure/code_structure_sea_boat_biomes"
+  },
+
+    // The generation step for when to generate the structure. there are 10 stages you can pick from!
+    // This surface structure stage places the structure before plants and ores are generated
+    // See GenerationStep.Feature enum for all the stages you can use and what order they are in
+  "step": "surface_structures",
+
+    // Where to spawn our structure at what y value if project_start_to_heightmap is not present.
+    // start_height can be used to spawn at a random fixed y value by doing something like: "max_inclusive": { "below_top": 10 }, "min_inclusive": { "above_bottom": 32 }
+    // If project_start_to_heightmap is present, the y value chosen in start_height will be added to the terrain's y value.
+    // So a start height that gives -5 will sink the structure 5 blocks into the terrain. Here, we will spawn this structure 1 blocks below the terrain.
+  "start_height": {
+    "absolute": -1
+  },
+
+    // Makes our sky fan structure take the terrain's top y value and add it to the start_height y value above.
+    // The final value is the y value the structures spawn at.
+    // WORLD_SURFACE_WG will stop at first non-air block so it spawns above oceans always instead of sunken into a deep sea.
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+
+    // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
+    // Set this to "ignore_waterlogging" if you are making underground structures that you do not want to get waterlogged and flooded by aquifiers.
+  "liquid_settings": "apply_waterlogging",
+
+    // What mobs can spawn over time in the structure.
+    // Make sure you add the mob to the right category (monster, creature, etc)
+  "spawn_overrides": {}
+}
