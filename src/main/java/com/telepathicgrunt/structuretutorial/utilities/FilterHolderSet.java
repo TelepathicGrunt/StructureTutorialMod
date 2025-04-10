@@ -20,6 +20,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A special HolderSet that holds one HolderSet as the base entries and uses a second HolderSet as a filter on those entries.
+ * You can copy and paste this to your project. You do not need to make any changes here.
+ * Simply use this in your structure's codec to replace the biomes HolderSet field. See OceanStructures.java for an example of usage.
+ */
 public class FilterHolderSet<T> implements HolderSet<T> {
     public static <T> MapCodec<FilterHolderSet<T>> codec(ResourceKey<? extends Registry<T>> registryKey, Codec<Holder<T>> holderCodec, boolean forceList) {
         return RecordCodecBuilder.mapCodec(
