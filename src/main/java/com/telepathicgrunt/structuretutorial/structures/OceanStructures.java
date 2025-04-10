@@ -41,7 +41,7 @@ public class OceanStructures extends Structure {
     public static final MapCodec<StructureSettings> CUSTOM_STRUCTURE_SETTINGS_CODEC = RecordCodecBuilder.mapCodec(
             codecBuilder -> codecBuilder.group(
                             // This is where we swapped in our custom codec that will apply the exclude structure tag to remove entries from the has structure tag.
-                            FilterHolderSet.codec(Registries.BIOME, Biome.CODEC, false).fieldOf("biomes").forGetter(x -> new FilterHolderSet<>(x.biomes(), HolderSet.empty())),
+                            FilterHolderSet.codec(Registries.BIOME, Biome.CODEC, false).fieldOf("biomes").forGetter(x -> x.biomes() instanceof FilterHolderSet<Biome> filterHolderSet ? filterHolderSet : new FilterHolderSet<>(x.biomes(), HolderSet.empty())),
                             Codec.simpleMap(MobCategory.CODEC, StructureSpawnOverride.CODEC, StringRepresentable.keys(MobCategory.values()))
                                     .fieldOf("spawn_overrides")
                                     .forGetter(StructureSettings::spawnOverrides),
