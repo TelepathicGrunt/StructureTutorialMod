@@ -14,8 +14,8 @@
 
           // The Identifier of the nbt file itself of the structure piece.
           // Note, this will automatically check into the 'structures' folder for the nbt file.
-          // The final path would look like 'resources/data/structure_tutorial/structure/sky_fan.nbt'
-        "location": "structure_tutorial:sky_fan",
+          // The final path would look like 'resources/data/structure_tutorial/structure/sea_boat.nbt'
+        "location": "structure_tutorial:sea_boat",
 
           // Specifies to run this processor list json for the above nbt file when placing it in the world
           // Processor lists are great for randomizing blocks and making structures appear more natural!
