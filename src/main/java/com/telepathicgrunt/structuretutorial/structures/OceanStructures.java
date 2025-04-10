@@ -199,6 +199,6 @@ public class OceanStructures extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return STStructures.SKY_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
+        return STStructures.OCEAN_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
     }
 }
