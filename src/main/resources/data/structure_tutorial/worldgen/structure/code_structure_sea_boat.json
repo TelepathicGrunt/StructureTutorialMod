@@ -14,7 +14,7 @@
   "start_jigsaw_name": "center",
 
     // This is how many pieces away from the starting piece a piece of the structure can spawn
-    // Think of it like the length of the branch of the structure
+    // Think of it like the length of the branch of the structureS
   "size": 1,
 
     // Maximum distance away from center that pieces can spawn. Cannot be greater than 128
