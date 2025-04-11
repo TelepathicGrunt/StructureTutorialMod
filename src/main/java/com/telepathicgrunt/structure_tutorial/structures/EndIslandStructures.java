@@ -3,10 +3,8 @@ package com.telepathicgrunt.structure_tutorial.structures;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import com.telepathicgrunt.structure_tutorial.STStructures;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.structure.StructureLiquidSettings;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.structure.pool.alias.StructurePoolAliasLookup;
@@ -16,8 +14,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.HeightContext;
 import net.minecraft.world.gen.heightprovider.HeightProvider;
-import net.minecraft.world.gen.structure.DimensionPadding;
-import net.minecraft.world.gen.structure.JigsawStructure;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
@@ -34,9 +30,7 @@ public class EndIslandStructures extends Structure {
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
-                    Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
-                    DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
-                    StructureLiquidSettings.codec.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
+                    Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
             ).apply(instance, EndIslandStructures::new));
 
     private final RegistryEntry<StructurePool> startPool;
@@ -45,8 +39,6 @@ public class EndIslandStructures extends Structure {
     private final HeightProvider startHeight;
     private final Optional<Heightmap.Type> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
-    private final DimensionPadding dimensionPadding;
-    private final StructureLiquidSettings liquidSettings;
 
     public EndIslandStructures(Structure.Config config,
                                RegistryEntry<StructurePool> startPool,
@@ -54,9 +46,7 @@ public class EndIslandStructures extends Structure {
                                int size,
                                HeightProvider startHeight,
                                Optional<Heightmap.Type> projectStartToHeightmap,
-                               int maxDistanceFromCenter,
-                               DimensionPadding dimensionPadding,
-                               StructureLiquidSettings liquidSettings)
+                               int maxDistanceFromCenter)
     {
         super(config);
         this.startPool = startPool;
@@ -65,8 +55,6 @@ public class EndIslandStructures extends Structure {
         this.startHeight = startHeight;
         this.projectStartToHeightmap = projectStartToHeightmap;
         this.maxDistanceFromCenter = maxDistanceFromCenter;
-        this.dimensionPadding = dimensionPadding;
-        this.liquidSettings = liquidSettings;
     }
 
     /*
@@ -137,9 +125,7 @@ public class EndIslandStructures extends Structure {
                         // Set projectStartToHeightmap to be empty optional for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this an empty optional when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                         this.maxDistanceFromCenter, // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
-                        StructurePoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
-                        this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
-                        this.liquidSettings); // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
+                        StructurePoolAliasLookup.EMPTY); // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
 
         /*
          * Note, you are always free to make your own JigsawPlacement class and implementation of how the structure
