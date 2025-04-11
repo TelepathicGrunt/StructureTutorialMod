@@ -7,7 +7,7 @@ plugins {
 }
 
 version = "${mod_version}"
-group = 'com.telepathicgrunt.structuretutorial'
+group = 'com.telepathicgrunt.structure_tutorial'
 archivesBaseName = 'structure_tutorial'
 
 repositories {
