@@ -1,0 +1,29 @@
+{
+    // What structures to pick to try and spawn if a spot passes the placement check.
+    // If two or more structures in this list can spawn in a biome at a spot, a random one based on weight is chosen to spawn
+  "structures": [
+    {
+      "structure": "structure_tutorial:code_structure_end_phantom_balloon",
+      "weight": 1
+    }
+  ],
+  "placement": {
+      // The kind of placement to use. Here we use own own custom placement to allow special position selecting.
+    "type": "structure_tutorial:distance_based_structure_placement",
+
+      // Make sure this is unique and does not match any other structure set's salt
+    "salt": 895443435,
+
+      // The average distance apart in chunks for spawn attempts
+    "spacing": 11,
+
+      // Minimum distance apart in chunks for spawn attempts
+      // MUST ALWAYS BE SMALLER THAN spacing ABOVE
+    "separation": 6,
+
+      // Our custom field we added to our placement type.
+      // Ensures this structure spawn 1000 blocks away from world center.
+      // Prevents our structure from spawning on the Ender Dragon island.
+    "min_distance_from_world_origin": 1000
+  }
+}
