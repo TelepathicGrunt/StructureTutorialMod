@@ -16,6 +16,7 @@ public class StructureTutorialMain implements ModInitializer {
          * We setup and register our structures here.
          * You should always register your stuff to prevent mod compatibility issue down the line.
          */
-        STStructures.registerStructureFeatures();
+        STStructures.registerStructureTypes();
+        STStructurePlacements.registerStructurePlacementTypes();
     }
 }
