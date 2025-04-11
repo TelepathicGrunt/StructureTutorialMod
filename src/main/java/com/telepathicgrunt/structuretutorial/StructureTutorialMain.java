@@ -14,5 +14,6 @@ public class StructureTutorialMain {
     public StructureTutorialMain(IEventBus modEventBus) {
         // For registration and init stuff.
         STStructures.DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
+        STStructurePlacements.DEFERRED_REGISTRY_STRUCTURE_PLACEMENT_TYPE.register(modEventBus);
     }
 }
