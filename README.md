@@ -1,4 +1,4 @@
-# Structure Tutorial Mod (Forge)
+# Structure Tutorial Mod (NeoForge)
 **How to register and generate jigsaw structures in 1.20.2+ Minecraft NeoForge using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
 
 **Change the Github branch to see other versions of this tutorial including for Fabric!**
