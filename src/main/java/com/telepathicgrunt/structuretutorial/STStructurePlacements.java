@@ -1,6 +1,6 @@
 package com.telepathicgrunt.structuretutorial;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.telepathicgrunt.structuretutorial.structureplacement.DistanceBasedStructurePlacement;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
@@ -27,7 +27,7 @@ public class STStructurePlacements {
      * some IDEs cannot resolve the typing correctly. This method explicitly states what the return type
      * is so that the IDE can put it into the DeferredRegistry properly.
      */
-    private static <T extends StructurePlacement> StructurePlacementType<T> explicitStructureTypeTyping(MapCodec<T> structurePlacementTypeCodec) {
+    private static <T extends StructurePlacement> StructurePlacementType<T> explicitStructureTypeTyping(Codec<T> structurePlacementTypeCodec) {
         return () -> structurePlacementTypeCodec;
     }
 }

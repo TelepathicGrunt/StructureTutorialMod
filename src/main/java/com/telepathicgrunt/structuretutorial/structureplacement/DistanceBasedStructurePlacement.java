@@ -19,7 +19,7 @@ public class DistanceBasedStructurePlacement extends RandomSpreadStructurePlacem
 
     // Special codec where we tacked on a "min_distance_from_world_origin" field so
     // we can now have structures spawn based on distance from world center.
-    public static final MapCodec<DistanceBasedStructurePlacement> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static final Codec<DistanceBasedStructurePlacement> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Vec3i.offsetCodec(16).optionalFieldOf("locate_offset", Vec3i.ZERO).forGetter(DistanceBasedStructurePlacement::locateOffset),
             StructurePlacement.FrequencyReductionMethod.CODEC.optionalFieldOf("frequency_reduction_method", StructurePlacement.FrequencyReductionMethod.DEFAULT).forGetter(DistanceBasedStructurePlacement::frequencyReductionMethod),
             Codec.floatRange(0.0F, 1.0F).optionalFieldOf("frequency", 1.0F).forGetter(DistanceBasedStructurePlacement::frequency),
