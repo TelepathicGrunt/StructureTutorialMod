@@ -10,7 +10,7 @@
   "values": [
     "#minecraft:is_end",
     {
-      "id": "#c:is_end",
+      "id": "#c:in_the_end",
       "required": false
     }
   ]
