@@ -1,9 +1,8 @@
-package com.telepathicgrunt.structuretutorial.structureplacement;
+package com.telepathicgrunt.structure_tutorial.structureplacement;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.telepathicgrunt.structuretutorial.STStructurePlacements;
+import com.telepathicgrunt.structure_tutorial.STStructurePlacements;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.ChunkPos;

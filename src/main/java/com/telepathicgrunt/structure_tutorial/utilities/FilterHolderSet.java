@@ -1,4 +1,4 @@
-package com.telepathicgrunt.structuretutorial.utilities;
+package com.telepathicgrunt.structure_tutorial.utilities;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

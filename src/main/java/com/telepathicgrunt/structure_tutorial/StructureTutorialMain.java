@@ -1,4 +1,4 @@
-package com.telepathicgrunt.structuretutorial;
+package com.telepathicgrunt.structure_tutorial;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
