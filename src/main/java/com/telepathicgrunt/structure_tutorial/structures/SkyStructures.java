@@ -1,69 +1,35 @@
-package com.telepathicgrunt.structuretutorial.structures;
+package com.telepathicgrunt.structure_tutorial.structures;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.telepathicgrunt.structuretutorial.STStructures;
-import com.telepathicgrunt.structuretutorial.utilities.FilterHolderSet;
+import com.telepathicgrunt.structure_tutorial.STStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.NoiseColumn;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class OceanStructures extends Structure {
+public class SkyStructures extends Structure {
 
-    // A customized structure settings codec to allow us to expand the abilities of the biomes field.
-    public static final MapCodec<StructureSettings> CUSTOM_STRUCTURE_SETTINGS_CODEC = RecordCodecBuilder.mapCodec(
-            codecBuilder -> codecBuilder.group(
-                            // This is where we swapped in our custom codec that will apply the exclude structure tag to remove entries from the has structure tag.
-                            FilterHolderSet.codec(Registries.BIOME, Biome.CODEC, false).fieldOf("biomes").forGetter(x -> x.biomes() instanceof FilterHolderSet<Biome> filterHolderSet ? filterHolderSet : new FilterHolderSet<>(x.biomes(), HolderSet.direct(List.of()))),
-                            Codec.simpleMap(MobCategory.CODEC, StructureSpawnOverride.CODEC, StringRepresentable.keys(MobCategory.values()))
-                                    .fieldOf("spawn_overrides")
-                                    .forGetter(StructureSettings::spawnOverrides),
-                            GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(StructureSettings::step),
-                            TerrainAdjustment.CODEC
-                                    .optionalFieldOf("terrain_adaptation", new StructureSettings(
-                                            HolderSet.direct(), Map.of(), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.NONE
-                                    ).terrainAdaptation())
-                                    .forGetter(StructureSettings::terrainAdaptation)
-                    )
-                    .apply(codecBuilder, StructureSettings::new)
-    );
-
-    // A custom codec that changes the size limit for our code_structure_sea_boat.json's config to not be capped at 7.
+    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
     // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
-    public static final Codec<OceanStructures> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(CUSTOM_STRUCTURE_SETTINGS_CODEC.forGetter(structureInfo -> structureInfo.modifiableStructureInfo().getOriginalStructureInfo().structureSettings()),
+    public static final Codec<SkyStructures> CODEC = RecordCodecBuilder.<SkyStructures>mapCodec(instance ->
+            instance.group(SkyStructures.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
-            ).apply(instance, OceanStructures::new));
+            ).apply(instance, SkyStructures::new)).codec();
 
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
@@ -72,13 +38,13 @@ public class OceanStructures extends Structure {
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
 
-    public OceanStructures(StructureSettings config,
-                           Holder<StructureTemplatePool> startPool,
-                           Optional<ResourceLocation> startJigsawName,
-                           int size,
-                           HeightProvider startHeight,
-                           Optional<Heightmap.Types> projectStartToHeightmap,
-                           int maxDistanceFromCenter)
+    public SkyStructures(Structure.StructureSettings config,
+                         Holder<StructureTemplatePool> startPool,
+                         Optional<ResourceLocation> startJigsawName,
+                         int size,
+                         HeightProvider startHeight,
+                         Optional<Heightmap.Types> projectStartToHeightmap,
+                         int maxDistanceFromCenter)
     {
         super(config);
         this.startPool = startPool;
@@ -119,42 +85,33 @@ public class OceanStructures extends Structure {
         // Grabs the chunk position we are at
         ChunkPos chunkpos = context.chunkPos();
 
-        // Get first non-air block.
-        int occupiedYPos = context.chunkGenerator().getFirstOccupiedHeight(
+        // Checks to make sure our structure does not spawn above land that's higher than y = 150
+        // to demonstrate how this method is good for checking extra conditions for spawning
+        return context.chunkGenerator().getFirstOccupiedHeight(
                 chunkpos.getMinBlockX(),
                 chunkpos.getMinBlockZ(),
-                Heightmap.Types.WORLD_SURFACE_WG,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 context.heightAccessor(),
-                context.randomState());
-
-        // Get column of blocks at corner of the chunk. BEWARE, getBaseColumn is an expensive call. Call this as few times as possible for your checks.
-        // Note, this column of blocks only has the raw terrain of the world which for the Overworld is Stone, Water, and Air.
-        NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(chunkpos.getBlockX(0), chunkpos.getBlockZ(0), context.heightAccessor(), context.randomState());
-
-        // Grab the block at the specified Y value.
-        BlockState blockState = columnOfBlocks.getBlock(occupiedYPos);
-
-        // Checks to make sure our structure only spawns if the spot has water.
-        return blockState.getFluidState().is(FluidTags.WATER);
+                context.randomState()) < 150;
     }
 
     @Override
-    public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+    public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
-        if (!OceanStructures.extraSpawningChecks(context)) {
+        if (!SkyStructures.extraSpawningChecks(context)) {
             return Optional.empty();
         }
 
-        // Set's our spawning blockpos's y offset
+        // Set's our spawning blockpos's y offset.
         int startY = this.startHeight.sample(context.random(), new WorldGenerationContext(context.chunkGenerator(), context.heightAccessor()));
 
         // Turns the chunk coordinates into actual coordinates we can use. (Gets corner of that chunk)
         ChunkPos chunkPos = context.chunkPos();
         BlockPos blockPos = new BlockPos(chunkPos.getMinBlockX(), startY, chunkPos.getMinBlockZ());
 
-        Optional<GenerationStub> structurePiecesGenerator =
+        Optional<Structure.GenerationStub> structurePiecesGenerator =
                 JigsawPlacement.addPieces(
                         context, // Used for JigsawPlacement to get all the proper behaviors done.
                         this.startPool, // The starting pool to use to create the structure layout from
@@ -163,7 +120,7 @@ public class OceanStructures extends Structure {
                         blockPos, // Where to spawn the structure.
                         false, // "useExpansionHack" This is for legacy villages to generate properly. You should keep this false always.
                         this.projectStartToHeightmap, // Adds the terrain height's y value to the passed in blockpos's y value. (This uses WORLD_SURFACE_WG heightmap which stops at top water too)
-                        // Here at projectStartToHeightmap, start_height's y value is -1 which means the structure spawn -1 blocks below terrain height if start_height and project_start_to_heightmap is defined in structure JSON.
+                        // Here at projectStartToHeightmap, start_height's y value is 60 which means the structure spawn 60 blocks above terrain height if start_height and project_start_to_heightmap is defined in structure JSON.
                         // Set projectStartToHeightmap to be empty optional for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this an empty optional when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                         this.maxDistanceFromCenter); // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
@@ -180,6 +137,6 @@ public class OceanStructures extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return STStructures.OCEAN_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
+        return STStructures.SKY_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
     }
 }

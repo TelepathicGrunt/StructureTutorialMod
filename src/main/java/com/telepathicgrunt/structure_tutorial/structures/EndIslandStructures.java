@@ -1,8 +1,8 @@
-package com.telepathicgrunt.structuretutorial.structures;
+package com.telepathicgrunt.structure_tutorial.structures;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.telepathicgrunt.structuretutorial.STStructures;
+import com.telepathicgrunt.structure_tutorial.STStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -14,23 +14,22 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class SkyStructures extends Structure {
+public class EndIslandStructures extends Structure {
 
-    // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
+    // A custom codec that changes the size limit for our code_structure_end_phantom_balloon.json's config to not be capped at 7.
     // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
-    public static final Codec<SkyStructures> CODEC = RecordCodecBuilder.<SkyStructures>mapCodec(instance ->
-            instance.group(SkyStructures.settingsCodec(instance),
+    public static final Codec<EndIslandStructures> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(EndIslandStructures.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
-            ).apply(instance, SkyStructures::new)).codec();
+            ).apply(instance, EndIslandStructures::new));
 
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
@@ -39,13 +38,13 @@ public class SkyStructures extends Structure {
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
 
-    public SkyStructures(Structure.StructureSettings config,
-                         Holder<StructureTemplatePool> startPool,
-                         Optional<ResourceLocation> startJigsawName,
-                         int size,
-                         HeightProvider startHeight,
-                         Optional<Heightmap.Types> projectStartToHeightmap,
-                         int maxDistanceFromCenter)
+    public EndIslandStructures(StructureSettings config,
+                               Holder<StructureTemplatePool> startPool,
+                               Optional<ResourceLocation> startJigsawName,
+                               int size,
+                               HeightProvider startHeight,
+                               Optional<Heightmap.Types> projectStartToHeightmap,
+                               int maxDistanceFromCenter)
     {
         super(config);
         this.startPool = startPool;
@@ -82,26 +81,25 @@ public class SkyStructures extends Structure {
      * Use the biome tags for where to spawn the structure and users can datapack
      * it to spawn in specific biomes that aren't in the dimension they don't like if they wish.
      */
-    private static boolean extraSpawningChecks(Structure.GenerationContext context) {
+    private static boolean extraSpawningChecks(GenerationContext context) {
         // Grabs the chunk position we are at
         ChunkPos chunkpos = context.chunkPos();
 
-        // Checks to make sure our structure does not spawn above land that's higher than y = 150
-        // to demonstrate how this method is good for checking extra conditions for spawning
+        // Checks to make sure our structure only spawns where the large end islands are and not over the void in the End.
         return context.chunkGenerator().getFirstOccupiedHeight(
                 chunkpos.getMinBlockX(),
                 chunkpos.getMinBlockZ(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 context.heightAccessor(),
-                context.randomState()) < 150;
+                context.randomState()) > context.chunkGenerator().getMinY();
     }
 
     @Override
-    public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
+    public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
-        if (!SkyStructures.extraSpawningChecks(context)) {
+        if (!EndIslandStructures.extraSpawningChecks(context)) {
             return Optional.empty();
         }
 
@@ -112,7 +110,7 @@ public class SkyStructures extends Structure {
         ChunkPos chunkPos = context.chunkPos();
         BlockPos blockPos = new BlockPos(chunkPos.getMinBlockX(), startY, chunkPos.getMinBlockZ());
 
-        Optional<Structure.GenerationStub> structurePiecesGenerator =
+        Optional<GenerationStub> structurePiecesGenerator =
                 JigsawPlacement.addPieces(
                         context, // Used for JigsawPlacement to get all the proper behaviors done.
                         this.startPool, // The starting pool to use to create the structure layout from
@@ -121,7 +119,7 @@ public class SkyStructures extends Structure {
                         blockPos, // Where to spawn the structure.
                         false, // "useExpansionHack" This is for legacy villages to generate properly. You should keep this false always.
                         this.projectStartToHeightmap, // Adds the terrain height's y value to the passed in blockpos's y value. (This uses WORLD_SURFACE_WG heightmap which stops at top water too)
-                        // Here at projectStartToHeightmap, start_height's y value is 60 which means the structure spawn 60 blocks above terrain height if start_height and project_start_to_heightmap is defined in structure JSON.
+                        // Here at projectStartToHeightmap, start_height's y value is 20 which means the structure spawn 20 blocks above terrain height if start_height and project_start_to_heightmap is defined in structure JSON.
                         // Set projectStartToHeightmap to be empty optional for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this an empty optional when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                         this.maxDistanceFromCenter); // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
@@ -138,6 +136,6 @@ public class SkyStructures extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return STStructures.SKY_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
+        return STStructures.END_ISLAND_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
     }
 }

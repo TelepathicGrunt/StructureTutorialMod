@@ -1,7 +1,7 @@
-package com.telepathicgrunt.structuretutorial;
+package com.telepathicgrunt.structure_tutorial;
 
 import com.mojang.serialization.Codec;
-import com.telepathicgrunt.structuretutorial.structureplacement.DistanceBasedStructurePlacement;
+import com.telepathicgrunt.structure_tutorial.structureplacement.DistanceBasedStructurePlacement;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;

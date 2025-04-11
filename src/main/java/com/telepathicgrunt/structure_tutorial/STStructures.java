@@ -1,9 +1,9 @@
-package com.telepathicgrunt.structuretutorial;
+package com.telepathicgrunt.structure_tutorial;
 
 import com.mojang.serialization.Codec;
-import com.telepathicgrunt.structuretutorial.structures.EndIslandStructures;
-import com.telepathicgrunt.structuretutorial.structures.OceanStructures;
-import com.telepathicgrunt.structuretutorial.structures.SkyStructures;
+import com.telepathicgrunt.structure_tutorial.structures.EndIslandStructures;
+import com.telepathicgrunt.structure_tutorial.structures.OceanStructures;
+import com.telepathicgrunt.structure_tutorial.structures.SkyStructures;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;

@@ -1,4 +1,4 @@
-package com.telepathicgrunt.structuretutorial;
+package com.telepathicgrunt.structure_tutorial;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
