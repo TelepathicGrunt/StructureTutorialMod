@@ -22,8 +22,14 @@
     "separation": 6,
 
       // Prevent spawning near Ocean Monuments
+      // WARNING: This is a tricky and potentially dangerous setting to use.
+      // What this is checking for is making sure Sky Fan does not spawn near any point that the
+      // Ocean Monument structure set sees as a valid POSSIBLE position. It does not check if the monument
+      // will actually spawn there. It does not even check that the biome is valid for monuments.
+      // Do not use this with a high chunk count and do not use it targeting a low spacing/separation structure set.
+      // And most importantly, do not have two structure sets target each other in an exclusion zone or else you will cause an infinite loop.
     "exclusion_zone": {
-      "chunk_count": 10,
+      "chunk_count": 4,
       "other_set": "minecraft:ocean_monuments"
     }
   }

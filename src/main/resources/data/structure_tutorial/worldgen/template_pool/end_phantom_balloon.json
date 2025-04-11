@@ -1,0 +1,25 @@
+{
+    // More info on template pools can be found here: https://minecraft.gamepedia.com/Custom_world_generation#JSON_format_8
+
+    // The template pool to refer to if the entries in 'elements' fails to generate.
+  "fallback": "minecraft:empty",
+
+    // Here you can list as many nbt files or placed features to spawn.
+    // Do note that placed features needs a special element entry stuff.
+  "elements": [
+    {
+        // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+
+          // The Identifier of the nbt file itself of the structure piece.
+          // Note, this will automatically check into the 'structures' folder for the nbt file.
+          // The final path would look like 'resources/data/structure_tutorial/structure/end_phantom_balloon.nbt'
+        "location": "structure_tutorial:end_phantom_balloon",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
