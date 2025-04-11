@@ -8,6 +8,11 @@
     // the path to the template pool json file to use
   "start_pool": "structure_tutorial:end_phantom_balloon",
 
+    // If this field is present, the game will look for a downward facing Jigsaw Block with this Name field in the chosen start piece.
+    // Once found, it will then spawn the start piece so that it's Jigsaw Block is now the true structure center position.
+    // If this field is not present, the start piece will spawn where the structure's true scenter position is the corner of the starting piece.
+  "start_jigsaw_name": "center",
+
     // This is how many pieces away from the starting piece a piece of the structure can spawn
     // Think of it like the length of the branch of the structure
   "size": 1,

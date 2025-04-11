@@ -1,24 +1,25 @@
-package com.telepathicgrunt.structuretutorial.structures;
+package com.telepathicgrunt.structure_tutorial.structures;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.telepathicgrunt.structuretutorial.STStructures;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.WorldGenerationContext;
-import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
-import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
-import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
-import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
+
+import com.telepathicgrunt.structure_tutorial.STStructures;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.structure.StructureLiquidSettings;
+import net.minecraft.structure.pool.StructurePool;
+import net.minecraft.structure.pool.StructurePoolBasedGenerator;
+import net.minecraft.structure.pool.alias.StructurePoolAliasLookup;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.gen.HeightContext;
+import net.minecraft.world.gen.heightprovider.HeightProvider;
+import net.minecraft.world.gen.structure.DimensionPadding;
+import net.minecraft.world.gen.structure.JigsawStructure;
+import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.gen.structure.StructureType;
 
 import java.util.Optional;
 
@@ -27,35 +28,35 @@ public class EndIslandStructures extends Structure {
     // A custom codec that changes the size limit for our code_structure_end_phantom_balloon.json's config to not be capped at 7.
     // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
     public static final MapCodec<EndIslandStructures> CODEC = RecordCodecBuilder.mapCodec(instance ->
-            instance.group(EndIslandStructures.settingsCodec(instance),
-                    StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                    ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+            instance.group(EndIslandStructures.configCodecBuilder(instance),
+                    StructurePool.REGISTRY_CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
+                    Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
-                    Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
+                    Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
-                    LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
+                    StructureLiquidSettings.codec.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
             ).apply(instance, EndIslandStructures::new));
 
-    private final Holder<StructureTemplatePool> startPool;
-    private final Optional<ResourceLocation> startJigsawName;
+    private final RegistryEntry<StructurePool> startPool;
+    private final Optional<Identifier> startJigsawName;
     private final int size;
     private final HeightProvider startHeight;
-    private final Optional<Heightmap.Types> projectStartToHeightmap;
+    private final Optional<Heightmap.Type> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
     private final DimensionPadding dimensionPadding;
-    private final LiquidSettings liquidSettings;
+    private final StructureLiquidSettings liquidSettings;
 
-    public EndIslandStructures(StructureSettings config,
-                               Holder<StructureTemplatePool> startPool,
-                               Optional<ResourceLocation> startJigsawName,
+    public EndIslandStructures(Structure.Config config,
+                               RegistryEntry<StructurePool> startPool,
+                               Optional<Identifier> startJigsawName,
                                int size,
                                HeightProvider startHeight,
-                               Optional<Heightmap.Types> projectStartToHeightmap,
+                               Optional<Heightmap.Type> projectStartToHeightmap,
                                int maxDistanceFromCenter,
                                DimensionPadding dimensionPadding,
-                               LiquidSettings liquidSettings)
+                               StructureLiquidSettings liquidSettings)
     {
         super(config);
         this.startPool = startPool;
@@ -94,21 +95,21 @@ public class EndIslandStructures extends Structure {
      * Use the biome tags for where to spawn the structure and users can datapack
      * it to spawn in specific biomes that aren't in the dimension they don't like if they wish.
      */
-    private static boolean extraSpawningChecks(GenerationContext context) {
+    private static boolean extraSpawningChecks(Structure.Context context) {
         // Grabs the chunk position we are at
         ChunkPos chunkpos = context.chunkPos();
 
         // Checks to make sure our structure only spawns where the large end islands are and not over the void in the End.
-        return context.chunkGenerator().getFirstOccupiedHeight(
-                chunkpos.getMinBlockX(),
-                chunkpos.getMinBlockZ(),
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                context.heightAccessor(),
-                context.randomState()) > context.chunkGenerator().getMinY();
+        return context.chunkGenerator().getHeightInGround(
+                chunkpos.getStartX(),
+                chunkpos.getStartZ(),
+                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                context.world(),
+                context.noiseConfig()) > context.chunkGenerator().getMinimumY();
     }
 
     @Override
-    public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+    public Optional<Structure.StructurePosition> getStructurePosition(Structure.Context context) {
 
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
@@ -117,15 +118,15 @@ public class EndIslandStructures extends Structure {
         }
 
         // Set's our spawning blockpos's y offset.
-        int startY = this.startHeight.sample(context.random(), new WorldGenerationContext(context.chunkGenerator(), context.heightAccessor()));
+        int startY = this.startHeight.get(context.random(), new HeightContext(context.chunkGenerator(), context.world()));
 
         // Turns the chunk coordinates into actual coordinates we can use. (Gets corner of that chunk)
         ChunkPos chunkPos = context.chunkPos();
-        BlockPos blockPos = new BlockPos(chunkPos.getMinBlockX(), startY, chunkPos.getMinBlockZ());
+        BlockPos blockPos = new BlockPos(chunkPos.getStartX(), startY, chunkPos.getStartZ());
 
-        Optional<GenerationStub> structurePiecesGenerator =
-                JigsawPlacement.addPieces(
-                        context, // Used for JigsawPlacement to get all the proper behaviors done.
+        Optional<StructurePosition> structurePiecesGenerator =
+                StructurePoolBasedGenerator.generate(
+                        context, // Used for StructurePoolBasedGenerator to get all the proper behaviors done.
                         this.startPool, // The starting pool to use to create the structure layout from
                         this.startJigsawName, // Can be used to only spawn from one Jigsaw block. But we don't need to worry about this.
                         this.size, // How deep a branch of pieces can go away from center piece. (5 means branches cannot be longer than 5 pieces from center piece)
@@ -136,7 +137,7 @@ public class EndIslandStructures extends Structure {
                         // Set projectStartToHeightmap to be empty optional for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this an empty optional when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                         this.maxDistanceFromCenter, // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
-                        PoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
+                        StructurePoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
                         this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
                         this.liquidSettings); // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
 
@@ -151,7 +152,7 @@ public class EndIslandStructures extends Structure {
     }
 
     @Override
-    public StructureType<?> type() {
-        return STStructures.END_ISLAND_STRUCTURES.get(); // Helps the game know how to turn this structure back to json to save to chunks
+    public StructureType<?> getType() {
+        return STStructures.END_ISLAND_STRUCTURES; // Helps the game know how to turn this structure back to json to save to chunks
     }
 }
