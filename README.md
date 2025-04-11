@@ -1,9 +1,38 @@
 # Structure Tutorial Mod (Fabric)
-**How to register and generate jigsaw structures in 1.19.0+ Minecraft Fabric using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
+**How to register and generate jigsaw structures in 1.20.2+ Minecraft Fabric using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
 
-**Change the Github branch to see other versions of this tutorial including Forge.**
+**Change the Github branch to see other versions of this tutorial including for NeoForge!**
+ 
+ This very small Fabric mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://minecraft.wiki/w/Tutorials/Custom_structures
+ 
+---
+ 
+There are 4 structures in this tutorial mod. Each one focusing on different setups you may want.
 
- This very small Fabric mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the code_structure_sky_fan structure is mostly json files but has a custom java structure class to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://gist.github.com/misode/45559d34627755ecaa52497daea83544
+- JSON Only House
+  - This structure uses only JSON files to be made. No code needed. 
+  - Uses Jigsaw blocks in the NBT files and template_pool JSON files to combine two NBT pieces together. A 2 piece structure. 
+  - Has an entity saved into NBT with persistence required. See the structure in-world for what the entity is and signs explaining it.
+  - Has a chest with a Loot Table saved to it, so it has random loot on first opening. See the structure in-world for signs explaining it.
+  - Overrides the natural biome creature and monster spawns with its own. See the worldgen/structure file for this.
+
+- Sky Fan
+  - This structure uses code to ensure it never spawns above land that is higher than y = 150. See worldgen/structure and SkyStructures.java for this.
+  - Has blocks randomized throughout the structure by using a processor list. See worldgen/template_pool and worldgen/processor_list for this.
+  - Has 4 entity saved into NBT with persistence required.
+  - Overrides the natural biome monster spawns with its own. See the worldgen/structure file for this.
+
+- Sea Boat
+    - This structure uses code to allow using 2 biome tags. 1 to say what biomes to spawn in and another for biome to ignore and not spawn in. See worldgen/structure and OceanStructures.java for this.
+    - This structure also checks to makes sure spawn location has water. See worldgen/structure and OceanStructures.java for this.
+
+- End Phantom Balloon
+  - This structure uses code to ensure it only spawns above the large end islands. See worldgen/structure and SkyStructures.java for this.
+  - Uses a custom structure placement so it only spawns 1000 blocks or more from world center. See worldgen/structure_set and DistanceBasedStructurePlacement.java
+
+---
+
+Another guide: https://gist.github.com/GentlemanRevvnar/98a8f191f46d28f63592672022c41497
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
 >https://www.youtube.com/watch?v=umhuRXinD3o
