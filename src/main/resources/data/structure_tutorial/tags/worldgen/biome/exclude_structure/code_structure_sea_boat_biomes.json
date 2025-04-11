@@ -4,7 +4,7 @@
   "_comment1": " This biome tag can specify the biome directly. Or specify another biome tag by starting with # ",
   "_comment2": " An entry can also be expanded to have a 'required' field set to false. This entry will be skipped if the tag or biome doesn't exist. ",
   "_comment3": " This is perfect for supporting modded and datapack biomes! NeoForge provides `forge` tags that you can use. ",
-  "_comment4": " NeoForge `forge` tags: https://github.com/neoforged/NeoForge/tree/1.20.2/src/generated/resources/data/forge/tags/worldgen/biome ",
+  "_comment4": " NeoForge `forge` tags: https://github.com/neoforged/NeoForge/tree/1.20.4/src/generated/resources/data/forge/tags/worldgen/biome ",
   "_comment5": " Minecraft `minecraft` tags: https://github.com/misode/mcmeta/tree/fe8604210aa12cbacf41572f0b5a45004bc08dfb/data/minecraft/worldgen/biome ",
   "_comment6": " Please use `forge` and `minecraft` biome tags as much as possible to maximize mod/datapack compatibility. ",
   "values": [
