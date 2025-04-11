@@ -16,5 +16,6 @@ public class StructureTutorialMain {
         // For registration and init stuff.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         STStructures.DEFERRED_REGISTRY_STRUCTURE.register(modEventBus);
+        STStructurePlacements.DEFERRED_REGISTRY_STRUCTURE_PLACEMENT_TYPE.register(modEventBus);
     }
 }
