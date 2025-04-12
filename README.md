@@ -2,9 +2,9 @@
 **How to register and generate jigsaw structures in 1.19.3+ Minecraft Forge using nbt files! In fact, you can actually make structures using only json files in 1.18.2+ MC!**
 
 **Change the Github branch to see other versions of this tutorial including for Fabric!**
- 
- This very small Forge mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the other 3 structures are mostly json files but has custom java classes to do extra behavior for it. Another tutorial you can check out for extra info that may be laid out much cleaner and easier to understand: https://minecraft.wiki/w/Tutorials/Custom_structures
- 
+
+ This very small Forge mod is full of comments that will help you understand what a lot of the json files and what needs to be done to get your structure to generate. In all, minimum number of files for a structure is 4 json files and 1 nbt file. The json_only_house structure is made using just json files while the other 3 structures are mostly json files but has custom java classes to do extra behavior for it.
+
 ---
  
 There are 4 structures in this tutorial mod. Each one focusing on different setups you may want.
@@ -33,8 +33,14 @@ There are 4 structures in this tutorial mod. Each one focusing on different setu
 ---
 
 All vanilla worldgen JSON and NBT files can be found here. Older Minecraft versions are under the commit history: https://github.com/misode/mcmeta/tree/data/data/minecraft
+ 
+Some other tutorials you can check out for extra info that might be easier to understand:
 
-Another guide: https://gist.github.com/GentlemanRevvnar/98a8f191f46d28f63592672022c41497
+- https://minecraft.wiki/w/Tutorials/Custom_structures
+
+- https://www.planetminecraft.com/blog/custom-structure-gen-documentation/
+
+- https://gist.github.com/GentlemanRevvnar/98a8f191f46d28f63592672022c41497
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
 >https://www.youtube.com/watch?v=umhuRXinD3o
