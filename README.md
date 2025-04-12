@@ -32,6 +32,8 @@ There are 4 structures in this tutorial mod. Each one focusing on different setu
 
 ---
 
+All vanilla worldgen JSON and NBT files can be found here. Older Minecraft versions are under the commit history: https://github.com/misode/mcmeta/tree/data/data/minecraft
+
 Another guide: https://gist.github.com/GentlemanRevvnar/98a8f191f46d28f63592672022c41497
 
 If you don't know how to make a nbt file for structures, it's actually fairly simple and you can do it all inside minecraft itself! Here is a video on how to make and save a structure to nbt using structure blocks. Here's a short video on how Structure Blocks work: 
