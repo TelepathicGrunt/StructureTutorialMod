@@ -62,7 +62,7 @@ public class OceanStructures extends Structure {
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Type.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
-                    Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
+                    JigsawStructure.MaxDistanceFromCenter.CODEC.fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
                     StructureLiquidSettings.codec.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
             ).apply(instance, OceanStructures::new));
@@ -72,19 +72,19 @@ public class OceanStructures extends Structure {
     private final int size;
     private final HeightProvider startHeight;
     private final Optional<Heightmap.Type> projectStartToHeightmap;
-    private final int maxDistanceFromCenter;
+    private final JigsawStructure.MaxDistanceFromCenter maxDistanceFromCenter;
     private final DimensionPadding dimensionPadding;
     private final StructureLiquidSettings liquidSettings;
 
     public OceanStructures(Structure.Config config,
-                         RegistryEntry<StructurePool> startPool,
-                         Optional<Identifier> startJigsawName,
-                         int size,
-                         HeightProvider startHeight,
-                         Optional<Heightmap.Type> projectStartToHeightmap,
-                         int maxDistanceFromCenter,
-                         DimensionPadding dimensionPadding,
-                         StructureLiquidSettings liquidSettings)
+                           RegistryEntry<StructurePool> startPool,
+                           Optional<Identifier> startJigsawName,
+                           int size,
+                           HeightProvider startHeight,
+                           Optional<Heightmap.Type> projectStartToHeightmap,
+                           JigsawStructure.MaxDistanceFromCenter maxDistanceFromCenter,
+                           DimensionPadding dimensionPadding,
+                           StructureLiquidSettings liquidSettings)
     {
         super(config);
         this.startPool = startPool;
@@ -174,7 +174,7 @@ public class OceanStructures extends Structure {
                         // Here at projectStartToHeightmap, start_height's y value is -1 which means the structure spawn -1 blocks below terrain height if start_height and project_start_to_heightmap is defined in structure JSON.
                         // Set projectStartToHeightmap to be empty optional for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this an empty optional when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                        this.maxDistanceFromCenter, // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
+                        this.maxDistanceFromCenter, // Maximum limit for how far pieces can spawn from center. You cannot set the horizontal part bigger than 128 or else pieces gets cutoff. Vertical is limited to dimension height.
                         StructurePoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
                         this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
                         this.liquidSettings); // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.

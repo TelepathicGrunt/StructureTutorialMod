@@ -9,8 +9,13 @@
     // Think of it like the length of the branch of the structure
   "size": 2,
 
-    // Maximum distance away from center that pieces can spawn. Cannot be greater than 128
-  "max_distance_from_center": 80,
+    // Maximum distance away from center that pieces can spawn.
+    // Horizontal cannot be bigger than 128 or else pieces gets cutoff.
+    // Vertical is limited to the dimension's height. 258 is a good default.
+  "max_distance_from_center":  {
+    "horizontal": 128,
+    "vertical": 256
+  },
 
     // The biome tag to use for what biomes that this structure can spawn in"
   "biomes": "#structure_tutorial:has_structure/json_only_house_biomes",

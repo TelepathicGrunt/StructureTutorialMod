@@ -23,7 +23,7 @@ public class DistanceBasedStructurePlacement extends RandomSpreadStructurePlacem
             Vec3i.createOffsetCodec(16).optionalFieldOf("locate_offset", Vec3i.ZERO).forGetter(DistanceBasedStructurePlacement::getLocateOffset),
             StructurePlacement.FrequencyReductionMethod.CODEC.optionalFieldOf("frequency_reduction_method", StructurePlacement.FrequencyReductionMethod.DEFAULT).forGetter(DistanceBasedStructurePlacement::getFrequencyReductionMethod),
             Codec.floatRange(0.0F, 1.0F).optionalFieldOf("frequency", 1.0F).forGetter(DistanceBasedStructurePlacement::getFrequency),
-            Codecs.NONNEGATIVE_INT.fieldOf("salt").forGetter(DistanceBasedStructurePlacement::getSalt),
+            Codecs.NON_NEGATIVE_INT.fieldOf("salt").forGetter(DistanceBasedStructurePlacement::getSalt),
             StructurePlacement.ExclusionZone.CODEC.optionalFieldOf("exclusion_zone").forGetter(DistanceBasedStructurePlacement::getExclusionZone),
             Codec.intRange(0, Integer.MAX_VALUE).fieldOf("spacing").forGetter(DistanceBasedStructurePlacement::getSpacing),
             Codec.intRange(0, Integer.MAX_VALUE).fieldOf("separation").forGetter(DistanceBasedStructurePlacement::getSeparation),

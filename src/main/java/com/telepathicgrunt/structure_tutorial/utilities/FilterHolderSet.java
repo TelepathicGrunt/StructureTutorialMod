@@ -96,6 +96,11 @@ public class FilterHolderSet<T> implements RegistryEntryList<T> {
     }
 
     @Override
+    public boolean isBound() {
+        return this.set != null;
+    }
+
+    @Override
     public Either<TagKey<T>, List<RegistryEntry<T>>> getStorage() {
         return Either.right(this.getList());
     }
