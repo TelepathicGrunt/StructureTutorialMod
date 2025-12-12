@@ -1,6 +1,6 @@
 {
-    // What structures to pick to try and spawn if a spot passes the placement check.
-    // If two or more structures in this list can spawn in a biome at a spot, a random one based on weight is chosen to spawn
+    "":" What structures to pick to try and spawn if a spot passes the placement check.",
+    "":" If two or more structures in this list can spawn in a biome at a spot, a random one based on weight is chosen to spawn",
   "structures": [
     {
       "structure": "structure_tutorial:code_structure_sky_fan",
@@ -8,26 +8,26 @@
     }
   ],
   "placement": {
-    // The kind of placement to use. The other kind is ring based like strongholds use.
+    "":" The kind of placement to use. The other kind is ring based like strongholds use.",
     "type": "minecraft:random_spread",
 
-      // Make sure this is unique and does not match any other structure set's salt
+      "":" Make sure this is unique and does not match any other structure set's salt",
     "salt": 1224466880,
 
-      // The average distance apart in chunks for spawn attempts
+      "":" The average distance apart in chunks for spawn attempts",
     "spacing": 16,
 
-      // Minimum distance apart in chunks for spawn attempts
-      // MUST ALWAYS BE SMALLER THAN spacing ABOVE
+      "":" Minimum distance apart in chunks for spawn attempts",
+      "":" MUST ALWAYS BE SMALLER THAN spacing ABOVE",
     "separation": 6,
 
-      // Prevent spawning near Ocean Monuments
-      // WARNING: This is a tricky and potentially dangerous setting to use.
-      // What this is checking for is making sure Sky Fan does not spawn near any point that the
-      // Ocean Monument structure set sees as a valid POSSIBLE position. It does not check if the monument
-      // will actually spawn there. It does not even check that the biome is valid for monuments.
-      // Do not use this with a high chunk count and do not use it targeting a low spacing/separation structure set.
-      // And most importantly, do not have two structure sets target each other in an exclusion zone or else you will cause an infinite loop.
+      "":" Prevent spawning near Ocean Monuments",
+      "":" WARNING: This is a tricky and potentially dangerous setting to use.",
+      "":" What this is checking for is making sure Sky Fan does not spawn near any point that the",
+      "":" Ocean Monument structure set sees as a valid POSSIBLE position. It does not check if the monument",
+      "":" will actually spawn there. It does not even check that the biome is valid for monuments.",
+      "":" Do not use this with a high chunk count and do not use it targeting a low spacing/separation structure set.",
+      "":" And most importantly, do not have two structure sets target each other in an exclusion zone or else you will cause an infinite loop.",
     "exclusion_zone": {
       "chunk_count": 4,
       "other_set": "minecraft:ocean_monuments"
