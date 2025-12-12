@@ -96,6 +96,11 @@ public class FilterHolderSet<T> implements HolderSet<T> {
     }
 
     @Override
+    public boolean isBound() {
+        return this.set != null;
+    }
+
+    @Override
     public Either<TagKey<T>, List<Holder<T>>> unwrap() {
         return Either.right(this.getList());
     }
